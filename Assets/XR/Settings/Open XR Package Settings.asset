@@ -775,16 +775,16 @@ MonoBehaviour:
   m_Name: Standalone
   m_EditorClassIdentifier: 
   features:
-  - {fileID: 4963040286616351577}
+  - {fileID: 1443452708213354362}
   - {fileID: -8749980634715080836}
-  - {fileID: 4893829345954421791}
+  - {fileID: -1276894210230670667}
   - {fileID: -4478006660784508864}
   - {fileID: -6081641041439107477}
   - {fileID: 32361891232910083}
   - {fileID: 1727173055597128861}
   - {fileID: -5941725581135416239}
   - {fileID: 5147218156019823978}
-  - {fileID: 4025793028449617705}
+  - {fileID: -4314466618941312080}
   - {fileID: 7246457321457738075}
   - {fileID: 2264897617209797459}
   - {fileID: 437417816440406694}
@@ -798,7 +798,7 @@ MonoBehaviour:
   - {fileID: -2513858183220632965}
   - {fileID: 7413458854745118488}
   - {fileID: -4454024988132797082}
-  - {fileID: -8895518590110429109}
+  - {fileID: 154189092879288027}
   - {fileID: -4731438336562001402}
   - {fileID: 4135229692886101830}
   - {fileID: -7494486358618572369}
@@ -2898,4 +2898,10 @@ MonoBehaviour:
   - {fileID: 4890582492822650874}
   - {fileID: -7494486358618572369}
   m_renderMode: 1
+  m_autoColorSubmissionMode: 1
+  m_colorSubmissionModes:
+    m_List: 00000000
   m_depthSubmissionMode: 0
+  m_spacewarpMotionVectorTextureFormat: 0
+  m_optimizeBufferDiscards: 0
+  m_symmetricProjection: 0
