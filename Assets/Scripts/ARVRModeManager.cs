@@ -38,6 +38,8 @@ public class ARVRModeManager : MonoBehaviour
     public Transform originalParent;
     public UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabInteractable;
     public bool wasGrabbable;
+    public Vector3 lastARPosition; // Store the most recent AR position
+    public Quaternion lastARRotation; // Store the most recent AR rotation
   }
 
   private void Start()
@@ -90,13 +92,31 @@ public class ARVRModeManager : MonoBehaviour
         originalLocalPosition = obj.transform.localPosition,
         originalParent = obj.transform.parent,
         grabInteractable = grabComponent,
-        wasGrabbable = grabComponent != null && grabComponent.enabled
+        wasGrabbable = grabComponent != null && grabComponent.enabled,
+        lastARPosition = obj.transform.position, // Initialize with current position
+        lastARRotation = obj.transform.rotation  // Initialize with current rotation
       };
       buildingObjectsData.Add(data);
     }
 
     // Start in AR mode
     SetARMode();
+  }
+
+  private void Update()
+  {
+    // If in AR mode, update the last known positions of objects
+    if (!isVRMode)
+    {
+      foreach (BuildingObjectData data in buildingObjectsData)
+      {
+        if (data.transform != null)
+        {
+          data.lastARPosition = data.transform.position;
+          data.lastARRotation = data.transform.rotation;
+        }
+      }
+    }
   }
 
   private void UpdateButtonText()
@@ -301,7 +321,7 @@ public class ARVRModeManager : MonoBehaviour
       xrOrigin.rotation = originalRotation;
     }
 
-    // Reset all building objects to their original state
+    // Reset all building objects to their last known AR state
     foreach (BuildingObjectData data in buildingObjectsData)
     {
       if (data.transform != null)
@@ -309,9 +329,10 @@ public class ARVRModeManager : MonoBehaviour
         // Restore original parent
         data.transform.SetParent(data.originalParent);
 
-        // Reset scale and position
+        // Reset scale and position to last known AR state
         data.transform.localScale = data.originalScale;
-        data.transform.position = data.originalPosition;
+        data.transform.position = data.lastARPosition;
+        data.transform.rotation = data.lastARRotation;
 
         // Restore original grab interaction state
         if (data.grabInteractable != null)
