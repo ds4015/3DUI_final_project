@@ -19,6 +19,13 @@ to facilitate collaboration.
 - Players now spawn as networked prefabs and can see each other.
 - Players can be cloned and tested via ParrelSync
 - Integrated Photon Fusion to the main scene
+<p>
+ <a href="https://www.youtube.com/watch?v=hGRsoeLVrd0">
+  <img src="https://img.youtube.com/vi/hGRsoeLVrd0/0.jpg" width="500" 
+  alt="Fusion Multiplayer"></a>
+  <br>
+  <em>Photon Fusion Multiplayer and ParrelSync</em>
+</p>
 
 
 ```
