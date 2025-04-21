@@ -7,6 +7,8 @@ TagManager:
   - BuildingObject
   - VRSpawnPoint
   - TableTop
+  - Floor
+  - Portal
   layers:
   - Default
   - TransparentFX
