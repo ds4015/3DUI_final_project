@@ -144,13 +144,18 @@ PositionPlayer.cs
 ```
 BasicSpawner.cs
 
-  Sets up multiplayer spawner with Fusion. Players can host or join a session and are spawned at the different markers in the scene. Script handles player spawning, despawning and handling of non-authoritative players
+  Sets up multiplayer spawner with Fusion. Players can host or join a session and 
+  are spawned at the different markers in the scene. Script handles player 
+  spawning, despawning and handling of non-authoritative players
 ```
 
 ```
 NetworkVR.cs
 
-  Syncs position and rotation of player's head, left controller, and right controller across the network. Uses state authority and updates the network with transforms of headset and controller. If player doesn't have authority, it reads and applies to local scene player. This allows for live movement of users.
+  Syncs position and rotation of player's head, left controller, and right 
+  controller across the network. Uses state authority and updates the network with 
+  transforms of headset and controller. If player doesn't have authority, it reads 
+  and applies to local scene player. This allows for live movement of users.
 ```
 
 ```
