@@ -1027,10 +1027,11 @@ MonoBehaviour:
   mainCamera: {fileID: 348547856}
   xrOrigin: {fileID: 1306165449}
   tableTop: {fileID: 8387178119316845288}
+  vrSpawnPoint: {fileID: 1706561674}
   toggleModeButton: {fileID: 1407414926}
   buttonText: {fileID: 2082651919}
   vrScaleFactor: 20
-  vrPositionOffset: {x: 0, y: 1.6, z: 0}
+  playerHeight: 1.6
   skyboxMaterial: {fileID: 2100000, guid: ec46d2188d4b8774e847e75f1e12a8db, type: 2}
 --- !u!4 &1065175693
 Transform:
@@ -1494,8 +1495,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d943ca99142485a9f5367d17d36cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardOffset: 0.7
-  rightOffset: 0.3
+  forwardOffset: 1
+  rightOffset: 0.4
   heightOffset: 0.3
   uiScale: {x: 0.001, y: 0.001, z: 0.001}
   rotationOffset: 0
@@ -1613,6 +1614,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!1 &1706561673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1706561674}
+  m_Layer: 0
+  m_Name: VRSpawnPoint
+  m_TagString: VRSpawnPoint
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1706561674
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706561673}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.22299524, y: 1.438, z: -0.00000011920929}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1815318735
 GameObject:
   m_ObjectHideFlags: 0
@@ -1936,6 +1968,10 @@ PrefabInstance:
     - target: {fileID: 6935963542069931490, guid: 96988b142d6ae4987b8a5e6870746cc6, type: 3}
       propertyPath: m_Name
       value: Tabletop
+      objectReference: {fileID: 0}
+    - target: {fileID: 6935963542069931490, guid: 96988b142d6ae4987b8a5e6870746cc6, type: 3}
+      propertyPath: m_TagString
+      value: TableTop
       objectReference: {fileID: 0}
     - target: {fileID: 6935963542069931490, guid: 96988b142d6ae4987b8a5e6870746cc6, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -2522,3 +2558,4 @@ SceneRoots:
   - {fileID: 1442928933}
   - {fileID: 253297190}
   - {fileID: 1065175693}
+  - {fileID: 1706561674}

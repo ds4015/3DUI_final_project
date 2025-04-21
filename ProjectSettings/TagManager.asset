@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - BuildingObject
+  - VRSpawnPoint
+  - TableTop
   layers:
   - Default
   - TransparentFX
