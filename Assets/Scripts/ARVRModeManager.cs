@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
 using TMPro;
+using System.Collections.Generic;
 
 public class ARVRModeManager : MonoBehaviour
 {
@@ -9,47 +10,56 @@ public class ARVRModeManager : MonoBehaviour
   [SerializeField] private Camera mainCamera;
   [SerializeField] private Transform xrOrigin;
   [SerializeField] private Transform tableTop;
-  [SerializeField] private Transform vrSpawnPoint; // Add an empty GameObject on your table as spawn point
 
   [Header("UI Elements")]
   [SerializeField] private Button toggleModeButton;
   [SerializeField] private TMP_Text buttonText;
 
   [Header("Mode Settings")]
-  [SerializeField] private float vrScaleFactor = 20f; // How much to scale up in VR mode
-  [SerializeField] private float playerHeight = 1.6f;
-  [SerializeField] private Material skyboxMaterial; // Assign your skybox material
+  [SerializeField] private Material skyboxMaterial;
+  [SerializeField] private float groundOffset = 0.1f; // Offset from table surface to place player
 
   private bool isVRMode = false;
-  private Vector3 originalScale;
   private Vector3 originalPosition;
   private Quaternion originalRotation;
+  private List<BuildingObjectData> buildingObjectsData = new List<BuildingObjectData>();
+
+  // Store original transform data for each building object
+  private class BuildingObjectData
+  {
+    public Transform transform;
+    public Vector3 originalScale;
+    public Vector3 originalPosition;
+    public Vector3 originalLocalPosition;
+  }
 
   private void Start()
   {
-    // Ensure proper tags are set
-    if (tableTop != null && tableTop.gameObject.tag != "TableTop")
-    {
-      tableTop.gameObject.tag = "TableTop";
-    }
-
-    if (vrSpawnPoint != null && vrSpawnPoint.gameObject.tag != "VRSpawnPoint")
-    {
-      vrSpawnPoint.gameObject.tag = "VRSpawnPoint";
-    }
-
     if (toggleModeButton != null)
     {
       toggleModeButton.onClick.AddListener(ToggleMode);
       UpdateButtonText();
     }
 
-    // Store original transform values
+    // Store original XR Origin transform
     if (xrOrigin != null)
     {
-      originalScale = xrOrigin.localScale;
       originalPosition = xrOrigin.position;
       originalRotation = xrOrigin.rotation;
+    }
+
+    // Find and store all building objects' original transforms
+    GameObject[] buildingObjects = GameObject.FindGameObjectsWithTag("BuildingObject");
+    foreach (GameObject obj in buildingObjects)
+    {
+      BuildingObjectData data = new BuildingObjectData
+      {
+        transform = obj.transform,
+        originalScale = obj.transform.localScale,
+        originalPosition = obj.transform.position,
+        originalLocalPosition = obj.transform.localPosition
+      };
+      buildingObjectsData.Add(data);
     }
 
     // Start in AR mode
@@ -82,35 +92,37 @@ public class ARVRModeManager : MonoBehaviour
 
   private void SetVRMode()
   {
-    if (!ValidateReferences())
-    {
-      Debug.LogError("Missing required references for VR mode transition!");
-      return;
-    }
+    if (!ValidateReferences()) return;
 
+    // Switch to skybox
     if (mainCamera != null)
     {
-      // Switch to skybox background
       mainCamera.clearFlags = CameraClearFlags.Skybox;
       RenderSettings.skybox = skyboxMaterial;
     }
 
-    // Scale up the scene
-    xrOrigin.localScale = originalScale * vrScaleFactor;
-
-    // Position the player at the spawn point
-    if (vrSpawnPoint != null)
+    // Position player at table height
+    if (tableTop != null)
     {
-      xrOrigin.position = vrSpawnPoint.position;
-      xrOrigin.rotation = vrSpawnPoint.rotation;
+      float tableHeight = tableTop.position.y;
+      xrOrigin.position = new Vector3(tableTop.position.x, tableHeight + groundOffset, tableTop.position.z);
     }
-    else
+
+    // Scale up all building objects to life size
+    foreach (BuildingObjectData data in buildingObjectsData)
     {
-      Debug.LogWarning("VR Spawn Point not set - using default positioning");
-      // Fallback to a safe position above the table
-      if (tableTop != null)
+      if (data.transform != null)
       {
-        xrOrigin.position = tableTop.position + Vector3.up * 0.1f;
+        // Set scale to 1,1,1 for life-size
+        data.transform.localScale = Vector3.one;
+
+        // Adjust position relative to table
+        Vector3 relativePos = data.transform.position - tableTop.position;
+        data.transform.position = new Vector3(
+          relativePos.x + tableTop.position.x,
+          relativePos.y + tableTop.position.y,
+          relativePos.z + tableTop.position.z
+        );
       }
     }
   }
@@ -119,41 +131,47 @@ public class ARVRModeManager : MonoBehaviour
   {
     if (mainCamera != null)
     {
-      // Switch to solid color background for AR passthrough
       mainCamera.clearFlags = CameraClearFlags.SolidColor;
     }
 
+    // Reset XR Origin
     if (xrOrigin != null)
     {
-      // Reset to original scale and position
-      xrOrigin.localScale = originalScale;
       xrOrigin.position = originalPosition;
       xrOrigin.rotation = originalRotation;
+    }
+
+    // Reset all building objects to their original state
+    foreach (BuildingObjectData data in buildingObjectsData)
+    {
+      if (data.transform != null)
+      {
+        data.transform.localScale = data.originalScale;
+        data.transform.position = data.originalPosition;
+      }
     }
   }
 
   private bool ValidateReferences()
   {
-    bool isValid = true;
-
     if (mainCamera == null)
     {
       Debug.LogError("Main Camera reference is missing!");
-      isValid = false;
+      return false;
     }
 
     if (xrOrigin == null)
     {
       Debug.LogError("XR Origin reference is missing!");
-      isValid = false;
+      return false;
     }
 
     if (tableTop == null)
     {
       Debug.LogError("Table Top reference is missing!");
-      isValid = false;
+      return false;
     }
 
-    return isValid;
+    return true;
   }
 }
