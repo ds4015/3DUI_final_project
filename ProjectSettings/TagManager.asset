@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - BuildingObject
+  - PalmCollider
+  - IndexFingerCollider
+  - Table
+  - RightFingerCollider
+  - LeftFingerCollider
+  - ControllerTip
   - VRSpawnPoint
   - TableTop
   - Floor
@@ -13,12 +19,12 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Hand
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Objects
+  - DetectGrab
+  - Midground Objects Layer
   - 
   - 
   - 
