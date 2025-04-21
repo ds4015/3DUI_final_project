@@ -5,7 +5,7 @@
 [Bb]uild/
 [Bb]uilds/
 [Ll]ogs/
-MemoryCaptures/
+[Mm]emoryCaptures/
 UserSettings/
 
 !*.meta
@@ -21,6 +21,7 @@ UserSettings/
 *.pidb
 *.booproj
 *.svd
+mono_crash.*.json
 
 # Rider
 .idea/
@@ -31,6 +32,7 @@ UserSettings/
 
 # Crash logs
 sysinfo.txt
+lib_burst_generated.txt
 
 # Builds
 *.apk
@@ -58,4 +60,5 @@ sysinfo.txt
 *.orig
 .DS_Store
 Thumbs.db
-
+ethumbs.db
+Icon?

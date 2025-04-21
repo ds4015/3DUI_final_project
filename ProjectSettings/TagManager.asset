@@ -11,6 +11,12 @@ TagManager:
   - RightFingerCollider
   - LeftFingerCollider
   - ControllerTip
+  - VRSpawnPoint
+  - TableTop
+  - Floor
+  - Portal
+  - Anchor
+  - StartMarker
   layers:
   - Default
   - TransparentFX
@@ -21,7 +27,7 @@ TagManager:
   - Objects
   - DetectGrab
   - Midground Objects Layer
-  - 
+  - RotateDetect
   - 
   - 
   - 

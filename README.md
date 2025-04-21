@@ -12,6 +12,29 @@ to facilitate collaboration.
 
 ## Updates
 ```
+4/21/25: Nathan - Photon Fusion Multiplayer and ParrelSync
+```
+- Set up initial Photon Fusion architecture for multiplayer.
+- Players able to Host or Join a session using Fusion's network runner  
+- Players now spawn as networked prefabs and can see each other.
+- Players can be cloned and tested via ParrelSync
+- Integrated Photon Fusion to the main scene
+
+```
+4/21/25: Dallas - Predefined Assets
+```
+- Included free assets from Unity Store to the scene, scaled down to appropriate
+size.
+- Scripts and colliders added to all assets to work with gestures.
+<p>
+ <a href="https://www.youtube.com/watch?v=6V5JzIdDubA">
+  <img src="https://img.youtube.com/vi/6V5JzIdDubA/0.jpg" width="500" 
+  alt="Custom Transformations"></a>
+  <br>
+  <em>Assets on Tabletop</em>
+</p>
+
+```
 4/20/25: Dallas - Custom Translate/Rotate and Item Portals
 ```
 - Translation and object rotation now functional. 
@@ -71,10 +94,18 @@ Dallas
 ```
 - [x] Custom transformation logic (4/20)
 - [ ] Prefab menu for building objects
-- [ ] Prefab design
+- [x] Prefab assets
 - [ ] Custom gesture for bringing up prefab menu
 - [ ] Controller interaction for transformations
 - [ ] Expand table, add more item portals w/position numbers
+
+```
+Nathan
+```
+- [x] Photon Fusion Integration (4/21)
+- [ ] Add authoritative interaction logic for scene objects
+- [ ] Set up spawn points to support up to 4 players
+- [ ] Ownership transfer of objects
 
 ## Scripts
 The following scripts are currently available:
@@ -121,6 +152,29 @@ PositionPlayer.cs
   This is placed on the XR Origin Hands rig to start the player's camera off in a
   particular location.  Assign the XR rig itself and an empty GameObject positioned
   at the desired start location to the serialized variables in the inspector.
+```
+
+```
+BasicSpawner.cs
+
+  Sets up multiplayer spawner with Fusion. Players can host or join a session and 
+  are spawned at the different markers in the scene. Script handles player 
+  spawning, despawning and handling of non-authoritative players
+```
+
+```
+NetworkVR.cs
+
+  Syncs position and rotation of player's head, left controller, and right 
+  controller across the network. Uses state authority and updates the network with 
+  transforms of headset and controller. If player doesn't have authority, it reads 
+  and applies to local scene player. This allows for live movement of users.
+```
+
+```
+Player.cs
+
+  Allows player to move character based on input data.
 ```
 
 ## Gestures

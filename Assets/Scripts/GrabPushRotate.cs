@@ -16,16 +16,16 @@ using System.Linq;
   typeof(UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable))]
 public class GrabPushRotate : MonoBehaviour
 {
-	Transform leftFinger;
-    Transform rightFinger;
+	[HideInInspector] public Transform leftFinger;
+    [HideInInspector] public Transform rightFinger;
     Transform activeFinger;
     Transform leftPush, rightPush;
-    Rigidbody rb;
-    Vector3 lastLeftTipProj;
-	Vector3 lastRightTipProj;
+    [HideInInspector] public Rigidbody rb;
+    [HideInInspector] public Vector3 lastLeftTipProj;
+	[HideInInspector] public Vector3 lastRightTipProj;
 
     bool rotating = false;
-	bool canTranslate = true;
+	[HideInInspector] public bool canTranslate = true;
     public float autoRotateSpeed = 45f;
 
 
@@ -77,6 +77,7 @@ public class GrabPushRotate : MonoBehaviour
         /* it's a left pointer */        
         if (other.name.Contains("LeftIndex") || other.name.Contains("L_IndexDistal"))
         {
+            Debug.Log("Left index finger detected");
             leftFinger = other.transform;
 
             /* old logic: not using physics for translation anymore, but leaving it anyway */
@@ -114,6 +115,7 @@ public class GrabPushRotate : MonoBehaviour
     {
         if (other.transform == leftFinger)
         {
+            Debug.Log("Left index finger left");
             leftFinger = null;
 
             /* again, old logic: not using push colliders/physics now */
@@ -191,6 +193,7 @@ public class GrabPushRotate : MonoBehaviour
         /* case: translating */
         if (canTranslate && !rotating && (leftFinger || rightFinger))
         {
+            Debug.Log("Translating");
             Transform finger = rightFinger;
             Vector3 lastTipProj = lastRightTipProj;
             if (leftFinger)
@@ -244,7 +247,7 @@ public class GrabPushRotate : MonoBehaviour
                     if (tipCollider == null)
                     {
                         tipCollider = leftIndexTip.gameObject.AddComponent<SphereCollider>();
-                        tipCollider.radius = 0.01f;
+                        tipCollider.radius = 0.02f;
                         tipCollider.isTrigger = true;
                         tipCollider.gameObject.tag = "IndexFingerCollider";
                     }
@@ -264,7 +267,7 @@ public class GrabPushRotate : MonoBehaviour
                     if (tipCollider == null)
                     {
                         tipCollider = rightIndexTip.gameObject.AddComponent<SphereCollider>();
-                        tipCollider.radius = 0.01f; // 1cm radius
+                        tipCollider.radius = 0.02f;
                         tipCollider.isTrigger = true;
                         tipCollider.gameObject.tag = "IndexFingerCollider";
                     }
@@ -274,6 +277,6 @@ public class GrabPushRotate : MonoBehaviour
     }
 
     /* helper - thanks for the help */
-    Vector3 ProjectXZ(Vector3 w) => new Vector3(w.x, rb.position.y, w.z);
+    [HideInInspector] public Vector3 ProjectXZ(Vector3 w) => new Vector3(w.x, rb.position.y, w.z);
 
 }

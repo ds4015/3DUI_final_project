@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 6924544072216989953}
   m_Layer: 0
   m_Name: Tabletop
-  m_TagString: Untagged
+  m_TagString: TableTop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
