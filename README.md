@@ -28,8 +28,8 @@ table in an aligned position by the force of gravity.
 conjunction with Meta AIO.
 - Device Simulator added and working.
 <p>
- <a href="https://www.youtube.com/watch?v=lwsksg-yi-Y">
-  <img src="https://img.youtube.com/vi/lwsksg-yi-Y/0.jpg" width="500" 
+ <a href="https://www.youtube.com/watch?v=Q_pKPHZifLI">
+  <img src="https://img.youtube.com/vi/Q_pKPHZifLI/0.jpg" width="500" 
   alt="Custom Transformations"></a>
   <br>
   <em>Custom Translate/Rotate + Item Portals</em>
