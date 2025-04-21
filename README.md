@@ -107,6 +107,14 @@ Nathan
 - [ ] Set up spawn points to support up to 4 players
 - [ ] Ownership transfer of objects
 
+```
+Nathan
+```
+- [x] Photon Fusion Integration (4/21)
+- [ ] Add authoritative interaction logic for scene objects
+- [ ] Set up spawn points to support up to 4 players
+- [ ] Ownership transfer of objects
+
 ## Scripts
 The following scripts are currently available:
 ```
@@ -152,6 +160,29 @@ PositionPlayer.cs
   This is placed on the XR Origin Hands rig to start the player's camera off in a
   particular location.  Assign the XR rig itself and an empty GameObject positioned
   at the desired start location to the serialized variables in the inspector.
+```
+
+```
+BasicSpawner.cs
+
+  Sets up multiplayer spawner with Fusion. Players can host or join a session and 
+  are spawned at the different markers in the scene. Script handles player 
+  spawning, despawning and handling of non-authoritative players
+```
+
+```
+NetworkVR.cs
+
+  Syncs position and rotation of player's head, left controller, and right 
+  controller across the network. Uses state authority and updates the network with 
+  transforms of headset and controller. If player doesn't have authority, it reads 
+  and applies to local scene player. This allows for live movement of users.
+```
+
+```
+Player.cs
+
+  Allows player to move character based on input data.
 ```
 
 ```
