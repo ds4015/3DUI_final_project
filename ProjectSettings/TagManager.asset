@@ -11,6 +11,10 @@ TagManager:
   - RightFingerCollider
   - LeftFingerCollider
   - ControllerTip
+  - VRSpawnPoint
+  - TableTop
+  - Floor
+  - Portal
   layers:
   - Default
   - TransparentFX
