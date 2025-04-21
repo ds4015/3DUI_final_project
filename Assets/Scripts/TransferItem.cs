@@ -29,8 +29,8 @@ public class TransferItem : MonoBehaviour
 
     IEnumerator MoveFromHoverToTable(Transform obj, Vector3 startPos)
     {
-        float waitTime = 5f;
-        float moveDuration = 1.5f;
+        float waitTime = 3f;
+        float moveDuration = 0.8f;
 
         yield return new WaitForSeconds(waitTime);
 

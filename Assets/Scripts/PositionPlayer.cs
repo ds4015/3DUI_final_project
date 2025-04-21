@@ -1,19 +1,24 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+using Unity;
+using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.OpenXR;
+using UnityEngine.XR.OpenXR.Features;
 
 public class PositionPlayer : MonoBehaviour
 {
     [SerializeField]
     private GameObject startMarker;
+    [SerializeField]
+    XROrigin origin;
     
 
     IEnumerator Start()
     {
-         yield return null;
-
-        transform.SetPositionAndRotation(startMarker.transform.position, startMarker.transform.rotation);
+        yield return null;
+        origin.transform.rotation = startMarker.transform.rotation;
+        origin.MoveCameraToWorldLocation(startMarker.transform.position);        
     } 
 
 }
