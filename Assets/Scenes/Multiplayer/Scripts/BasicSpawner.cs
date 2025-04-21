@@ -10,15 +10,32 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
+    [SerializeField]
+    private Transform[] spawnMarkers;
+    private int spawnIndex = 0;
+
+
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (runner.IsServer)
         {
-            // Create a unique position for the player
-            Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 1, 0);
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-            // Keep track of the player avatars for easy access
+            Vector3 spawnPosition = Vector3.zero;
+            Quaternion spawnRotation = Quaternion.identity;
+
+            if (spawnMarkers != null && spawnIndex < spawnMarkers.Length)
+            {
+                spawnPosition = spawnMarkers[spawnIndex].position;
+                spawnRotation = spawnMarkers[spawnIndex].rotation;
+                spawnIndex++;
+            }
+
+            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, spawnRotation, player);
             _spawnedCharacters.Add(player, networkPlayerObject);
+            if (!networkPlayerObject.HasInputAuthority)
+            {
+                AudioListener listener = networkPlayerObject.GetComponentInChildren<AudioListener>();
+                listener.enabled = false; //disable audiosource for non-authority players
+            }
         }
     }
 

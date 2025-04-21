@@ -12,6 +12,16 @@ to facilitate collaboration.
 
 ## Updates
 ```
+4/21/25: Nathan - Photon Fusion Multiplayer and ParrelSync
+```
+- Set up initial Photon Fusion architecture for multiplayer.
+- Players able to Host or Join a session using Fusion's network runner  
+- Players now spawn as networked prefabs and can see each other.
+- Players can be cloned and tested via ParrelSync
+- Integrated Photon Fusion to the main scene
+
+
+```
 4/20/25: Dallas - Custom Translate/Rotate and Item Portals
 ```
 - Translation and object rotation now functional. 
@@ -75,6 +85,14 @@ Dallas
 - [ ] Custom gesture for bringing up prefab menu
 - [ ] Controller interaction for transformations
 - [ ] Expand table, add more item portals w/position numbers
+
+```
+Nathan
+```
+- [x] Photon Fusion Integration (4/21)
+- [ ] Add authoritative interaction logic for scene objects
+- [ ] Set up spawn points to support up to 4 players
+- [ ] Ownership transfer of objects
 
 ## Scripts
 The following scripts are currently available:
