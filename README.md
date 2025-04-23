@@ -12,6 +12,24 @@ to facilitate collaboration.
 
 ## Updates
 ```
+4/22/25: Dallas - UI Object Selection
+```
+- Designed UI menu for player to choose and spawn building objects.
+- Button activation on side of table to bring up menu.
+- Object selection from menu spawns prefab on the table next to player.
+- Transparent box as signifier for newly spawned object.
+- Redesigned item transfer portals.
+- Sound effects for button press, object selection, item portal transfer.
+- Expanded table to accommodate 4 players.
+<p>
+ <a href="https://www.youtube.com/watch?v=PVe_PHboDSA">
+  <img src="https://img.youtube.com/vi/PVe_PHboDSA/0.jpg" width="500" 
+  alt="Object Selection Menu"></a>
+  <br>
+  <em>UI: Object Selection Menu</em>
+</p>
+
+```
 4/21/25: Nathan - Photon Fusion Multiplayer and ParrelSync
 ```
 - Set up initial Photon Fusion architecture for multiplayer.
@@ -93,8 +111,8 @@ automatically transferred onto the table next to the participant.
 Dallas
 ```
 - [x] Custom transformation logic (4/20)
-- [ ] Prefab menu for building objects
-- [x] Prefab assets
+- [x] Prefab menu for building objects (4/22)
+- [x] Prefab assets (4/21)
 - [ ] Custom gesture for bringing up prefab menu
 - [ ] Controller interaction for transformations
 - [ ] Expand table, add more item portals w/position numbers
@@ -107,16 +125,10 @@ Nathan
 - [ ] Set up spawn points to support up to 4 players
 - [ ] Ownership transfer of objects
 
-```
-Nathan
-```
-- [x] Photon Fusion Integration (4/21)
-- [ ] Add authoritative interaction logic for scene objects
-- [ ] Set up spawn points to support up to 4 players
-- [ ] Ownership transfer of objects
 
 ## Scripts
 The following scripts are currently available:
+
 ```
 GrabPushRotate.cs:
 
@@ -129,6 +141,73 @@ GrabPushRotate.cs:
   that has another collider (trigger).  The first collider is for transformations,
   the second trigger child collider is to be able to grab the object with the
   XR Grab Interactable.
+
+```
+
+```
+HoverPortal.cs
+
+  A simple script that animates item transfer portals in a slow up/down
+  ping-pong vertical motion.
+
+```
+
+```
+OpenObjectMenu.cs
+
+  This is used for opening up the main object creation/spawn menu selection UI.
+  It is placed on the cylindrical "button" child object of the ToggleObjectMenuButton
+  GameObject and listens for triggers from the index fingers.  When the button is
+  pressed, the Object Menu with all of its prefabs will become active.  When pressed
+  a second time, it will become inactive.
+
+  The Object Menu will also be able to brought up via hand gestures in the future,
+  not only through this button press.  Raising the palm in an upward or downward
+  direction will open or close the menu, respectively.  
+
+  The OpenObjectMenu script has several public variables that must be set in the
+  inspector, including a reference to the ObjectMenu itself, as well as sound
+  files for the button press and object select.
+```
+
+```
+PositionPlayer.cs
+
+  This is placed on the XR Origin Hands rig to start the player's camera off in a
+  particular location.  Assign the XR rig itself and an empty GameObject positioned
+  at the desired start location to the serialized variables in the inspector.
+```
+
+```
+RotateObject.cs
+
+  A simple rotator script.  Slowly rotates a given GameObject continuously
+  at a constant rate.
+```
+
+```
+SelectNewObject.cs
+
+  This script is responsible for spawning a new object when the player selects
+  it from the Object Menu.  It is placed on each prefab child in the Object Menu
+  and listens for triggers from the index fingers.  Upon making a selection,
+  the object's prefab will be instantiated on the table in front of the player,
+  as well as a transparent rotating box surrounding it to differentiate it from
+  other objects on the table.  Once it is moved, the transparent box will
+  disappear.
+
+  This script disables the Object Menu when a new object is selected, so in order
+  to be able to play the sound effect associated with an item select and to remove
+  the transparent box once the object is moved, we need to pass those variables
+  back to OpenObjectMenu.cs, where it is listening in its Update function for a new
+  item spawn.
+
+  This has several public variables to assign in the inspector, including a
+  reference to the OpenObjectMenu script on our button, the transparent material
+  to be used for the container box, the GameObject transform representing where
+  on the table the new object should be spawned at, a reference to the actual
+  prefab in assets that will be spawned, as well as the audio clip for selecting
+  an object.
 ```
 
 ```
@@ -152,37 +231,6 @@ TransferItem.cs
     Portal 2 - the portal the item is going to travel to
     Table Drop Point - an empty game object denoting the location on the table where
       the object will land after coming out of the portal.
-```
-
-```
-PositionPlayer.cs
-
-  This is placed on the XR Origin Hands rig to start the player's camera off in a
-  particular location.  Assign the XR rig itself and an empty GameObject positioned
-  at the desired start location to the serialized variables in the inspector.
-```
-
-```
-BasicSpawner.cs
-
-  Sets up multiplayer spawner with Fusion. Players can host or join a session and 
-  are spawned at the different markers in the scene. Script handles player 
-  spawning, despawning and handling of non-authoritative players
-```
-
-```
-NetworkVR.cs
-
-  Syncs position and rotation of player's head, left controller, and right 
-  controller across the network. Uses state authority and updates the network with 
-  transforms of headset and controller. If player doesn't have authority, it reads 
-  and applies to local scene player. This allows for live movement of users.
-```
-
-```
-Player.cs
-
-  Allows player to move character based on input data.
 ```
 
 ```
@@ -227,8 +275,8 @@ Grab
   away from the scene if thrown).
   ```
 
-  ```
-  Move Object
+```
+Move Object
 
     To move/translate an object with the hand, press your index finger on any
     surface and keep pressing to move it.  The trigger for moving an object is

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Old Map 3D Model
+* source:	https://sketchfab.com/3d-models/old-map-3d-model-c8f056e093f74be99b2e83034099c40a
+* author:	Johana-PS (https://sketchfab.com/Johana-PS)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Old Map 3D Model" (https://sketchfab.com/3d-models/old-map-3d-model-c8f056e093f74be99b2e83034099c40a) by Johana-PS (https://sketchfab.com/Johana-PS) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
