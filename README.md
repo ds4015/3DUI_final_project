@@ -125,7 +125,6 @@ Nathan
 - [ ] Set up spawn points to support up to 4 players
 - [ ] Ownership transfer of objects
 
-
 ## Scripts
 The following scripts are currently available:
 
@@ -234,6 +233,14 @@ TransferItem.cs
 ```
 
 ```
+PositionPlayer.cs
+
+  This is placed on the XR Origin Hands rig to start the player's camera off in a
+  particular location.  Assign the XR rig itself and an empty GameObject positioned
+  at the desired start location to the serialized variables in the inspector.
+```
+
+```
 BasicSpawner.cs
 
   Sets up multiplayer spawner with Fusion. Players can host or join a session and 
@@ -255,6 +262,7 @@ Player.cs
 
   Allows player to move character based on input data.
 ```
+
 
 ## Gestures
 The following hand gestures are currently available:
