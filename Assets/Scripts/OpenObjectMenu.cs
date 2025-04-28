@@ -14,6 +14,7 @@ public class OpenObjectMenu : MonoBehaviour
     public float palmDownThreshold = -0.7f; 
     public float buttonPressDepth = 0.05f;
     public float buttonPressSpeed = 0.3f;
+    public float buttonCooldown = 1.0f; 
 
     private XRHandSubsystem hands;
     private XRHand leftHand, rightHand;
@@ -22,6 +23,7 @@ public class OpenObjectMenu : MonoBehaviour
     private bool isButtonPressed = false;
     private AudioSource audioSource;
     private bool isPressed = false;
+    private bool isInCooldown = false;
 
     public AudioClip objectSelectedAudio;
 
@@ -58,10 +60,10 @@ public class OpenObjectMenu : MonoBehaviour
     void Update()
     {
         if (hands != null)
-            CheckPalmGesture();
+           // CheckPalmGesture();
 
         /* continuation of item spawn from SelectNewObject.cs */
-        if (justSpawned)
+        if (justSpawned && !isPressed)  // Only handle spawning if button wasn't just pressed
         {
             if (objectSelectedAudio != null)
                 audioSource.PlayOneShot(objectSelectedAudio);
@@ -99,19 +101,12 @@ public class OpenObjectMenu : MonoBehaviour
     /* for open object menu gesture, alternative to button */
     void CheckHandGesture(XRHand hand)
     {
-        Debug.Log("Logger: Checking hand gesture");
         if (!hand.isTracked)
-        {
-            Debug.Log("Logger: Hand is not tracked");
             return;
-        }
 
         XRHandJoint palmJoint = hand.GetJoint(XRHandJointID.Palm);
         if (palmJoint == null)
-        {
-            Debug.Log("Logger: Palm joint is null");
             return;
-        }
 
         bool gotPose = palmJoint.TryGetPose(out Pose palmPose);
         if (!gotPose)
@@ -135,13 +130,16 @@ public class OpenObjectMenu : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         /* pressa de Alain de Botton */
-        if (other.gameObject.CompareTag("IndexFingerCollider") && !isButtonPressed)
+        if (other.gameObject.CompareTag("IndexFingerCollider") && !isButtonPressed && !isInCooldown)
         {
             isPressed = true;
             if (audioSource != null && buttonClickSound != null)
                 audioSource.PlayOneShot(buttonClickSound);
+            Debug.Log("Logger: Button pressed");
             ActivateObjectMenu();
             StartCoroutine(ButtonPressAnimation());
+            StartCoroutine(ButtonCooldown());
+            transform.position = origPosition;
         }
     }
 
@@ -153,6 +151,7 @@ public class OpenObjectMenu : MonoBehaviour
 
     IEnumerator ButtonPressAnimation()
     {
+        Debug.Log("Logger: Button press animation started");
         isButtonPressed = true;
         
         Vector3 targetPosition = origPosition - new Vector3(-buttonPressDepth, 0, 0);
@@ -172,7 +171,7 @@ public class OpenObjectMenu : MonoBehaviour
 
         transform.localPosition = targetPosition;
         
-        yield return new WaitForSeconds(0.1f);
+       yield return new WaitForSeconds(0.1f);
 
         elapsedTime = 0f;
         while (elapsedTime < pressDuration)
@@ -192,9 +191,20 @@ public class OpenObjectMenu : MonoBehaviour
         isPressed = false;
     }
 
+    IEnumerator ButtonCooldown()
+    {
+        Debug.Log("Logger: Button cooldown started");
+        isInCooldown = true;
+        yield return new WaitForSeconds(buttonCooldown);
+        isInCooldown = false;
+        Debug.Log("Logger: Button cooldown ended");
+    }
+
     void ActivateObjectMenu()
     {
+        Debug.Log("Logger: Activating object menu");
         if (objectMenu != null)
             objectMenu.SetActive(!objectMenu.activeSelf);
+        Debug.Log("Logger: Object menu activated: " + objectMenu.activeSelf);
     }
 }

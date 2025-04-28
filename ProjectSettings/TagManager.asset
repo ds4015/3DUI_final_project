@@ -17,6 +17,8 @@ TagManager:
   - Portal
   - Anchor
   - StartMarker
+  - HandCollider
+  - DropSurface
   layers:
   - Default
   - TransparentFX
@@ -28,6 +30,8 @@ TagManager:
   - DetectGrab
   - Midground Objects Layer
   - RotateDetect
+  - Reticle
+  - Table
   - 
   - 
   - 
@@ -46,9 +50,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - XR Simulation
   - 
   m_SortingLayers:
   - name: Default

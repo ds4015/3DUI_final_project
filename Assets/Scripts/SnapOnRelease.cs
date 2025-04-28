@@ -26,9 +26,21 @@ public class SnapOnRelease : MonoBehaviour
         if (!waitForSnap) return;
 
         if (!collision.gameObject.CompareTag("Table")) return;
-        float y = transform.eulerAngles.y;     
-        waitForSnap = false;
+        
 
+        transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+        
+        Vector3 newPosition = transform.position;
+        newPosition.y = collision.transform.position.y + (transform.localScale.y / 2f);
+        transform.position = newPosition;
+        
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        
+        waitForSnap = false;
     }
 
     void OnDestroy()

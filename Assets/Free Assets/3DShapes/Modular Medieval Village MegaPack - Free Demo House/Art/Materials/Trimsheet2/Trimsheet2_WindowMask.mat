@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-3308428328612735075
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639247ca83abc874e893eb93af2b5e44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 0
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Trimsheet2_WindowMask
+  m_Shader: {fileID: -6465566751694194690, guid: bbf677af661a5e9459a4b99467561977, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlbedoTransparency:
+        m_Texture: {fileID: 2800000, guid: 2e113f8ba069e7e4ebb5ffa304e08c36, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _AoRM:
+        m_Texture: {fileID: 2800000, guid: d5d51fcd8576b3c4da9235f4e86dee15, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emission:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskUV3:
+        m_Texture: {fileID: 2800000, guid: aec829b78376b75419af1749b75eff9a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: ef2940305d97c5141aba335fa15b20e4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_0e7e09a0af89443595fa79b9fdbd5a74_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 8d8e557098e549740aa66c71ab513fac, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_0e7e09a0af89443595fa79b9fdbd5a74_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 8d8e557098e549740aa66c71ab513fac, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_17b777233d83455bb958c8b0719526cd_Texture_1:
+        m_Texture: {fileID: 2800000, guid: eb550d4b491447f4f8bf1a24b39cea9e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_17b777233d83455bb958c8b0719526cd_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: eb550d4b491447f4f8bf1a24b39cea9e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_32842a25f75d43b8b77de71b21fefe03_Texture_1:
+        m_Texture: {fileID: 2800000, guid: d5d51fcd8576b3c4da9235f4e86dee15, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_732bd7a47f5b436e8e8d0deb1421b1c2_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 2e113f8ba069e7e4ebb5ffa304e08c36, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_7ce784e6cbf74e7aa0bb2b2b590dd4cb_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 00216b5e7c508d745bc6fd4fc37cb6fb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_cb8f93b79a8e4aa483cf44a53ff5f483_Texture_1:
+        m_Texture: {fileID: 2800000, guid: ef2940305d97c5141aba335fa15b20e4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BUILTIN_QueueControl: 0
+    - _BUILTIN_QueueOffset: 0
+    m_Colors:
+    - _Dirt: {r: 0.2264151, g: 0.18132551, b: 0.13755785, a: 0}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _MetalBorder: {r: 0.9195443, g: 0.93085355, b: 0.990566, a: 0}
+    - _WoodBorder: {r: 0.9339623, g: 0.65962404, b: 0.4440726, a: 0}
+    - _WoodBorder_Saturacion: {r: 0.12793832, g: 0.11263797, b: 0.13207549, a: 0}
+  m_BuildTextureStacks: []

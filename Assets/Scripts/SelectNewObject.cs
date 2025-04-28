@@ -33,18 +33,30 @@ public class SelectNewObject : MonoBehaviour
             return;
 
         /* spawn the object player selects */
-        var spawned = Instantiate(prefabToSpawn, t.position, t.rotation);
-        BoxCollider prefabCol = spawned.gameObject.GetComponent<BoxCollider>();
+        var spawned = Instantiate(prefabToSpawn, t.position, prefabToSpawn.transform.rotation);
+        Collider prefabCol = spawned.gameObject.GetComponent<BoxCollider>();
+        if (prefabCol == null)
+        {
+            prefabCol = spawned.gameObject.GetComponent<MeshCollider>();
+            if (prefabCol == null)
+            {
+                Debug.LogError("No BoxCollider or MeshCollider found on prefab!");
+                return;
+            }
+        }
         Bounds b = prefabCol.bounds;
 
         /* spawn its transaprent cube container */
         spawnCubeContainer = GameObject.CreatePrimitive(PrimitiveType.Cube);        
         spawnCubeContainer.transform.position = b.center;
+        float maxExtent = 0;
+        if (b.size.x > b.size.z)
+            maxExtent = b.size.x;
+        else
+            maxExtent = b.size.z;
+
         spawnCubeContainer.transform.localScale = new Vector3(
-            b.size.x * 1.2f, 
-            b.size.y * 1.2f,  
-            b.size.z * 1.2f   
-        );
+            maxExtent, b.size.y + 0.1f, maxExtent);
 
         /* set the transaprent material */
         var rend = spawnCubeContainer.GetComponent<Renderer>();

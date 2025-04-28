@@ -12,6 +12,29 @@ to facilitate collaboration.
 
 ## Updates
 ```
+4/28/25: Dallas - Portals, New Assets, Test Scene, Gesture Revision
+```
+- Added positions around the table for 4 players
+- Added marker objects for player start, teleport spawn, objet spawn
+- Numerical placards at each end of the table denoting players
+- All four item ports functional with numerical buttons determining which player to transfer to
+- New assets added for all 4 players - each player has unique set of 6 assets each
+- Test scene designed
+- Temporary secret position port menu behind each player to swap table positions (to be removed in final version)
+- Revised hand gestures: Left hand now translates object, right hand rotates, grab remains the same
+- Sound effect added for object rotation
+- Replaced transformation hand colliders with collider on all fingers instead of just pointer
+- Pointer collider on fingers remains for button presses
+
+<p>
+ <a href="https://www.youtube.com/watch?v=btehh4BpnYA">
+  <img src="https://img.youtube.com/vi/btehh4BpnYA/0.jpg" width="500" 
+  alt="City Scene"></a>
+  <br>
+  <em>City Scene, Portals, Player Placards</em>
+</p>
+
+```
 4/22/25: Dallas - UI Object Selection
 ```
 - Designed UI menu for player to choose and spawn building objects.
@@ -21,6 +44,7 @@ to facilitate collaboration.
 - Redesigned item transfer portals.
 - Sound effects for button press, object selection, item portal transfer.
 - Expanded table to accommodate 4 players.
+
 <p>
  <a href="https://www.youtube.com/watch?v=PVe_PHboDSA">
   <img src="https://img.youtube.com/vi/PVe_PHboDSA/0.jpg" width="500" 
@@ -113,9 +137,14 @@ Dallas
 - [x] Custom transformation logic (4/20)
 - [x] Prefab menu for building objects (4/22)
 - [x] Prefab assets (4/21)
-- [ ] Custom gesture for bringing up prefab menu
-- [ ] Controller interaction for transformations
-- [ ] Expand table, add more item portals w/position numbers
+- [x] Assets for all four players (4/28)
+- [x] Item portals for all four players (4/28)
+- [x] Expand table, add more item portals w/position numbers (4/28)
+- [x] Test scene (4/28)
+
+Optional:
+- [ ] Include controller input
+- [ ] Item request feature
 
 ```
 Nathan
@@ -125,9 +154,70 @@ Nathan
 - [ ] Set up spawn points to support up to 4 players
 - [ ] Ownership transfer of objects
 
+
+## Gestures
+The following hand gestures are currently available:
+
+```
+Grab
+
+  To grab an object on the table and lift it away, simply pinch the index finger and
+  the thumb together on the object.  The grab function uses raycasting from the 
+  hand to select the correct object.
+
+  The hand visual prefabs will glow red on the thumb and index finger when you are
+  near a grabbable object, indicating that you can pinch to pick it up.  When it is
+  picked up, the thumb and index finger will turn blue.
+
+  A grabbed item can be released by releasing the pinch gesture.  Once released,
+  the object is subject to gravity and will fall back to the nearest surface (or
+  away from the scene if thrown).
+  ```
+
+```
+Move Object (*revised*)
+
+    To move/translate an object with the hand, place any of your fingers on
+    the left hand on the object and then move your hand.  As long as your
+    left hand remains on the object, the object will follow the hand.  Lift
+    up to stop translating.  
+```
+
+```
+Rotate Object (*revised*)
+
+  To rotate an object, place any of your fingers of the right hand on the
+  object. The object will begin to automatically rotate at a constant rate 
+  (45 deg/sec).
+
+  As long as any part of the right hand is touching the object, it will
+  continue to rotate. Once the desired rotation has been achieved, simply 
+  remove the right hand from the object to stop rotating.
+```
+
+```
+Transfer Object
+
+  To transfer an object to a player on the other side of the table, grab
+  it and release it into the portal next to you on your side of the table.
+  It will automatically transfer over to the other player's portal and
+  hover above it for 3 seconds.
+
+  The other player can either grab it or wait for 3 seconds, after which
+  it will automatically travel from the portal to a position on the table
+  right next to the player.  If an object is already there, it will stack
+  on top of it or push it out of the way depending on the geometry.
+
+  You must select which player number you wish to transfer an object to
+  using the buttons on top of the portal before placing the object inside
+  the portal.
+```
+
+
 ## Scripts
 The following scripts are currently available:
 
+### AR Tabletop Scripts
 ```
 GrabPushRotate.cs:
 
@@ -167,6 +257,22 @@ OpenObjectMenu.cs
   The OpenObjectMenu script has several public variables that must be set in the
   inspector, including a reference to the ObjectMenu itself, as well as sound
   files for the button press and object select.
+```
+
+```
+PortToPosition.cs (*new*)
+
+  Allows teleportation from one table position to another using an in-game UI menu
+  for location selection.  This feature is for testing and will be removed in the final
+  version, along with this script.
+```
+
+```
+PositionPlayer.cs
+
+  This is placed on the XR Origin Hands rig to start the player's camera off in a
+  particular location.  Assign the XR rig itself and an empty GameObject positioned
+  at the desired start location to the serialized variables in the inspector.
 ```
 
 ```
@@ -210,12 +316,21 @@ SelectNewObject.cs
 ```
 
 ```
-SnapOnRelease.cs
+SelectRemotePortal.cs (*new*)
 
-  This script should also be placed along with GrabPushRotate.cs on any object that
-  will be placed on the tabletop.  It snaps the object back down onto the table
-  in an appropriate orientation after being removed from the tabletop and placed
-  back down.
+  This is used in conjunction with the in-game UI menu for item portals to transfer
+  items between players.  It allows the player to select which table position (1,2,3,4)
+  the item is to be transferred to via the portal before it is transferred.  Once a
+  selection has been made, the item will travel to the other portal at the selected
+  destination.
+```
+
+```
+SnapOnRelease.cs (*deprecated*)
+
+  This script previously snapped an object to the table upon being released from
+  a grab.  It is no longer used in conjunction with GrabPushRotate.cs and can
+  be ignored.
 ```
 
 ```
@@ -226,19 +341,21 @@ TransferItem.cs
   on the Opening child object (not on the port object itself).  
 
   Make sure you assign the following serialized variables in the inspector: 
-    Portal 1 - the portal this script is being applied to
-    Portal 2 - the portal the item is going to travel to
-    Table Drop Point - an empty game object denoting the location on the table where
-      the object will land after coming out of the portal.
+    Portal 1 - item portal player 1 game object 
+    Portal 2 - item portal player 2 game object 
+    Portal 3 - item portal player 3 game object 
+    Portal 4 - item portal player 4 game object 
+    Table Drop Point 1 - marker game object denoting the location on the table where
+      the object will land after coming out of the portal for player 1.
+    Table Drop Point 2 - marker game object denoting the location on the table where
+      the object will land after coming out of the portal for player 2.      
+    Table Drop Point 3 - marker game object denoting the location on the table where
+      the object will land after coming out of the portal for player 3.
+    Table Drop Point 4 - marker game object denoting the location on the table where
+      the object will land after coming out of the portal for player 4.
 ```
 
-```
-PositionPlayer.cs
-
-  This is placed on the XR Origin Hands rig to start the player's camera off in a
-  particular location.  Assign the XR rig itself and an empty GameObject positioned
-  at the desired start location to the serialized variables in the inspector.
-```
+### Networking Scripts
 
 ```
 BasicSpawner.cs
@@ -249,84 +366,16 @@ BasicSpawner.cs
 ```
 
 ```
+Player.cs
+
+  Allows player to move character based on input data.
+```
+
+```
 NetworkVR.cs
 
   Syncs position and rotation of player's head, left controller, and right 
   controller across the network. Uses state authority and updates the network with 
   transforms of headset and controller. If player doesn't have authority, it reads 
   and applies to local scene player. This allows for live movement of users.
-```
-
-```
-Player.cs
-
-  Allows player to move character based on input data.
-```
-
-
-## Gestures
-The following hand gestures are currently available:
-
-```
-Grab
-
-  To grab an object on the table and lift it away, simply pinch the index finger and
-  the thumb together on the object.  The grab function uses raycasting from the 
-  hand to select the correct object.
-
-  The hand visual prefabs will glow red on the thumb and index finger when you are
-  near a grabbable object, indicating that you can pinch to pick it up.  When it is
-  picked up, the thumb and index finger will turn blue.
-
-  A grabbed item can be released by releasing the pinch gesture.  Once released,
-  the object is subject to gravity and will fall back to the nearest surface (or
-  away from the scene if thrown).
-  ```
-
-```
-Move Object
-
-    To move/translate an object with the hand, press your index finger on any
-    surface and keep pressing to move it.  The trigger for moving an object is
-    specifically located on the distal interphalangeal joint of each hand
-    (the first joint just below the fingertip).  Touching an object on this 
-    joint will move it in whichever direction you push. 
-    
-    An object will not rotate while being translated.
-```
-
-```
-Rotate Object
-
-  To rotate an object, place the index finger of either your left or right
-  hand and point it downward.  Place this downwardly directed finger 
-  into the top of the object and hold it there.  Then take the index finger 
-  of your other hand and touch anywhere on the object.  The object will begin 
-  to automatically rotate at a constant rate (45 deg/sec).
-
-  As long as an index finger is pointed downward into the object and the
-  other index finger is touching the object, it will continue to rotate.
-  Once the desired rotation has been achieved, simply move one of the
-  fingers.
-
-  If you are uncertain about the rotation, you can simply leave one
-  index finger pointed downward into the object, remove the other finger
-  and assess, then place the other finger back on the object to 
-  continue rotating.
-
-  An object will not translate while being rotated.
-```
-
-```
-Transfer Object
-
-  To transfer an object to a player on the other side of the table, grab
-  it and release it into the portal next to you on your side of the table.
-  It will automatically transfer over to the other player's portal and
-  hover above it for 3 seconds.
-
-  The other player can either grab it or wait for 3 seconds, after which
-  it will automatically travel from the portal to a position on the table
-  right next to the player.  If an object is already there, it will stack
-  on top of it or push it out of the way depending on the geometry.
 ```
