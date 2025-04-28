@@ -11,6 +11,7 @@ public class ARVRModeManager : MonoBehaviour
   [SerializeField] private Camera mainCamera;
   [SerializeField] private Transform xrOrigin;
   [SerializeField] private Transform tableTop;
+  [SerializeField] private int playerNumber = 1; // Which player is this (1-4)
 
   [Header("UI Elements")]
   [SerializeField] private Button toggleModeButton;
@@ -27,6 +28,8 @@ public class ARVRModeManager : MonoBehaviour
   private Transform floorTransform;
   private List<GameObject> portalObjects = new List<GameObject>();
   private Vector3 tableTopCenter;
+  private Transform vrSpawnPoint; // The spawn point for VR mode
+  private Transform arStartMarker; // The start marker for AR mode based on player number
 
   // Store original transform data for each building object
   private class BuildingObjectData
@@ -65,17 +68,42 @@ public class ARVRModeManager : MonoBehaviour
     GameObject[] portals = GameObject.FindGameObjectsWithTag("Portal");
     portalObjects.AddRange(portals);
 
+    // Find the VR spawn point
+    GameObject vrSpawnObj = GameObject.FindGameObjectWithTag("VRSpawnPoint");
+    if (vrSpawnObj != null)
+    {
+      vrSpawnPoint = vrSpawnObj.transform;
+    }
+    else
+    {
+      Debug.LogWarning("No VRSpawnPoint found in the scene. Will use default spawn location.");
+    }
+
+    // Find the appropriate AR start marker based on player number
+    string markerName = $"StartMarkerP{playerNumber}";
+    GameObject startMarkerObj = GameObject.Find(markerName);
+    if (startMarkerObj != null)
+    {
+      arStartMarker = startMarkerObj.transform;
+      // Store this as the original position to return to in AR mode
+      originalPosition = arStartMarker.position;
+      originalRotation = arStartMarker.rotation;
+    }
+    else
+    {
+      Debug.LogWarning($"No {markerName} found in the scene. Will use current position as start position.");
+      // Fall back to current position if no marker found
+      if (xrOrigin != null)
+      {
+        originalPosition = xrOrigin.position;
+        originalRotation = xrOrigin.rotation;
+      }
+    }
+
     if (toggleModeButton != null)
     {
       toggleModeButton.onClick.AddListener(ToggleMode);
       UpdateButtonText();
-    }
-
-    // Store original XR Origin transform
-    if (xrOrigin != null)
-    {
-      originalPosition = xrOrigin.position;
-      originalRotation = xrOrigin.rotation;
     }
 
     // Find and store all building objects' original transforms
@@ -154,14 +182,24 @@ public class ARVRModeManager : MonoBehaviour
       RenderSettings.skybox = skyboxMaterial;
     }
 
-    // Position player at floor height
-    if (floorTransform != null)
+    // Position player at VR spawn point if available, otherwise use floor height
+    if (vrSpawnPoint != null)
     {
+      // Teleport the player to the VR spawn point
+      xrOrigin.position = vrSpawnPoint.position;
+      xrOrigin.rotation = vrSpawnPoint.rotation;
+
+      // Hide the spawn point marker
+      vrSpawnPoint.gameObject.SetActive(false);
+    }
+    else if (floorTransform != null)
+    {
+      // Fall back to the floor position if no spawn point is available
       float floorHeight = floorTransform.position.y;
       xrOrigin.position = new Vector3(floorTransform.position.x, floorHeight + groundOffset, floorTransform.position.z);
     }
 
-    // Hide the tabletop and portals
+    // Hide the tabletop
     if (tableTop != null)
     {
       tableTop.gameObject.SetActive(false);
@@ -299,7 +337,7 @@ public class ARVRModeManager : MonoBehaviour
       mainCamera.clearFlags = CameraClearFlags.SolidColor;
     }
 
-    // Show the tabletop and portals
+    // Show the tabletop
     if (tableTop != null)
     {
       tableTop.gameObject.SetActive(true);
@@ -314,9 +352,21 @@ public class ARVRModeManager : MonoBehaviour
       }
     }
 
-    // Reset XR Origin
-    if (xrOrigin != null)
+    // Show the VR spawn point marker if it exists
+    if (vrSpawnPoint != null)
     {
+      vrSpawnPoint.gameObject.SetActive(true);
+    }
+
+    // Reset XR Origin to the appropriate start position based on player number
+    if (arStartMarker != null)
+    {
+      xrOrigin.position = arStartMarker.position;
+      xrOrigin.rotation = arStartMarker.rotation;
+    }
+    else if (xrOrigin != null)
+    {
+      // Fall back to the original position if no start marker is found
       xrOrigin.position = originalPosition;
       xrOrigin.rotation = originalRotation;
     }
