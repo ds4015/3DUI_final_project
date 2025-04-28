@@ -15,7 +15,7 @@ to facilitate collaboration.
 4/28/25: Dallas - Portals, New Assets, Test Scene, Gesture Revision
 ```
 - Added positions around the table for 4 players
-- Added marker objects for player start, teleport spawn, objet spawn
+- Added marker objects for player start, teleport spawn, object spawn
 - Numerical placards at each end of the table denoting players
 - All four item ports functional with numerical buttons determining which player to transfer to
 - New assets added for all 4 players - each player has unique set of 6 assets each
