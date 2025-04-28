@@ -214,6 +214,9 @@ public class ARVRModeManager : MonoBehaviour
       }
     }
 
+    // Check if we need to refresh our building objects list (for objects added after scene start)
+    RefreshBuildingObjectsList();
+
     // Create a temporary parent to maintain relative positions during transition
     GameObject tempParent = new GameObject("TempParent");
     tempParent.transform.position = floorTransform.position;
@@ -225,12 +228,6 @@ public class ARVRModeManager : MonoBehaviour
     {
       if (data.transform != null)
       {
-        // Debug log for the problematic object
-        if (data.transform.name == "TestXRGrabbable (1)")
-        {
-          Debug.Log($"Processing TestXRGrabbable (1) - Position: {data.transform.position}, Parent: {data.transform.parent?.name}");
-        }
-
         // Store the world position before reparenting
         Vector3 worldPosition = data.transform.position;
         Quaternion worldRotation = data.transform.rotation;
@@ -250,12 +247,6 @@ public class ARVRModeManager : MonoBehaviour
           rb.useGravity = false;
           rb.velocity = Vector3.zero;
           rb.angularVelocity = Vector3.zero;
-
-          // Additional debug for the problematic object
-          if (data.transform.name == "TestXRGrabbable (1)")
-          {
-            Debug.Log($"Rigidbody settings for TestXRGrabbable (1) - isKinematic: {rb.isKinematic}, useGravity: {rb.useGravity}");
-          }
         }
         else
         {
@@ -306,16 +297,9 @@ public class ARVRModeManager : MonoBehaviour
           rb.angularVelocity = Vector3.zero;
           rb.constraints = RigidbodyConstraints.FreezeRotation; // Prevent objects from rotating
 
-          // Additional safety check for the problematic object
-          if (data.transform.name == "TestXRGrabbable (1)")
-          {
-            Debug.Log($"Final position for TestXRGrabbable (1): {data.transform.position}");
-            Debug.Log($"Rigidbody final settings - isKinematic: {rb.isKinematic}, useGravity: {rb.useGravity}");
-
-            // Force a small upward position adjustment to ensure it's above the floor
-            pos.y += 0.01f;
-            data.transform.position = pos;
-          }
+          // Force a small upward position adjustment to ensure it's above the floor
+          pos.y += 0.01f;
+          data.transform.position = pos;
         }
 
         // Disable grab interaction in VR mode
@@ -328,6 +312,49 @@ public class ARVRModeManager : MonoBehaviour
 
     // Clean up the temporary parent
     Destroy(tempParent);
+  }
+
+  // Helper method to refresh the building objects list
+  private void RefreshBuildingObjectsList()
+  {
+    // Find any new objects that weren't in our original list
+    GameObject[] currentBuildingObjects = GameObject.FindGameObjectsWithTag("BuildingObject");
+    HashSet<Transform> existingTransforms = new HashSet<Transform>();
+
+    // Create a set of existing transforms for fast lookup
+    foreach (BuildingObjectData data in buildingObjectsData)
+    {
+      if (data.transform != null)
+      {
+        existingTransforms.Add(data.transform);
+      }
+    }
+
+    // Check for new objects
+    foreach (GameObject obj in currentBuildingObjects)
+    {
+      if (!existingTransforms.Contains(obj.transform))
+      {
+        // This is a new object, add it to our list
+        UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabComponent =
+          obj.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+
+        BuildingObjectData data = new BuildingObjectData
+        {
+          transform = obj.transform,
+          originalScale = obj.transform.localScale,
+          originalPosition = obj.transform.position,
+          originalLocalPosition = obj.transform.localPosition,
+          originalParent = obj.transform.parent,
+          grabInteractable = grabComponent,
+          wasGrabbable = grabComponent != null && grabComponent.enabled,
+          lastARPosition = obj.transform.position,
+          lastARRotation = obj.transform.rotation
+        };
+        buildingObjectsData.Add(data);
+        Debug.Log($"Added new building object to tracking: {obj.name}");
+      }
+    }
   }
 
   private void SetARMode()
@@ -370,6 +397,9 @@ public class ARVRModeManager : MonoBehaviour
       xrOrigin.position = originalPosition;
       xrOrigin.rotation = originalRotation;
     }
+
+    // Check if we need to refresh our building objects list
+    RefreshBuildingObjectsList();
 
     // Reset all building objects to their last known AR state
     foreach (BuildingObjectData data in buildingObjectsData)
