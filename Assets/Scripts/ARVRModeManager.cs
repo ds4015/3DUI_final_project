@@ -48,6 +48,8 @@ public class ARVRModeManager : MonoBehaviour
     public bool wasGrabbable;
     public Vector3 lastARPosition; // Store the most recent AR position
     public Quaternion lastARRotation; // Store the most recent AR rotation
+    public GrabPushRotate grabPushRotate; // Reference to the GrabPushRotate component
+    public bool wasGrabPushRotateEnabled; // Whether the GrabPushRotate was enabled
   }
 
   private void Start()
@@ -144,6 +146,7 @@ public class ARVRModeManager : MonoBehaviour
     foreach (GameObject obj in buildingObjects)
     {
       UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabComponent = obj.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+      GrabPushRotate grabPushComponent = obj.GetComponent<GrabPushRotate>();
 
       BuildingObjectData data = new BuildingObjectData
       {
@@ -155,7 +158,9 @@ public class ARVRModeManager : MonoBehaviour
         grabInteractable = grabComponent,
         wasGrabbable = grabComponent != null && grabComponent.enabled,
         lastARPosition = obj.transform.position, // Initialize with current position
-        lastARRotation = obj.transform.rotation  // Initialize with current rotation
+        lastARRotation = obj.transform.rotation,  // Initialize with current rotation
+        grabPushRotate = grabPushComponent,
+        wasGrabPushRotateEnabled = grabPushComponent != null && grabPushComponent.enabled
       };
       buildingObjectsData.Add(data);
     }
@@ -441,10 +446,16 @@ public class ARVRModeManager : MonoBehaviour
           data.transform.position = pos;
         }
 
-        // Disable grab interaction in VR mode
+        // Disable interaction components in VR mode
         if (data.grabInteractable != null)
         {
           data.grabInteractable.enabled = false;
+        }
+
+        // Disable GrabPushRotate script in VR mode
+        if (data.grabPushRotate != null)
+        {
+          data.grabPushRotate.enabled = false;
         }
       }
     }
@@ -477,6 +488,7 @@ public class ARVRModeManager : MonoBehaviour
         // This is a new object, add it to our list
         UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabComponent =
           obj.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        GrabPushRotate grabPushComponent = obj.GetComponent<GrabPushRotate>();
 
         BuildingObjectData data = new BuildingObjectData
         {
@@ -488,7 +500,9 @@ public class ARVRModeManager : MonoBehaviour
           grabInteractable = grabComponent,
           wasGrabbable = grabComponent != null && grabComponent.enabled,
           lastARPosition = obj.transform.position,
-          lastARRotation = obj.transform.rotation
+          lastARRotation = obj.transform.rotation,
+          grabPushRotate = grabPushComponent,
+          wasGrabPushRotateEnabled = grabPushComponent != null && grabPushComponent.enabled
         };
         buildingObjectsData.Add(data);
         Debug.Log($"Added new building object to tracking: {obj.name}");
@@ -564,16 +578,42 @@ public class ARVRModeManager : MonoBehaviour
       }
     }
 
+    // Determine camera height adjustment
+    float heightAdjustment = eyeHeight;
+    if (cameraOffsetTransform != null)
+    {
+      foreach (Transform child in cameraOffsetTransform)
+      {
+        if (child.GetComponent<Camera>() != null)
+        {
+          heightAdjustment = child.localPosition.y;
+          Debug.Log($"AR mode: Found camera height: {heightAdjustment}m");
+          break;
+        }
+      }
+    }
+
     // Reset XR Origin to the appropriate start position based on player number
     if (arStartMarker != null)
     {
-      xrOrigin.position = arStartMarker.position;
+      // Calculate target position adjusted for camera height
+      Vector3 targetPosition = arStartMarker.position;
+
+      // Lower the XR Origin by the camera height so your view is at the marker position
+      targetPosition.y -= heightAdjustment;
+
+      Debug.Log($"Setting AR position to adjusted marker at {targetPosition} (original: {arStartMarker.position}, camera height: {heightAdjustment})");
+      xrOrigin.position = targetPosition;
       xrOrigin.rotation = arStartMarker.rotation;
     }
     else if (xrOrigin != null)
     {
       // Fall back to the original position if no start marker is found
-      xrOrigin.position = originalPosition;
+      Vector3 targetPosition = originalPosition;
+      targetPosition.y -= heightAdjustment;
+
+      Debug.Log($"Setting AR position to adjusted original position at {targetPosition}");
+      xrOrigin.position = targetPosition;
       xrOrigin.rotation = originalRotation;
     }
 
@@ -597,6 +637,12 @@ public class ARVRModeManager : MonoBehaviour
         if (data.grabInteractable != null)
         {
           data.grabInteractable.enabled = data.wasGrabbable;
+        }
+
+        // Restore original GrabPushRotate state
+        if (data.grabPushRotate != null)
+        {
+          data.grabPushRotate.enabled = data.wasGrabPushRotateEnabled;
         }
       }
     }
