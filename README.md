@@ -1,6 +1,14 @@
 # The ARchitects: Perspective Shifting
 Final team project for 3D UI Design at Columbia University, Spring 2025
 
+## Contents
+
+- [Project Overview](#overview)
+- [Recent Updates](#updates)
+- [To Do List](#to-do-list)
+- [Hand Gestures](#gestures)
+- [Scripts](#scripts)
+
 ## Overview
 The goal of this project is to investigate perspective shifting in a 3D VR
 environment.  It consists of two parts:  A virtual tabletop at which participants
@@ -146,6 +154,7 @@ Dallas
 Optional:
 - [ ] Include controller input
 - [ ] Item request feature
+- [ ] Hand gestures to open/close object selection UI panels
 
 ```
 Nathan
