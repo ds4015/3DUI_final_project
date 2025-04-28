@@ -481,6 +481,23 @@ public class ARVRModeManager : MonoBehaviour
 
           // Force a small upward position adjustment to ensure it's above the floor
           pos.y += 0.01f;
+
+          // Special handling for Bench object that tends to fall through the floor
+          if (data.transform.name.Contains("Bench"))
+          {
+            // Give benches a larger offset from the floor
+            pos.y += 0.05f;
+
+            // Ensure the bench has proper physics settings
+            rb.mass = 10f; // Increase mass to prevent it from moving too easily
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous; // Better collision detection
+
+            // Add freeze position Y to constraints to prevent falling
+            rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+
+            Debug.Log($"Applied special physics handling for bench: {data.transform.name}");
+          }
+
           data.transform.position = pos;
         }
 
@@ -699,6 +716,27 @@ public class ARVRModeManager : MonoBehaviour
         data.transform.localScale = data.originalScale;
         data.transform.position = data.lastARPosition;
         data.transform.rotation = data.lastARRotation;
+
+        // Special handling for bench objects when returning to AR mode
+        if (data.transform.name.Contains("Bench"))
+        {
+          // Get the rigidbody component
+          Rigidbody rb = data.transform.GetComponent<Rigidbody>();
+          if (rb != null)
+          {
+            // Reset to default physics values for AR mode
+            rb.mass = 1f;
+            rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            // Ensure the bench is properly positioned
+            data.transform.position = data.lastARPosition;
+
+            Debug.Log($"Restored bench physics settings in AR mode: {data.transform.name}");
+          }
+        }
 
         // Restore original grab interaction state
         if (data.grabInteractable != null)
