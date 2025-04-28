@@ -276,14 +276,6 @@ PositionPlayer.cs
 ```
 
 ```
-PositionPlayer.cs
-
-  This is placed on the XR Origin Hands rig to start the player's camera off in a
-  particular location.  Assign the XR rig itself and an empty GameObject positioned
-  at the desired start location to the serialized variables in the inspector.
-```
-
-```
 RotateObject.cs
 
   A simple rotator script.  Slowly rotates a given GameObject continuously
