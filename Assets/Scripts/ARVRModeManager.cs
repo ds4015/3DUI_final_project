@@ -19,6 +19,7 @@ public class ARVRModeManager : MonoBehaviour
 
   [Header("Mode Settings")]
   [SerializeField] private Material skyboxMaterial;
+  [SerializeField] private Material transparentMaterial; // Material to use for invisible objects
   [SerializeField] private float groundOffset = 0.1f; // Offset from table surface to place player
 
   private bool isVRMode = false;
@@ -30,6 +31,8 @@ public class ARVRModeManager : MonoBehaviour
   private Vector3 tableTopCenter;
   private Transform vrSpawnPoint; // The spawn point for VR mode
   private Transform arStartMarker; // The start marker for AR mode based on player number
+  private Material originalVRSpawnMaterial; // Store the original material
+  private bool vrSpawnRigidbodyState; // Store the original Rigidbody state
 
   // Store original transform data for each building object
   private class BuildingObjectData
@@ -73,6 +76,19 @@ public class ARVRModeManager : MonoBehaviour
     if (vrSpawnObj != null)
     {
       vrSpawnPoint = vrSpawnObj.transform;
+
+      // Store the original material if it has a renderer
+      Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
+      if (renderer != null && renderer.material != null)
+      {
+        originalVRSpawnMaterial = renderer.material;
+      }
+
+      // Store original rigidbody state
+      Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
+      vrSpawnRigidbodyState = rb != null && rb.isKinematic == false;
+
+      Debug.Log($"Found VRSpawnPoint: {vrSpawnObj.name} at position {vrSpawnObj.transform.position}, parent: {vrSpawnObj.transform.parent?.name}");
     }
     else
     {
@@ -182,20 +198,68 @@ public class ARVRModeManager : MonoBehaviour
       RenderSettings.skybox = skyboxMaterial;
     }
 
+    // If we lost reference to the VR spawn point, try to find it again
+    if (vrSpawnPoint == null)
+    {
+      GameObject vrSpawnObj = GameObject.FindGameObjectWithTag("VRSpawnPoint");
+      if (vrSpawnObj != null)
+      {
+        vrSpawnPoint = vrSpawnObj.transform;
+
+        // Store the original material if it has a renderer
+        Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
+        if (renderer != null && renderer.material != null && originalVRSpawnMaterial == null)
+        {
+          originalVRSpawnMaterial = renderer.material;
+        }
+
+        // Store original rigidbody state if we don't have it
+        Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+          vrSpawnRigidbodyState = !rb.isKinematic;
+        }
+
+        Debug.Log($"Refound VRSpawnPoint: {vrSpawnObj.name} at position {vrSpawnObj.transform.position}");
+      }
+    }
+
     // Position player at VR spawn point if available, otherwise use floor height
     if (vrSpawnPoint != null)
     {
+      // Make sure the object is active first
+      vrSpawnPoint.gameObject.SetActive(true);
+
+      // Make the VR spawn point transparent
+      Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
+      if (renderer != null && transparentMaterial != null)
+      {
+        renderer.material = transparentMaterial;
+      }
+
+      // Disable the rigidbody physics in VR mode
+      Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
+      if (rb != null)
+      {
+        rb.isKinematic = true;
+        rb.useGravity = false;
+      }
+
+      // Log the spawn point's position for debugging
+      Debug.Log($"Teleporting to VRSpawnPoint at position {vrSpawnPoint.position}, rotation: {vrSpawnPoint.rotation.eulerAngles}");
+
       // Teleport the player to the VR spawn point
       xrOrigin.position = vrSpawnPoint.position;
       xrOrigin.rotation = vrSpawnPoint.rotation;
 
-      // Hide the spawn point marker
-      vrSpawnPoint.gameObject.SetActive(false);
+      // Don't hide the spawn point marker - just leave it visible
+      // This allows it to be found again for subsequent mode changes
     }
     else if (floorTransform != null)
     {
       // Fall back to the floor position if no spawn point is available
       float floorHeight = floorTransform.position.y;
+      Debug.Log($"No VRSpawnPoint found. Teleporting to floor at height {floorHeight + groundOffset}");
       xrOrigin.position = new Vector3(floorTransform.position.x, floorHeight + groundOffset, floorTransform.position.z);
     }
 
@@ -379,10 +443,50 @@ public class ARVRModeManager : MonoBehaviour
       }
     }
 
-    // Show the VR spawn point marker if it exists
+    // Ensure the VR spawn point marker is active if it exists
     if (vrSpawnPoint != null)
     {
       vrSpawnPoint.gameObject.SetActive(true);
+
+      // Restore the original material
+      Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
+      if (renderer != null && originalVRSpawnMaterial != null)
+      {
+        renderer.material = originalVRSpawnMaterial;
+      }
+
+      // Restore the original rigidbody state
+      Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
+      if (rb != null)
+      {
+        rb.isKinematic = !vrSpawnRigidbodyState;
+        rb.useGravity = vrSpawnRigidbodyState;
+      }
+    }
+    else
+    {
+      // Try to find it if we lost the reference
+      GameObject vrSpawnObj = GameObject.FindGameObjectWithTag("VRSpawnPoint");
+      if (vrSpawnObj != null)
+      {
+        vrSpawnPoint = vrSpawnObj.transform;
+        vrSpawnPoint.gameObject.SetActive(true);
+
+        // Restore material if possible
+        Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
+        if (renderer != null && originalVRSpawnMaterial != null)
+        {
+          renderer.material = originalVRSpawnMaterial;
+        }
+
+        // Restore rigidbody state
+        Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+          rb.isKinematic = !vrSpawnRigidbodyState;
+          rb.useGravity = vrSpawnRigidbodyState;
+        }
+      }
     }
 
     // Reset XR Origin to the appropriate start position based on player number
