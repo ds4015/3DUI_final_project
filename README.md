@@ -141,6 +141,7 @@ Dallas
 - [x] Item portals for all four players (4/28)
 - [x] Expand table, add more item portals w/position numbers (4/28)
 - [x] Test scene (4/28)
+- [ ] Overhead view switch to facilitate object placement in middle of table
 
 Optional:
 - [ ] Include controller input
