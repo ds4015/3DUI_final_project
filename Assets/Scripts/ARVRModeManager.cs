@@ -19,7 +19,7 @@ public class ARVRModeManager : MonoBehaviour
 
   [Header("Mode Settings")]
   [SerializeField] private Material skyboxMaterial;
-  [SerializeField] private Material transparentMaterial; // Material to use for invisible objects
+  [SerializeField] private Material transparentMaterial; // Material to use for invisible objects in VR
   [SerializeField] private float groundOffset = 0.1f; // Offset from table surface to place player
   [SerializeField] private float eyeHeight = 1.6f; // Average human eye height in meters
 
@@ -35,6 +35,8 @@ public class ARVRModeManager : MonoBehaviour
   private Material originalVRSpawnMaterial; // Store the original material
   private bool vrSpawnRigidbodyState; // Store the original Rigidbody state
   private Transform cameraOffsetTransform; // The camera offset child of the XR Origin
+  private Vector3 vrSpawnPointOriginalPosition; // Store the original position of VR spawn point
+  private Quaternion vrSpawnPointOriginalRotation; // Store the original rotation of VR spawn point
 
   // Store original transform data for each building object
   private class BuildingObjectData
@@ -54,6 +56,12 @@ public class ARVRModeManager : MonoBehaviour
 
   private void Start()
   {
+    // Validate that the transparent material is set
+    if (transparentMaterial == null)
+    {
+      Debug.LogWarning("No transparent material assigned to ARVRModeManager. VR spawn point will remain visible in VR mode.");
+    }
+
     // Find the Floor object - now using DropSurface tag
     GameObject floorObject = GameObject.FindGameObjectWithTag("DropSurface");
     if (floorObject != null)
@@ -96,11 +104,16 @@ public class ARVRModeManager : MonoBehaviour
     {
       vrSpawnPoint = vrSpawnObj.transform;
 
+      // Store the original position and rotation
+      vrSpawnPointOriginalPosition = vrSpawnPoint.position;
+      vrSpawnPointOriginalRotation = vrSpawnPoint.rotation;
+
       // Store the original material if it has a renderer
       Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
       if (renderer != null && renderer.material != null)
       {
         originalVRSpawnMaterial = renderer.material;
+        Debug.Log($"Stored original VR spawn point material: {originalVRSpawnMaterial.name}");
       }
 
       // Store original rigidbody state
@@ -228,14 +241,22 @@ public class ARVRModeManager : MonoBehaviour
       {
         vrSpawnPoint = vrSpawnObj.transform;
 
+        // Store the original position and rotation if we don't have it
+        if (vrSpawnPointOriginalPosition == Vector3.zero)
+        {
+          vrSpawnPointOriginalPosition = vrSpawnPoint.position;
+          vrSpawnPointOriginalRotation = vrSpawnPoint.rotation;
+        }
+
         // Store the original material if it has a renderer
         Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
         if (renderer != null && renderer.material != null && originalVRSpawnMaterial == null)
         {
           originalVRSpawnMaterial = renderer.material;
+          Debug.Log($"Re-stored original VR spawn point material: {originalVRSpawnMaterial.name}");
         }
 
-        // Store original rigidbody state if we don't have it
+        // Store original rigidbody state
         Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -252,11 +273,28 @@ public class ARVRModeManager : MonoBehaviour
       // Make sure the object is active first
       vrSpawnPoint.gameObject.SetActive(true);
 
-      // Make the VR spawn point transparent
+      // Make the VR spawn point invisible
       Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
-      if (renderer != null && transparentMaterial != null)
+      if (renderer != null)
       {
-        renderer.material = transparentMaterial;
+        if (transparentMaterial != null)
+        {
+          // Store original material if it hasn't been stored yet
+          if (originalVRSpawnMaterial == null)
+          {
+            originalVRSpawnMaterial = renderer.material;
+          }
+
+          // Apply transparent material
+          renderer.material = transparentMaterial;
+          Debug.Log($"Applied transparent material to VRSpawnPoint");
+        }
+        else
+        {
+          // If no transparent material is set, just disable the renderer
+          renderer.enabled = false;
+          Debug.Log("No transparent material available, disabled renderer instead");
+        }
       }
 
       // Disable the rigidbody physics in VR mode
@@ -535,13 +573,27 @@ public class ARVRModeManager : MonoBehaviour
     // Ensure the VR spawn point marker is active if it exists
     if (vrSpawnPoint != null)
     {
+      // Make sure the object is active first
       vrSpawnPoint.gameObject.SetActive(true);
+
+      // Restore the original position and rotation
+      vrSpawnPoint.position = vrSpawnPointOriginalPosition;
+      vrSpawnPoint.rotation = vrSpawnPointOriginalRotation;
+      Debug.Log($"Restored VR spawn point to original position: {vrSpawnPointOriginalPosition}");
 
       // Restore the original material
       Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
-      if (renderer != null && originalVRSpawnMaterial != null)
+      if (renderer != null)
       {
-        renderer.material = originalVRSpawnMaterial;
+        // Re-enable the renderer in case it was disabled
+        renderer.enabled = true;
+
+        // Restore original material if we have it
+        if (originalVRSpawnMaterial != null)
+        {
+          renderer.material = originalVRSpawnMaterial;
+          Debug.Log($"Restored original material to VRSpawnPoint: {originalVRSpawnMaterial.name}");
+        }
       }
 
       // Restore the original rigidbody state
@@ -561,11 +613,26 @@ public class ARVRModeManager : MonoBehaviour
         vrSpawnPoint = vrSpawnObj.transform;
         vrSpawnPoint.gameObject.SetActive(true);
 
+        // Restore the original position and rotation if we have it
+        if (vrSpawnPointOriginalPosition != Vector3.zero)
+        {
+          vrSpawnPoint.position = vrSpawnPointOriginalPosition;
+          vrSpawnPoint.rotation = vrSpawnPointOriginalRotation;
+          Debug.Log($"Restored rediscovered VR spawn point to original position: {vrSpawnPointOriginalPosition}");
+        }
+
         // Restore material if possible
         Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
-        if (renderer != null && originalVRSpawnMaterial != null)
+        if (renderer != null)
         {
-          renderer.material = originalVRSpawnMaterial;
+          // Re-enable the renderer in case it was disabled
+          renderer.enabled = true;
+
+          if (originalVRSpawnMaterial != null)
+          {
+            renderer.material = originalVRSpawnMaterial;
+            Debug.Log($"Restored original material to rediscovered VRSpawnPoint: {originalVRSpawnMaterial.name}");
+          }
         }
 
         // Restore rigidbody state
