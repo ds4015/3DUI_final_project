@@ -44,15 +44,15 @@ public class ARVRModeManager : MonoBehaviour
 
   private void Start()
   {
-    // Find the Floor object
-    GameObject floorObject = GameObject.FindGameObjectWithTag("Floor");
+    // Find the Floor object - now using DropSurface tag
+    GameObject floorObject = GameObject.FindGameObjectWithTag("DropSurface");
     if (floorObject != null)
     {
       floorTransform = floorObject.transform;
     }
     else
     {
-      Debug.LogError("No object with 'Floor' tag found in the scene!");
+      Debug.LogError("No object with 'DropSurface' tag found in the scene!");
     }
 
     // Store table center for reference
