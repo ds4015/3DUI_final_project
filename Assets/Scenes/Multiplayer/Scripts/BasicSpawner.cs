@@ -50,6 +50,11 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+
+    }
+    /*
+    public void OnInput(NetworkRunner runner, NetworkInput input)
+    {
     var data = new NetworkInputData();
 
     if (Keyboard.current.wKey.isPressed)
@@ -65,7 +70,9 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         data.direction += Vector3.right;
 
         input.Set(data);
-    }    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+    }    
+    */
+    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }

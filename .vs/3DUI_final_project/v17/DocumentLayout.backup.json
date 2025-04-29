@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\networkvr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\networkvr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scenes\\multiplayer\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\basicspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scenes\\multiplayer\\scripts\\basicspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\basicspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scenes\\multiplayer\\scripts\\networkvr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\networkvr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,43 +22,43 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "NetworkVR.cs",
               "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
               "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
               "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
               "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAA0wCEAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-29T15:41:31.821Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
               "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
               "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
               "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-29T14:43:45.389Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "BasicSpawner.cs",
               "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
               "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
               "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
               "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
-              "ViewState": "AgIAAFYAAAAAAAAAAAAgwF8AAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwCcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-29T13:44:39.617Z",
               "EditorCaption": ""

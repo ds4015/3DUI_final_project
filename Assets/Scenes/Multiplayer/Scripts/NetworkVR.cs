@@ -18,6 +18,8 @@ public class NetworkedVR : NetworkBehaviour
     {
         if (HasStateAuthority)
         {
+            Debug.Log($"Left Hand Pos: {leftHand.position}, Right Hand Pos: {rightHand.position}");
+
             HeadPosition = head.position;
             HeadRotation = head.rotation;
             LeftHandPosition = leftHand.position;
@@ -27,9 +29,12 @@ public class NetworkedVR : NetworkBehaviour
         }
         else
         {
-            head.SetPositionAndRotation(HeadPosition, HeadRotation);
-            leftHand.SetPositionAndRotation(LeftHandPosition, LeftHandRotation);
-            rightHand.SetPositionAndRotation(RightHandPosition, RightHandRotation);
+            head.position = HeadPosition;
+            head.rotation = HeadRotation;
+            leftHand.position = LeftHandPosition;
+            leftHand.rotation = LeftHandRotation;
+            rightHand.position = RightHandPosition;
+            rightHand.rotation = RightHandRotation;
         }
     }
 
