@@ -15,6 +15,17 @@ to facilitate collaboration.
 ## Updates
 
 ```
+4/28/25: Kyleigh - ARVRModeManager Improvements
+```
+
+- Fixed VR spawn point positioning and stability issues
+- Added special physics handling for bench objects to prevent falling through the floor
+- Improved scaling and positioning of objects during AR/VR mode transitions
+- Adjusted player camera height in VR mode for better visibility and comfort
+- Enhanced object restoration when switching back to AR mode
+- Added robust error recovery for VR spawn points
+
+```
 4/28/25: Kyleigh - AR/VR Mode Switching
 ```
 
