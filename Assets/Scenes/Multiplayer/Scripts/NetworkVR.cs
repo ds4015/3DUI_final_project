@@ -32,4 +32,23 @@ public class NetworkedVR : NetworkBehaviour
             rightHand.SetPositionAndRotation(RightHandPosition, RightHandRotation);
         }
     }
+
+    private void Start()
+    {
+        if (!HasInputAuthority)
+        {
+            Camera camera = GetComponentInChildren<Camera>();
+            if (camera != null)
+            {
+                camera.enabled = false;
+                Debug.Log("Camera for other disabled");
+            }
+            AudioListener audioListener = GetComponentInChildren<AudioListener>();
+            if (audioListener != null)
+            {
+                audioListener.enabled = false;
+                Debug.Log("AudioListener for other disabeld");
+            }
+        }
+    }
 }

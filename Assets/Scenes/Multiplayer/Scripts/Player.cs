@@ -14,10 +14,17 @@ public class Player : NetworkBehaviour
 
   public override void FixedUpdateNetwork()
   {
+        Debug.Log("Running");
+    if(!HasInputAuthority)
+        {
+            return;
+        }
     if (GetInput(out NetworkInputData data))
     {
       data.direction.Normalize();
       _cc.Move(5*data.direction*Runner.DeltaTime);
+
+            Debug.Log($"[{Runner.LocalPlayer}] Moving Player. New Position: {transform.position}");
     }
   }
 }

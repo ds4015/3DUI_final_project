@@ -3,6 +3,7 @@ using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
@@ -17,8 +18,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.IsServer)
-        {
+
             Vector3 spawnPosition = Vector3.zero;
             Quaternion spawnRotation = Quaternion.identity;
 
@@ -30,13 +30,14 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             }
 
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, spawnRotation, player);
+            Debug.Log($"Spawned Player: {player} - State Auth: {networkPlayerObject.HasStateAuthority}, InputAuthority: {networkPlayerObject.HasInputAuthority}");
             _spawnedCharacters.Add(player, networkPlayerObject);
             if (!networkPlayerObject.HasInputAuthority)
             {
                 AudioListener listener = networkPlayerObject.GetComponentInChildren<AudioListener>();
                 listener.enabled = false; //disable audiosource for non-authority players
             }
-        }
+
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -51,19 +52,19 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
     var data = new NetworkInputData();
 
-    if (Input.GetKey(KeyCode.W))
+    if (Keyboard.current.wKey.isPressed)
         data.direction += Vector3.forward;
 
-    if (Input.GetKey(KeyCode.S))
+    if (Keyboard.current.sKey.isPressed)
         data.direction += Vector3.back;
 
-    if (Input.GetKey(KeyCode.A))
+    if (Keyboard.current.aKey.isPressed)
         data.direction += Vector3.left;
 
-    if (Input.GetKey(KeyCode.D))
+    if (Keyboard.current.dKey.isPressed)
         data.direction += Vector3.right;
 
-    input.Set(data);
+        input.Set(data);
     }    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
@@ -88,6 +89,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
+        _runner.AddCallbacks(this);
 
         // Create the NetworkSceneInfo from the current scene
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
@@ -104,6 +106,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
+        Debug.Log("Runner Mode: " + _runner.Mode);
+        Debug.Log("IsSharedMode: " + _runner.GameMode);
     }
     private void OnGUI()
     {
