@@ -486,7 +486,7 @@ public class ARVRModeManager : MonoBehaviour
           if (data.transform.name.Contains("Bench"))
           {
             // Give benches a larger offset from the floor
-            pos.y += 0.05f;
+            pos.y += 0.25f; // Increased from 0.05f to 0.25f to ensure bench sits completely above floor
 
             // Ensure the bench has proper physics settings
             rb.mass = 10f; // Increase mass to prevent it from moving too easily
@@ -495,7 +495,7 @@ public class ARVRModeManager : MonoBehaviour
             // Add freeze position Y to constraints to prevent falling
             rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
 
-            Debug.Log($"Applied special physics handling for bench: {data.transform.name}");
+            Debug.Log($"Applied special physics handling for bench: {data.transform.name} with height offset of 0.25f");
           }
 
           data.transform.position = pos;
