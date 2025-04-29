@@ -37,6 +37,9 @@ public class ARVRModeManager : MonoBehaviour
   private Transform cameraOffsetTransform; // The camera offset child of the XR Origin
   private Vector3 vrSpawnPointOriginalPosition; // Store the original position of VR spawn point
   private Quaternion vrSpawnPointOriginalRotation; // Store the original rotation of VR spawn point
+  private Vector3 vrSpawnPointOriginalScale; // Store the original scale of VR spawn point
+  private Transform vrSpawnPointOriginalParent; // Store the original parent of VR spawn point
+  private bool wasInVRModePreviously = false; // Track if we were in VR mode in the previous state
 
   // Store original transform data for each building object
   private class BuildingObjectData
@@ -104,9 +107,11 @@ public class ARVRModeManager : MonoBehaviour
     {
       vrSpawnPoint = vrSpawnObj.transform;
 
-      // Store the original position and rotation
+      // Store the original position, rotation and scale
       vrSpawnPointOriginalPosition = vrSpawnPoint.position;
       vrSpawnPointOriginalRotation = vrSpawnPoint.rotation;
+      vrSpawnPointOriginalScale = vrSpawnPoint.localScale;
+      vrSpawnPointOriginalParent = vrSpawnPoint.parent;
 
       // Store the original material if it has a renderer
       Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
@@ -118,7 +123,15 @@ public class ARVRModeManager : MonoBehaviour
 
       // Store original rigidbody state
       Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
-      vrSpawnRigidbodyState = rb != null && rb.isKinematic == false;
+      if (rb != null)
+      {
+        vrSpawnRigidbodyState = rb.isKinematic == false;
+        // Make sure rigidbody is initially kinematic to prevent it from moving
+        rb.isKinematic = true;
+        rb.useGravity = false;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+      }
 
       Debug.Log($"Found VRSpawnPoint: {vrSpawnObj.name} at position {vrSpawnObj.transform.position}, parent: {vrSpawnObj.transform.parent?.name}");
     }
@@ -210,6 +223,9 @@ public class ARVRModeManager : MonoBehaviour
   {
     isVRMode = !isVRMode;
 
+    // Save information about the previous mode
+    wasInVRModePreviously = !isVRMode;
+
     if (isVRMode)
     {
       SetVRMode();
@@ -273,6 +289,10 @@ public class ARVRModeManager : MonoBehaviour
       // Make sure the object is active first
       vrSpawnPoint.gameObject.SetActive(true);
 
+      // Save the original position before any modifications
+      Vector3 savedPosition = vrSpawnPoint.position;
+      Quaternion savedRotation = vrSpawnPoint.rotation;
+
       // Make the VR spawn point invisible
       Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
       if (renderer != null)
@@ -297,12 +317,16 @@ public class ARVRModeManager : MonoBehaviour
         }
       }
 
-      // Disable the rigidbody physics in VR mode
+      // Ensure the Rigidbody is properly configured
       Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
       if (rb != null)
       {
         rb.isKinematic = true;
         rb.useGravity = false;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        // Add freeze constraints to prevent any physics movement
+        rb.constraints = RigidbodyConstraints.FreezeAll;
       }
 
       // Calculate target position accounting for player height
@@ -593,10 +617,17 @@ public class ARVRModeManager : MonoBehaviour
       // Make sure the object is active first
       vrSpawnPoint.gameObject.SetActive(true);
 
-      // Restore the original position and rotation
+      // Reset the parent if we have the original
+      if (vrSpawnPointOriginalParent != null)
+      {
+        vrSpawnPoint.SetParent(vrSpawnPointOriginalParent);
+      }
+
+      // Force the position reset to the exact original position
       vrSpawnPoint.position = vrSpawnPointOriginalPosition;
       vrSpawnPoint.rotation = vrSpawnPointOriginalRotation;
-      Debug.Log($"Restored VR spawn point to original position: {vrSpawnPointOriginalPosition}");
+      vrSpawnPoint.localScale = vrSpawnPointOriginalScale;
+      Debug.Log($"Forced VR spawn point to exact original position: {vrSpawnPointOriginalPosition}");
 
       // Restore the original material
       Renderer renderer = vrSpawnPoint.GetComponent<Renderer>();
@@ -613,12 +644,19 @@ public class ARVRModeManager : MonoBehaviour
         }
       }
 
-      // Restore the original rigidbody state
+      // Completely reset the rigidbody
       Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
       if (rb != null)
       {
-        rb.isKinematic = !vrSpawnRigidbodyState;
-        rb.useGravity = vrSpawnRigidbodyState;
+        // Always make it kinematic and disable gravity in AR mode to prevent it from moving
+        rb.isKinematic = true;
+        rb.useGravity = false;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        // Remove all constraints
+        rb.constraints = RigidbodyConstraints.None;
+
+        Debug.Log("Reset VR spawn point physics - made kinematic with no gravity");
       }
     }
     else
@@ -630,12 +668,19 @@ public class ARVRModeManager : MonoBehaviour
         vrSpawnPoint = vrSpawnObj.transform;
         vrSpawnPoint.gameObject.SetActive(true);
 
-        // Restore the original position and rotation if we have it
+        // Restore the original parent if we have it
+        if (vrSpawnPointOriginalParent != null)
+        {
+          vrSpawnPoint.SetParent(vrSpawnPointOriginalParent);
+        }
+
+        // Force the position reset to the exact original position
         if (vrSpawnPointOriginalPosition != Vector3.zero)
         {
           vrSpawnPoint.position = vrSpawnPointOriginalPosition;
           vrSpawnPoint.rotation = vrSpawnPointOriginalRotation;
-          Debug.Log($"Restored rediscovered VR spawn point to original position: {vrSpawnPointOriginalPosition}");
+          vrSpawnPoint.localScale = vrSpawnPointOriginalScale;
+          Debug.Log($"Forced rediscovered VR spawn point to exact original position: {vrSpawnPointOriginalPosition}");
         }
 
         // Restore material if possible
@@ -652,12 +697,16 @@ public class ARVRModeManager : MonoBehaviour
           }
         }
 
-        // Restore rigidbody state
+        // Always make it kinematic in AR mode
         Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
         if (rb != null)
         {
-          rb.isKinematic = !vrSpawnRigidbodyState;
-          rb.useGravity = vrSpawnRigidbodyState;
+          rb.isKinematic = true;
+          rb.useGravity = false;
+          rb.velocity = Vector3.zero;
+          rb.angularVelocity = Vector3.zero;
+          rb.constraints = RigidbodyConstraints.None;
+          Debug.Log("Reset rediscovered VR spawn point physics - made kinematic with no gravity");
         }
       }
     }
