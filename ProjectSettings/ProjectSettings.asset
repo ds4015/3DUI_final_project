@@ -144,9 +144,6 @@ PlayerSettings:
   preloadedAssets:
   - {fileID: 0}
   - {fileID: 11400000, guid: e975d0f76b96f445a96dec4b7dc51422, type: 2}
-  - {fileID: -8196854396901781169, guid: 1a4c68ca72a83449f938d669337cb305, type: 2}
-  - {fileID: 11400000, guid: 6dee06cff2e7b42f098dd866cfae5714, type: 2}
-  - {fileID: -64324148185763206, guid: a9a6963505ddf7f4d886008c6dc86122, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -942,11 +939,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 7847f401-f0e7-4992-9bad-9f47545adea7
+  cloudProjectId: 7e5a107f-107a-4e90-96b2-17b6614c292a
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: SampleVR
-  organizationId: ds4015
+  projectName: SampleVR (2)
+  organizationId: unity_670564ebcc0cf64823c7
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
