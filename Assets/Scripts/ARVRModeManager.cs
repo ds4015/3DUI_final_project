@@ -22,6 +22,7 @@ public class ARVRModeManager : MonoBehaviour
   [SerializeField] private Material transparentMaterial; // Material to use for invisible objects in VR
   [SerializeField] private float groundOffset = 0.1f; // Offset from table surface to place player
   [SerializeField] private float eyeHeight = 1.6f; // Average human eye height in meters
+  [SerializeField] private float vrHeightBoost = 0.7f; // Additional height in VR mode for better camera position
 
   private bool isVRMode = false;
   private Vector3 originalPosition;
@@ -262,6 +263,7 @@ public class ARVRModeManager : MonoBehaviour
         {
           vrSpawnPointOriginalPosition = vrSpawnPoint.position;
           vrSpawnPointOriginalRotation = vrSpawnPoint.rotation;
+          vrSpawnPointOriginalScale = vrSpawnPoint.localScale;
         }
 
         // Store the original material if it has a renderer
@@ -276,7 +278,7 @@ public class ARVRModeManager : MonoBehaviour
         Rigidbody rb = vrSpawnPoint.GetComponent<Rigidbody>();
         if (rb != null)
         {
-          vrSpawnRigidbodyState = !rb.isKinematic;
+          vrSpawnRigidbodyState = rb.isKinematic == false;
         }
 
         Debug.Log($"Refound VRSpawnPoint: {vrSpawnObj.name} at position {vrSpawnObj.transform.position}");
@@ -328,81 +330,6 @@ public class ARVRModeManager : MonoBehaviour
         // Add freeze constraints to prevent any physics movement
         rb.constraints = RigidbodyConstraints.FreezeAll;
       }
-
-      // Calculate target position accounting for player height
-      Vector3 targetPosition = vrSpawnPoint.position;
-
-      // If we have the camera offset, adjust position to account for eye height
-      if (cameraOffsetTransform != null)
-      {
-        // The XR Origin should be positioned on the ground, with the camera at eye level
-        // We need to adjust the XR Origin position to place the player's view at the target height
-
-        // Get current height of the camera relative to XR Origin
-        float cameraHeight = 0f;
-        foreach (Transform child in cameraOffsetTransform)
-        {
-          if (child.GetComponent<Camera>() != null)
-          {
-            cameraHeight = child.localPosition.y;
-            break;
-          }
-        }
-
-        // If found a camera in the offset, use its height
-        if (cameraHeight > 0)
-        {
-          // Lower the XR Origin so the camera is at the spawn point's height
-          targetPosition.y -= cameraHeight;
-          Debug.Log($"Adjusting for camera height ({cameraHeight}m)");
-        }
-        else
-        {
-          // If camera height not found, use default eye height adjustment
-          targetPosition.y -= eyeHeight;
-          Debug.Log($"Using default eye height adjustment ({eyeHeight}m)");
-        }
-      }
-
-      // Log the target position
-      Debug.Log($"Teleporting to adjusted VRSpawnPoint at position {targetPosition}, rotation: {vrSpawnPoint.rotation.eulerAngles}");
-
-      // Teleport the player to the VR spawn point
-      xrOrigin.position = targetPosition;
-      xrOrigin.rotation = vrSpawnPoint.rotation;
-
-      // Don't hide the spawn point marker - just leave it visible
-      // This allows it to be found again for subsequent mode changes
-    }
-    else if (floorTransform != null)
-    {
-      // Fall back to the floor position if no spawn point is available
-      float floorHeight = floorTransform.position.y;
-
-      // Determine camera height adjustment
-      float heightAdjustment = eyeHeight;
-      if (cameraOffsetTransform != null)
-      {
-        foreach (Transform child in cameraOffsetTransform)
-        {
-          if (child.GetComponent<Camera>() != null)
-          {
-            heightAdjustment = child.localPosition.y;
-            break;
-          }
-        }
-      }
-
-      // Calculate target position - the XR Origin should be positioned such that
-      // the player's view is at an appropriate height above the floor
-      Vector3 targetPosition = new Vector3(
-        floorTransform.position.x,
-        floorHeight - heightAdjustment + groundOffset,
-        floorTransform.position.z
-      );
-
-      Debug.Log($"No VRSpawnPoint found. Teleporting to floor at adjusted height {targetPosition.y} (floor: {floorHeight}, adjustment: {heightAdjustment})");
-      xrOrigin.position = targetPosition;
     }
 
     // Hide the tabletop
@@ -459,6 +386,28 @@ public class ARVRModeManager : MonoBehaviour
           Debug.LogWarning($"No Rigidbody found on {data.transform.name}");
         }
       }
+    }
+
+    // Track the VR spawn point as well, adding it to the temp parent
+    Vector3 vrSpawnPointWorldPosition = Vector3.zero;
+    Quaternion vrSpawnPointWorldRotation = Quaternion.identity;
+    Transform vrSpawnPointOriginalParentSaved = null;
+
+    if (vrSpawnPoint != null)
+    {
+      // Store the world position before reparenting
+      vrSpawnPointWorldPosition = vrSpawnPoint.position;
+      vrSpawnPointWorldRotation = vrSpawnPoint.rotation;
+      vrSpawnPointOriginalParentSaved = vrSpawnPoint.parent;
+
+      // Parent to temporary parent
+      vrSpawnPoint.SetParent(tempParentTransform, true);
+
+      // Restore world position and rotation
+      vrSpawnPoint.position = vrSpawnPointWorldPosition;
+      vrSpawnPoint.rotation = vrSpawnPointWorldRotation;
+
+      Debug.Log($"Added VR spawn point to temp parent at position: {vrSpawnPointWorldPosition}");
     }
 
     // Calculate the scale factor based on the table size
@@ -539,8 +488,116 @@ public class ARVRModeManager : MonoBehaviour
       }
     }
 
+    // Now handle the VR spawn point separately, parent it to the floor
+    Vector3 finalVRSpawnPointPosition = Vector3.zero;
+    Quaternion finalVRSpawnPointRotation = Quaternion.identity;
+
+    if (vrSpawnPoint != null && floorTransform != null)
+    {
+      // Store the world position after scaling 
+      Vector3 worldPosition = vrSpawnPoint.position;
+      Quaternion worldRotation = vrSpawnPoint.rotation;
+
+      // Parent to floor
+      vrSpawnPoint.SetParent(floorTransform, true);
+
+      // Restore world position and rotation
+      vrSpawnPoint.position = worldPosition;
+      vrSpawnPoint.rotation = worldRotation;
+
+      // Ensure it's at the correct height 
+      Vector3 pos = vrSpawnPoint.position;
+      pos.y = floorTransform.position.y + 0.01f; // Small offset to avoid z-fighting
+      vrSpawnPoint.position = pos;
+
+      // Store the final position and rotation for player teleportation
+      finalVRSpawnPointPosition = vrSpawnPoint.position;
+      finalVRSpawnPointRotation = vrSpawnPoint.rotation;
+
+      Debug.Log($"VR spawn point final position after scaling and placement: {finalVRSpawnPointPosition}");
+    }
+
     // Clean up the temporary parent
     Destroy(tempParent);
+
+    // Now teleport the player to the scaled VR spawn point position
+    if (vrSpawnPoint != null)
+    {
+      // Calculate target position accounting for player height
+      Vector3 targetPosition = finalVRSpawnPointPosition;
+
+      // If we have the camera offset, adjust position to account for eye height
+      if (cameraOffsetTransform != null)
+      {
+        // The XR Origin should be positioned on the ground, with the camera at eye level
+        // We need to adjust the XR Origin position to place the player's view at the target height
+
+        // Get current height of the camera relative to XR Origin
+        float cameraHeight = 0f;
+        foreach (Transform child in cameraOffsetTransform)
+        {
+          if (child.GetComponent<Camera>() != null)
+          {
+            cameraHeight = child.localPosition.y;
+            break;
+          }
+        }
+
+        // If found a camera in the offset, use its height
+        if (cameraHeight > 0)
+        {
+          // Lower the XR Origin so the camera is at the spawn point's height
+          // Add the VR height boost for more comfortable viewing
+          targetPosition.y = targetPosition.y - cameraHeight + vrHeightBoost;
+          Debug.Log($"Adjusting for camera height ({cameraHeight}m) with additional height boost of {vrHeightBoost}m");
+        }
+        else
+        {
+          // If camera height not found, use default eye height adjustment
+          // Add the VR height boost for more comfortable viewing
+          targetPosition.y = targetPosition.y - eyeHeight + vrHeightBoost;
+          Debug.Log($"Using default eye height adjustment ({eyeHeight}m) with additional height boost of {vrHeightBoost}m");
+        }
+      }
+
+      // Log the target position
+      Debug.Log($"Teleporting to SCALED VRSpawnPoint at position {targetPosition}, rotation: {finalVRSpawnPointRotation.eulerAngles}");
+
+      // Teleport the player to the VR spawn point
+      xrOrigin.position = targetPosition;
+      xrOrigin.rotation = finalVRSpawnPointRotation;
+    }
+    else if (floorTransform != null)
+    {
+      // Fall back to the floor position if no spawn point is available
+      float floorHeight = floorTransform.position.y;
+
+      // Determine camera height adjustment
+      float heightAdjustment = eyeHeight;
+      if (cameraOffsetTransform != null)
+      {
+        foreach (Transform child in cameraOffsetTransform)
+        {
+          if (child.GetComponent<Camera>() != null)
+          {
+            heightAdjustment = child.localPosition.y;
+            break;
+          }
+        }
+      }
+
+      // Calculate target position - the XR Origin should be positioned such that
+      // the player's view is at an appropriate height above the floor
+      // Add the VR height boost for more comfortable viewing
+      Vector3 targetPosition = new Vector3(
+        floorTransform.position.x,
+        floorHeight - heightAdjustment + groundOffset + vrHeightBoost,
+        floorTransform.position.z
+      );
+
+      Debug.Log($"No VRSpawnPoint found. Teleporting to floor at adjusted height {targetPosition.y} with height boost of {vrHeightBoost}m");
+      xrOrigin.position = targetPosition;
+    }
   }
 
   // Helper method to refresh the building objects list
