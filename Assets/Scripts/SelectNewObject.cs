@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 using UnityEngine.XR.Hands;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -8,7 +9,8 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class SelectNewObject : MonoBehaviour
 {
-    public GameObject prefabToSpawn;
+    public NetworkPrefabRef prefabToSpawn;
+    //public GameObject prefabToSpawn;
     public Transform spawnPoint;
     public GameObject objectMenu;
     public Material spawnCubeContainerMaterial;    
@@ -27,13 +29,27 @@ public class SelectNewObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //NetworkRunner runner = BasicSpawner.Instance;
+        NetworkRunner runner = FindObjectOfType<NetworkRunner>();
+        if (runner == null)
+        {
+            Debug.LogError("No NetworkRunner");
+            return;
+        }
         Transform t = spawnPoint != null ? spawnPoint : transform;
         
         if (prefabToSpawn == null)
             return;
 
         /* spawn the object player selects */
-        var spawned = Instantiate(prefabToSpawn, t.position, prefabToSpawn.transform.rotation);
+        //var spawned = Instantiate(prefabToSpawn, t.position, prefabToSpawn.transform.rotation);
+        NetworkObject networkObj = runner.Spawn(prefabToSpawn, t.position, Quaternion.identity, runner.LocalPlayer);
+        if (networkObj == null)
+        {
+            Debug.LogError("Failed to spawn prefab with runner spawner");
+        }
+        GameObject spawned = networkObj.gameObject;
+        /*
         Collider prefabCol = spawned.gameObject.GetComponent<BoxCollider>();
         if (prefabCol == null)
         {
@@ -47,6 +63,7 @@ public class SelectNewObject : MonoBehaviour
         Bounds b = prefabCol.bounds;
 
         /* spawn its transaprent cube container */
+        /*
         spawnCubeContainer = GameObject.CreatePrimitive(PrimitiveType.Cube);        
         spawnCubeContainer.transform.position = b.center;
         float maxExtent = 0;
@@ -58,7 +75,7 @@ public class SelectNewObject : MonoBehaviour
         spawnCubeContainer.transform.localScale = new Vector3(
             maxExtent, b.size.y + 0.1f, maxExtent);
 
-        /* set the transaprent material */
+        /* set the transaprent material *//*
         var rend = spawnCubeContainer.GetComponent<Renderer>();
         if (rend == null)
             return;
@@ -66,7 +83,7 @@ public class SelectNewObject : MonoBehaviour
         if(spawnCubeContainerMaterial != null)
             rend.material = spawnCubeContainerMaterial;
 
-        /* rotate the container */
+        /* rotate the container *//*
         spawnCubeContainer.AddComponent<RotateObject>();
         
         Destroy(spawnCubeContainer.GetComponent<Collider>());
@@ -74,8 +91,10 @@ public class SelectNewObject : MonoBehaviour
         /* pass the spawned object and container to OpenObjectMenu.cs */
         /* why? because once we disable the ObjectMenu, can no longer
             play sound effect or delete the container when the object is moved */
+        
         openObjectMenu.objectSpawned = spawned;
-        openObjectMenu.objectSpawnedCubeContainer = spawnCubeContainer;
+        //openObjectMenu.objectSpawnedCubeContainer = spawnCubeContainer;
+
         openObjectMenu.justSpawned = true;
 
         /* disable the object menu once the object is spawned */

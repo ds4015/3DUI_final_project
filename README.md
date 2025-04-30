@@ -21,6 +21,14 @@ the scene in progress from the perspectives of other participants in order
 to facilitate collaboration.
 
 ## Updates
+```
+4/29/25: Nathan - Multiplayer Integration
+```
+
+- Continued testing multiplayer object synchronization with Fusion
+- Implemented network object for visibility across players
+- Verified that objects can spawn and are visible to player
+- Currently facing issues with object perspectives - objects appear in different locations based on user viewpoint
 
 ```
 4/28/25: Kyleigh - ARVRModeManager Improvements
@@ -66,6 +74,28 @@ to facilitate collaboration.
   <br>
   <em>City Scene, Portals, Player Placards</em>
 </p>
+
+```
+4/27/25: Nathan - Auto Hosting and Client Join
+```
+
+- Added automatic host/client
+- First player becomes host, other players auto-join as clients
+- Deleted GUI for smoother experience on headset
+
+```
+4/24/25: Nathan - Alternative Multiplayer Testing
+```
+
+- Tested other networking options (Netcode for GameObjects, Photon PUN)
+- Integration of Netcode and PUN unsuccessful for current project
+- PUN does not have headless hosting feature for VR integration
+```
+4/23/25: Nathan - Transform Bug Multiplayer Fix
+```
+
+- Fixed issue where moving one player leads to another moving
+- Issue occured due to both players running the project in the same machine despite two Uniy editors
 
 ```
 4/22/25: Dallas - UI Object Selection

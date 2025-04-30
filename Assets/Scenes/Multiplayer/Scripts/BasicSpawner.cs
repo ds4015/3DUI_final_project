@@ -88,46 +88,27 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player){ }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data){ }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress){ }
+    //public static NetworkRunner Instance { get; private set; }
 
     private NetworkRunner _runner;
 
-    async void StartGame(GameMode mode)
+    private async void Start()
     {
-        // Create the Fusion runner and let it know that we will be providing user input
-        _runner = gameObject.AddComponent<NetworkRunner>();
+        _runner = GetComponent<NetworkRunner>();
+        if( _runner == null )
+            _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
         _runner.AddCallbacks(this);
-
-        // Create the NetworkSceneInfo from the current scene
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
-        var sceneInfo = new NetworkSceneInfo();
-        if (scene.IsValid) {
-            sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
-        }
-
-        // Start or join (depends on gamemode) a session with a specific name
-        await _runner.StartGame(new StartGameArgs()
+        var result = await _runner.StartGame(new StartGameArgs()
         {
-            GameMode = mode,
+            GameMode = GameMode.AutoHostOrClient,
             SessionName = "TestRoom",
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
-        Debug.Log("Runner Mode: " + _runner.Mode);
-        Debug.Log("IsSharedMode: " + _runner.GameMode);
+        Debug.Log($"Auto-starting: {result.Ok}, Mode: {_runner.Mode}");
+        
     }
-    private void OnGUI()
-    {
-    if (_runner == null)
-    {
-        if (GUI.Button(new Rect(0,0,200,40), "Host"))
-        {
-            StartGame(GameMode.Host);
-        }
-        if (GUI.Button(new Rect(0,40,200,40), "Join"))
-        {
-            StartGame(GameMode.Client);
-        }
-    }
-    }
+
 }
