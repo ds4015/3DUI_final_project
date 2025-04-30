@@ -10,9 +10,17 @@ public class UISetup : MonoBehaviour
   [SerializeField] private Vector3 uiScale = new Vector3(0.001f, 0.001f, 0.001f); // Scale for world space UI
   [SerializeField] private float rotationOffset = 15f; // Angle to rotate towards player
 
+  [Header("Smooth Movement")]
+  [SerializeField] private float positionSmoothTime = 0.15f; // Time to smooth position movement
+  [SerializeField] private float rotationSmoothTime = 0.1f; // Time to smooth rotation
+
   private Canvas canvas;
   private Camera mainCamera;
   private RectTransform canvasRect;
+  private Vector3 targetPosition;
+  private Quaternion targetRotation;
+  private Vector3 positionVelocity;
+  private float rotationVelocity;
 
   private void Start()
   {
@@ -28,17 +36,20 @@ public class UISetup : MonoBehaviour
       // Set the world space scale
       transform.localScale = uiScale;
 
-      // Set initial position
-      UpdateCanvasPosition();
+      // Initialize position and rotation
+      UpdateTargetTransforms();
+      transform.position = targetPosition;
+      transform.rotation = targetRotation;
     }
   }
 
   private void LateUpdate()
   {
-    UpdateCanvasPosition();
+    UpdateTargetTransforms();
+    SmoothlyUpdatePosition();
   }
 
-  private void UpdateCanvasPosition()
+  private void UpdateTargetTransforms()
   {
     if (mainCamera != null && canvas != null)
     {
@@ -49,21 +60,41 @@ public class UISetup : MonoBehaviour
       Vector3 forwardDirection = cameraTransform.forward;
 
       // Calculate the target position
-      Vector3 targetPosition = cameraTransform.position +
-                             forwardDirection * forwardOffset +
-                             rightDirection * rightOffset +
-                             Vector3.up * heightOffset;
-
-      // Update position
-      transform.position = targetPosition;
+      targetPosition = cameraTransform.position +
+                     forwardDirection * forwardOffset +
+                     rightDirection * rightOffset +
+                     Vector3.up * heightOffset;
 
       // Calculate rotation to face the player but maintain vertical orientation
-      Vector3 lookDirection = transform.position - cameraTransform.position;
+      Vector3 lookDirection = targetPosition - cameraTransform.position;
       lookDirection.y = 0; // Keep UI vertical
 
-      // Rotate towards player with offset
-      Quaternion targetRotation = Quaternion.LookRotation(lookDirection) * Quaternion.Euler(0, rotationOffset, 0);
-      transform.rotation = targetRotation;
+      // Determine target rotation with offset
+      targetRotation = Quaternion.LookRotation(lookDirection) * Quaternion.Euler(0, rotationOffset, 0);
     }
+  }
+
+  private void SmoothlyUpdatePosition()
+  {
+    // Smoothly interpolate position
+    transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref positionVelocity, positionSmoothTime);
+
+    // Smoothly interpolate rotation (using slerp with a damp-like behavior)
+    transform.rotation = SmoothDampQuaternion(transform.rotation, targetRotation, ref rotationVelocity, rotationSmoothTime);
+  }
+
+  // Helper method to smooth quaternion rotation similar to SmoothDamp
+  private Quaternion SmoothDampQuaternion(Quaternion current, Quaternion target, ref float velocityRef, float smoothTime)
+  {
+    float delta = Quaternion.Angle(current, target);
+
+    if (delta > 0f)
+    {
+      float t = Mathf.SmoothDampAngle(0f, delta, ref velocityRef, smoothTime);
+      t = 1.0f - (t / delta);
+      return Quaternion.Slerp(current, target, t);
+    }
+
+    return current;
   }
 }
