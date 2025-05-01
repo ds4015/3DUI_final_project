@@ -305,30 +305,6 @@ The following scripts are currently available:
 ### AR Tabletop Scripts
 
 ```
-ARVRModeManager.cs:
-
-  This script manages the transition between AR tabletop view and immersive VR mode.
-  In AR mode, users can build and manipulate miniature structures on the tabletop.
-  In VR mode, the environment is scaled up to human size for immersive exploration.
-
-  The manager handles:
-  - Scaling and repositioning objects when switching modes
-  - Preserving object relationships and positions during transitions
-  - Managing physics properties appropriately for each mode
-  - Storing the last known positions in AR mode for seamless return
-  - Adjusting camera settings and skybox for each mode
-```
-
-```
-XRModeToggleButton.cs:
-
-  This script enables hand interaction with the AR/VR mode toggle button.
-  When an index finger collider touches the button, it triggers a mode switch
-  via the ARVRModeManager. Includes a cooldown timer to prevent accidental
-  double-presses.
-```
-
-```
 GrabPushRotate.cs:
 
   This script is used to translate and rotate buildable objects.  Place it on any
@@ -480,4 +456,45 @@ NetworkVR.cs
   controller across the network. Uses state authority and updates the network with
   transforms of headset and controller. If player doesn't have authority, it reads
   and applies to local scene player. This allows for live movement of users.
+```
+
+### AR/VR Immersion
+
+```
+ARVRModeManager.cs:
+
+  This script manages the transition between AR tabletop view and immersive VR mode.
+  In AR mode, users can build and manipulate miniature structures on the tabletop.
+  In VR mode, the environment is scaled up to human size for immersive exploration.
+
+  The manager handles:
+  - Scaling and repositioning objects when switching modes
+  - Preserving object relationships and positions during transitions
+  - Managing physics properties appropriately for each mode
+  - Storing the last known positions in AR mode for seamless return
+  - Adjusting camera settings and skybox for each mode
+```
+
+```
+UISetup.cs:
+
+  This script handles the positioning and movement of UI elements that follow the player.
+  It uses smooth interpolation techniques to create natural-feeling UI movement with a
+  subtle delay that improves usability.
+
+  The script features:
+  - Configurable position and rotation offsets from the player's viewpoint
+  - Smooth position tracking using Vector3.SmoothDamp for natural following behavior
+  - Custom quaternion rotation interpolation for smooth rotational movement
+  - Adjustable smoothing parameters to fine-tune the UI responsiveness
+  - World space UI positioning that maintains optimal viewing angles
+```
+
+```
+XRModeToggleButton.cs:
+
+  This script enables hand interaction with the AR/VR mode toggle button.
+  When an index finger collider touches the button, it triggers a mode switch
+  via the ARVRModeManager. Includes a cooldown timer to prevent accidental
+  double-presses.
 ```
