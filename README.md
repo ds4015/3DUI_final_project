@@ -21,6 +21,17 @@ the scene in progress from the perspectives of other participants in order
 to facilitate collaboration.
 
 ## Updates
+
+```
+5/01/25: Kyleigh - UI Tracking Improvements
+```
+
+- Implemented smooth movement tracking for UI elements
+- Added configurable position and rotation interpolation
+- UI elements now follow player with natural delay similar to Meta Horizon buttons
+- Improved UI positioning stability when player moves quickly
+- Added customizable smoothing parameters for position and rotation
+
 ```
 4/29/25: Nathan - Multiplayer Integration
 ```
@@ -90,6 +101,7 @@ to facilitate collaboration.
 - Tested other networking options (Netcode for GameObjects, Photon PUN)
 - Integration of Netcode and PUN unsuccessful for current project
 - PUN does not have headless hosting feature for VR integration
+
 ```
 4/23/25: Nathan - Transform Bug Multiplayer Fix
 ```
