@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Hands;
+using UnityEngine.XR;
+using Unity.XR.CoreUtils;
 using UnityEngine.SubsystemsImplementation;
 using UnityEngine.XR.Management;
 
@@ -24,6 +26,9 @@ public class OpenObjectMenu : MonoBehaviour
     private AudioSource audioSource;
     private bool isPressed = false;
     private bool isInCooldown = false;
+    public GameObject tabletop2;
+    public XROrigin xrRig;
+    public ScreenFader screenFader;
 
     public AudioClip objectSelectedAudio;
 
@@ -31,6 +36,7 @@ public class OpenObjectMenu : MonoBehaviour
     [HideInInspector] public GameObject objectSpawned;
     [HideInInspector] public GameObject objectSpawnedCubeContainer;
     [HideInInspector] public bool justSpawned = false;
+    public OverheadSwap overheadSwap;
 
     public Material spawnCubeContainerMaterial;
 
@@ -61,34 +67,15 @@ public class OpenObjectMenu : MonoBehaviour
     {
         if (hands != null)
            // CheckPalmGesture();
+           Debug.Log("justSpawned: " + justSpawned);
 
         /* continuation of item spawn from SelectNewObject.cs */
-        if (justSpawned && !isPressed)  // Only handle spawning if button wasn't just pressed
+        if (justSpawned && !isPressed)  
         {
             if (objectSelectedAudio != null)
                 audioSource.PlayOneShot(objectSelectedAudio);
-
-            if (objectSpawnedCubeContainer != null)
-            {
-                var rend = objectSpawnedCubeContainer.GetComponent<Renderer>();
-                if (spawnCubeContainerMaterial != null)
-                    rend.material = spawnCubeContainerMaterial;
-            }
-            justSpawned = false;
-        }
-
-        if (objectSpawned != null && objectSpawnedCubeContainer != null)
-        {
-            float distance = Vector3.Distance(objectSpawned.transform.position,
-                objectSpawnedCubeContainer.transform.position);
-            float containerSize = objectSpawnedCubeContainer.transform.localScale.magnitude;
-            
-            /* delete transparent cube once the newly spawned object is moved */
-            if (distance > containerSize * 0.5f)
-            {
-                Destroy(objectSpawnedCubeContainer);
-                objectSpawnedCubeContainer = null;
-            }
+            overheadSwap.AddItem(objectSpawned);
+            StartCoroutine(SwapTabletopRoutine());
         }
     }
 
@@ -135,7 +122,6 @@ public class OpenObjectMenu : MonoBehaviour
             isPressed = true;
             if (audioSource != null && buttonClickSound != null)
                 audioSource.PlayOneShot(buttonClickSound);
-            Debug.Log("Logger: Button pressed");
             ActivateObjectMenu();
             StartCoroutine(ButtonPressAnimation());
             StartCoroutine(ButtonCooldown());
@@ -151,7 +137,6 @@ public class OpenObjectMenu : MonoBehaviour
 
     IEnumerator ButtonPressAnimation()
     {
-        Debug.Log("Logger: Button press animation started");
         isButtonPressed = true;
         
         Vector3 targetPosition = origPosition - new Vector3(-buttonPressDepth, 0, 0);
@@ -193,18 +178,37 @@ public class OpenObjectMenu : MonoBehaviour
 
     IEnumerator ButtonCooldown()
     {
-        Debug.Log("Logger: Button cooldown started");
         isInCooldown = true;
         yield return new WaitForSeconds(buttonCooldown);
         isInCooldown = false;
-        Debug.Log("Logger: Button cooldown ended");
     }
 
     void ActivateObjectMenu()
     {
-        Debug.Log("Logger: Activating object menu");
         if (objectMenu != null)
             objectMenu.SetActive(!objectMenu.activeSelf);
-        Debug.Log("Logger: Object menu activated: " + objectMenu.activeSelf);
     }
+
+    private IEnumerator SwapTabletopRoutine()
+	{
+        justSpawned = false;
+        overheadSwap.isOverhead = true;
+
+
+		yield return screenFader.FadeOut();
+
+		xrRig.transform.rotation = tabletop2.transform.rotation;
+		xrRig.MoveCameraToWorldLocation(tabletop2.transform.position); 
+
+
+		yield return new WaitForSeconds(0.2f);
+
+
+		yield return screenFader.FadeIn();
+	}
+
+	private IEnumerator WaitForSeconds(float seconds)
+	{
+		yield return new WaitForSeconds(seconds);
+	}
 }

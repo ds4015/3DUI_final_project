@@ -21,22 +21,9 @@ public class SelectRemotePortal : MonoBehaviour
         
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
-            audioSource = gameObject.AddComponent<AudioSource>();
+            Debug.LogError("No audio source found");
         
-        audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 1.0f;
-        audioSource.volume = 1.0f;
-        audioSource.spread = 0f;
-        audioSource.minDistance = 0.1f; 
-        audioSource.maxDistance = 5f;
-        audioSource.dopplerLevel = 0f;
-        audioSource.bypassEffects = true;
-        audioSource.bypassListenerEffects = true;
-        audioSource.bypassReverbZones = true;
-        audioSource.outputAudioMixerGroup = null; 
-        
-        if (audioSource.clip != null)
-            Debug.Log("No audio clip");
+
         
         
         Transform buttonParent = transform.parent.parent;

@@ -9,8 +9,8 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class SelectNewObject : MonoBehaviour
 {
-    public NetworkPrefabRef prefabToSpawn;
-    //public GameObject prefabToSpawn;
+   // public NetworkPrefabRef prefabToSpawn;
+    public GameObject prefabToSpawn;
     public Transform spawnPoint;
     public GameObject objectMenu;
     public Material spawnCubeContainerMaterial;    
@@ -29,26 +29,36 @@ public class SelectNewObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!other.gameObject.CompareTag("IndexFingerCollider"))
+            return;
+
         //NetworkRunner runner = BasicSpawner.Instance;
-        NetworkRunner runner = FindObjectOfType<NetworkRunner>();
+      /*  NetworkRunner runner = FindObjectOfType<NetworkRunner>();
         if (runner == null)
         {
             Debug.LogError("No NetworkRunner");
             return;
-        }
+        } */
         Transform t = spawnPoint != null ? spawnPoint : transform;
         
         if (prefabToSpawn == null)
             return;
 
         /* spawn the object player selects */
-        //var spawned = Instantiate(prefabToSpawn, t.position, prefabToSpawn.transform.rotation);
-        NetworkObject networkObj = runner.Spawn(prefabToSpawn, t.position, Quaternion.identity, runner.LocalPlayer);
-        if (networkObj == null)
-        {
-            Debug.LogError("Failed to spawn prefab with runner spawner");
-        }
-        GameObject spawned = networkObj.gameObject;
+        var spawned = Instantiate(prefabToSpawn, t.position, prefabToSpawn.transform.rotation);
+
+        GameObject tabletopParent = GameObject.Find("Tabletop Objects");
+        if (tabletopParent != null)
+            spawned.transform.SetParent(tabletopParent.transform);
+
+
+        
+       // NetworkObject networkObj = runner.Spawn(prefabToSpawn, t.position, Quaternion.identity, runner.LocalPlayer);
+       // if (networkObj == null)
+       // {
+       //     Debug.LogError("Failed to spawn prefab with runner spawner");
+       // }
+       // GameObject spawned = networkObj.gameObject;
         /*
         Collider prefabCol = spawned.gameObject.GetComponent<BoxCollider>();
         if (prefabCol == null)
@@ -101,4 +111,7 @@ public class SelectNewObject : MonoBehaviour
         if (objectMenu != null)
             objectMenu.SetActive(false);
     }
+
+
+    
 }

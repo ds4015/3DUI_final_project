@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 1a8cbb3e30f9f43459cd7ca84e65b839
+  m_SerializeEntries:
+  - m_GUID: 062f16ec3a3224c00bbe4f2dc9ee8f9b
+    m_Address: Assets/Prefabs/Art Deco Building.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0ce73bed862ec407996b7eeab6bfffd6
+    m_Address: Assets/Prefabs/Pine Tree.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2512041e8867b45be872da57b56fbb01
+    m_Address: Assets/Prefabs/Romantic Porcelain Figurine.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2f51617de3161440b90fe85b0aeee3e8
+    m_Address: Assets/Prefabs/Food Tent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3388a54dfbcf44f46a62441e3eedf650
+    m_Address: Assets/Prefabs/Old House.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a8b14e7184ba4f68b8ce3aa49392a74
+    m_Address: Assets/Prefabs/Swimming Pool.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3faa6288674ab461591e37dc6e7bf50e
+    m_Address: Assets/Prefabs/Flower2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4185b253e17294e29b8e084dbd74dc44
+    m_Address: Assets/Prefabs/Well.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 564b9563793c540cfb6ec0bc393fe4e6
+    m_Address: Assets/Prefabs/Stone Ground.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 597695b488c124774a793b33a349e901
+    m_Address: Assets/Prefabs/Flower1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5a075e2253c4d4e78b30c55a199b195b
+    m_Address: Assets/Prefabs/ShortWall.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 646e41f5566bb42419094e555d6c8d93
+    m_Address: Assets/Prefabs/Boat.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b3e81910d22e454299cda7f37fb6888
+    m_Address: Assets/Prefabs/Wooden Bridge.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 713f01b94b62f4c33b112b68e47136c3
+    m_Address: Assets/Prefabs/Apple Tree.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76ca1302e50d944d4a51f75f1d97c494
+    m_Address: Assets/Prefabs/House.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f65a6648774141f7bb94476823a633b
+    m_Address: Assets/Prefabs/Wooden Fence.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a711e86ed8efd43cf85100de45602988
+    m_Address: Assets/Prefabs/WallGate.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b39da92bdef194b7db6ed2196f22767a
+    m_Address: Assets/Prefabs/Bench.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: be99a08b4caee4cc4abef80497b9eb28
+    m_Address: Assets/Prefabs/Bell.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c34fd175af581449dbbbea3f13c78674
+    m_Address: Assets/Prefabs/Pond.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c9be685d50d034600bb7dafeb9ac4fbb
+    m_Address: Assets/Prefabs/Fountain.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d2f7a369e51d0414d9f320d457f9d31d
+    m_Address: Assets/Prefabs/CurveWall.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f2c386dc673274689aa4c1e49508cecc
+    m_Address: Assets/Prefabs/Flower Ground.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f2ce5eb2006e24089ae48cae6b75922f
+    m_Address: Assets/Prefabs/Wall Tower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fd401add6766147979a602b5a7c933ef
+    m_Address: Assets/Prefabs/Tree.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: d99e12d4e3ade4a03a2d3e41f82b9854, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: e0ad50c7a5c04428b87395c6d1562478, type: 2}
+    - {fileID: 11400000, guid: 277452dac692c48f7ba006c0510958cb, type: 2}
