@@ -338,6 +338,23 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
     {
       uiComponent.UpdatePerspectiveText(currentPlayerIndex);
     }
+
+    // Find and update perspective menu if it exists
+    UpdatePerspectiveMenus();
+  }
+
+  private void UpdatePerspectiveMenus()
+  {
+    // Find any perspective menus in the scene and update them
+    PerspectiveSwitcherMenu[] menus = FindObjectsOfType<PerspectiveSwitcherMenu>();
+
+    if (menus != null && menus.Length > 0)
+    {
+      foreach (PerspectiveSwitcherMenu menu in menus)
+      {
+        menu.UpdateButtonStates();
+      }
+    }
   }
 
   // Public methods for external calls (e.g. UI buttons)
@@ -387,6 +404,15 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
   public int GetCurrentPlayerIndex()
   {
     return currentPlayerIndex;
+  }
+
+  // Check if a player marker exists at the given index
+  public bool HasPlayerMarker(int playerIndex)
+  {
+    if (playerIndex < 0 || playerIndex >= playerMarkers.Length)
+      return false;
+
+    return playerMarkers[playerIndex] != null;
   }
 
   // Helper method to get the full path of a transform for debugging
