@@ -170,19 +170,39 @@ public class UISetup : MonoBehaviour
   {
     if (wristTransform != null)
     {
-      // Calculate position relative to the wrist
-      Vector3 forwardDirection = wristTransform.forward;
-      Vector3 rightDirection = wristTransform.right;
+      // Calculate position directly on top of the wrist
+      Vector3 wristUpDirection = wristTransform.up;
+      Vector3 directionToCamera = (mainCamera.transform.position - wristTransform.position).normalized;
 
-      // Calculate the target position
+      // Project the direction to camera onto the plane defined by the wrist's up direction
+      // to get a forward vector that points towards the player but stays level with the wrist
+      Vector3 forwardDirection = Vector3.ProjectOnPlane(directionToCamera, wristUpDirection).normalized;
+
+      // Use the cross product to get a right vector perpendicular to both up and forward
+      Vector3 rightDirection = Vector3.Cross(wristUpDirection, forwardDirection).normalized;
+      if (!attachToRightWrist)
+      {
+        // Flip right direction for left wrist
+        rightDirection = -rightDirection;
+      }
+
+      // Calculate the target position - directly on top of the wrist
       targetPosition = wristTransform.position +
-                    forwardDirection * forwardOffset +
-                    rightDirection * rightOffset +
-                    Vector3.up * heightOffset;
+                   wristUpDirection * heightOffset +  // Height above wrist
+                   forwardDirection * forwardOffset + // Slight forward adjustment
+                   rightDirection * rightOffset;      // Slight right/left adjustment
 
-      // Calculate rotation to face the player
-      Vector3 directionToCamera = mainCamera.transform.position - targetPosition;
-      targetRotation = Quaternion.LookRotation(directionToCamera) * Quaternion.Euler(0, rotationOffset, 0);
+      // Make UI face the player by looking at the camera, but keeping aligned with wrist orientation
+      Vector3 lookDirection = mainCamera.transform.position - targetPosition;
+      targetRotation = Quaternion.LookRotation(lookDirection, wristUpDirection);
+
+      // Apply rotation offset if needed
+      if (rotationOffset != 0)
+      {
+        // Create a rotation around the up axis of the UI
+        Quaternion additionalRotation = Quaternion.AngleAxis(rotationOffset, wristUpDirection);
+        targetRotation = additionalRotation * targetRotation;
+      }
     }
     else
     {
