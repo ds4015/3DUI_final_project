@@ -27,7 +27,7 @@ to facilitate collaboration.
 - Overhead view mode activated with bell on side of table
 - Gives top-down view of player's quadrant of the table and allows object 
   manipulation
-- Newly spanwed items will automatically transition to overhead view for
+- Newly spawned items will automatically transition to overhead view for
   placement.
 - Object selection by double tapping with index finger - object must be
   selected before translating/rotating
