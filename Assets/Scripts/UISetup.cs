@@ -14,11 +14,13 @@ public class UISetup : MonoBehaviour
   [SerializeField] private float positionSmoothTime = 0.15f; // Time to smooth position movement
   [SerializeField] private float rotationSmoothTime = 0.1f; // Time to smooth rotation
 
-  [Header("Wrist Attachment")]
+  [Header("Wrist Activation")]
   [SerializeField] private bool attachToRightWrist = true; // Whether to attach to right or left wrist
-  [SerializeField] private float wristRaiseThreshold = 0.3f; // How high the wrist needs to be raised (relative to camera height)
-  [SerializeField] private float wristShowDelay = 0.5f; // How long to wait before showing UI after wrist is raised
-  [SerializeField] private float wristHideDelay = 1.0f; // How long to wait before hiding UI after wrist is lowered
+  [SerializeField] private float wristRaiseThreshold = 0.5f; // How high the wrist needs to be raised (relative to camera height)
+  [SerializeField] private float wristShowDelay = 0.3f; // How long to wait before showing UI after wrist is raised
+  [SerializeField] private float wristHideDelay = 0.5f; // How long to wait before hiding UI after wrist is lowered
+  [SerializeField] private bool requireFacingCamera = true; // Whether the wrist needs to be facing the camera
+  [SerializeField] private float facingCameraThreshold = 0.3f; // Dot product threshold for wrist facing camera
 
   private Canvas canvas;
   private Camera mainCamera;
@@ -105,7 +107,29 @@ public class UISetup : MonoBehaviour
     // Calculate how high the wrist is relative to camera eye level
     float wristHeight = wristTransform.position.y;
     float cameraHeight = mainCamera.transform.position.y;
-    bool wristCurrentlyRaised = (wristHeight - cameraHeight) > wristRaiseThreshold;
+    bool heightConditionMet = (wristHeight - cameraHeight) > wristRaiseThreshold;
+
+    // Calculate whether the wrist is facing toward the camera
+    bool facingConditionMet = true;
+    if (requireFacingCamera)
+    {
+      // Get wrist forward direction based on which wrist we're using
+      Vector3 wristForward = attachToRightWrist ? -wristTransform.forward : wristTransform.forward;
+
+      // Get direction from wrist to camera
+      Vector3 toCameraDirection = (mainCamera.transform.position - wristTransform.position).normalized;
+
+      // Check if wrist is facing toward the camera using dot product
+      float facingDot = Vector3.Dot(wristForward, toCameraDirection);
+      facingConditionMet = facingDot > facingCameraThreshold;
+
+      // Debug visualization
+      Debug.DrawRay(wristTransform.position, wristForward * 0.2f, Color.blue);
+      Debug.DrawRay(wristTransform.position, toCameraDirection * 0.2f, Color.red);
+    }
+
+    // Both conditions must be met for the wrist to be considered "raised"
+    bool wristCurrentlyRaised = heightConditionMet && facingConditionMet;
 
     // Handle wrist raise detection with delay
     if (wristCurrentlyRaised && !isWristRaised)
