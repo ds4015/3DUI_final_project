@@ -14,13 +14,8 @@ public class UISetup : MonoBehaviour
   [SerializeField] private float positionSmoothTime = 0.15f; // Time to smooth position movement
   [SerializeField] private float rotationSmoothTime = 0.1f; // Time to smooth rotation
 
-  [Header("Wrist Activation")]
+  [Header("Wrist Attachment")]
   [SerializeField] private bool attachToRightWrist = true; // Whether to attach to right or left wrist
-  [SerializeField] private float wristRaiseThreshold = 0.5f; // How high the wrist needs to be raised (relative to camera height)
-  [SerializeField] private float wristShowDelay = 0.3f; // How long to wait before showing UI after wrist is raised
-  [SerializeField] private float wristHideDelay = 0.5f; // How long to wait before hiding UI after wrist is lowered
-  [SerializeField] private bool requireFacingCamera = true; // Whether the wrist needs to be facing the camera
-  [SerializeField] private float facingCameraThreshold = 0.3f; // Dot product threshold for wrist facing camera
 
   private Canvas canvas;
   private Camera mainCamera;
@@ -30,10 +25,6 @@ public class UISetup : MonoBehaviour
   private Vector3 positionVelocity;
   private float rotationVelocity;
   private Transform wristTransform;
-  private bool isWristRaised = false;
-  private float wristRaiseTimer = 0f;
-  private float wristLowerTimer = 0f;
-  private bool isUIVisible = false;
 
   private void Start()
   {
@@ -56,9 +47,6 @@ public class UISetup : MonoBehaviour
       UpdateTargetTransforms();
       transform.position = targetPosition;
       transform.rotation = targetRotation;
-
-      // Initially hide the UI
-      SetUIVisibility(false);
     }
   }
 
@@ -92,102 +80,9 @@ public class UISetup : MonoBehaviour
       }
     }
 
-    // Check if wrist is raised
-    CheckWristRaised();
-
     // Update transforms and position
     UpdateTargetTransforms();
     SmoothlyUpdatePosition();
-  }
-
-  private void CheckWristRaised()
-  {
-    if (wristTransform == null || mainCamera == null) return;
-
-    // Calculate how high the wrist is relative to camera eye level
-    float wristHeight = wristTransform.position.y;
-    float cameraHeight = mainCamera.transform.position.y;
-    bool heightConditionMet = (wristHeight - cameraHeight) > wristRaiseThreshold;
-
-    // Calculate whether the wrist is facing toward the camera
-    bool facingConditionMet = true;
-    if (requireFacingCamera)
-    {
-      // Get wrist forward direction based on which wrist we're using
-      Vector3 wristForward = attachToRightWrist ? -wristTransform.forward : wristTransform.forward;
-
-      // Get direction from wrist to camera
-      Vector3 toCameraDirection = (mainCamera.transform.position - wristTransform.position).normalized;
-
-      // Check if wrist is facing toward the camera using dot product
-      float facingDot = Vector3.Dot(wristForward, toCameraDirection);
-      facingConditionMet = facingDot > facingCameraThreshold;
-
-      // Debug visualization
-      Debug.DrawRay(wristTransform.position, wristForward * 0.2f, Color.blue);
-      Debug.DrawRay(wristTransform.position, toCameraDirection * 0.2f, Color.red);
-    }
-
-    // Both conditions must be met for the wrist to be considered "raised"
-    bool wristCurrentlyRaised = heightConditionMet && facingConditionMet;
-
-    // Handle wrist raise detection with delay
-    if (wristCurrentlyRaised && !isWristRaised)
-    {
-      wristRaiseTimer += Time.deltaTime;
-      if (wristRaiseTimer >= wristShowDelay)
-      {
-        isWristRaised = true;
-        wristRaiseTimer = 0f;
-        SetUIVisibility(true);
-      }
-    }
-    else if (!wristCurrentlyRaised && isWristRaised)
-    {
-      wristLowerTimer += Time.deltaTime;
-      if (wristLowerTimer >= wristHideDelay)
-      {
-        isWristRaised = false;
-        wristLowerTimer = 0f;
-        SetUIVisibility(false);
-      }
-    }
-    else
-    {
-      // Reset timers if state hasn't changed
-      if (!wristCurrentlyRaised) wristRaiseTimer = 0f;
-      if (wristCurrentlyRaised) wristLowerTimer = 0f;
-    }
-  }
-
-  private void SetUIVisibility(bool visible)
-  {
-    if (isUIVisible == visible) return;
-
-    isUIVisible = visible;
-
-    // Enable/disable all child renderers and canvases
-    foreach (var renderer in GetComponentsInChildren<Renderer>(true))
-    {
-      renderer.enabled = visible;
-    }
-
-    foreach (var graphic in GetComponentsInChildren<Graphic>(true))
-    {
-      graphic.enabled = visible;
-    }
-
-    // Make sure any child canvases update their visibility
-    foreach (var childCanvas in GetComponentsInChildren<Canvas>(true))
-    {
-      if (childCanvas != canvas) // Don't disable the main canvas
-      {
-        childCanvas.enabled = visible;
-      }
-    }
-
-    // Keep the canvas component enabled but make it not render
-    canvas.enabled = true;
   }
 
   private void UpdateTargetTransforms()
