@@ -310,6 +310,14 @@ Rotate Object (*revised*)
 ```
 
 ```
+Select Object (*new*)
+
+  Tap twice on an object with the left index finger to select it for 
+  translation and rotation.  In normal view mode, selected objects will
+  appear with a white outline around them.
+```
+
+```
 Transfer Object
 
   To transfer an object to a player on the other side of the table, grab
