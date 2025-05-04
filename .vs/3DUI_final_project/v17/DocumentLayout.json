@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\rotateobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\rotateobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
@@ -15,15 +19,11 @@
       "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\selectnewobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scripts\\rotateobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\rotateobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scripts\\objecttabmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\objecttabmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\objecttabmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scripts\\openobjectmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\openobjectmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\openobjectmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -50,11 +50,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "README.md",
               "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\README.md",
               "RelativeDocumentMoniker": "README.md",
@@ -67,13 +67,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "RotateObject.cs",
               "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RotateObject.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\RotateObject.cs",
               "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RotateObject.cs",
               "RelativeToolTip": "Assets\\Scripts\\RotateObject.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-04T04:40:27.094Z",
               "EditorCaption": ""
@@ -88,8 +88,7 @@
               "RelativeToolTip": "Assets\\Scripts\\ObjectTabMenu.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T03:58:54.131Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T03:58:54.131Z"
             },
             {
               "$type": "Document",
@@ -101,8 +100,7 @@
               "RelativeToolTip": "Assets\\Scripts\\OpenObjectMenu.cs",
               "ViewState": "AgIAAKIAAAAAAAAAAAAAANIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T03:41:11.685Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T03:41:11.685Z"
             },
             {
               "$type": "Document",
@@ -114,8 +112,7 @@
               "RelativeToolTip": "Assets\\Plugins\\Android\\AndroidManifest.xml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
-              "WhenOpened": "2025-04-30T12:01:03.29Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-30T12:01:03.29Z"
             },
             {
               "$type": "Document",
@@ -131,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "SelectNewObject.cs",
               "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\SelectNewObject.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\SelectNewObject.cs",
@@ -139,8 +136,7 @@
               "RelativeToolTip": "Assets\\Scripts\\SelectNewObject.cs",
               "ViewState": "AgIAAEgAAAAAAAAAAAAowCAAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-30T01:11:16.307Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-30T01:11:16.307Z"
             },
             {
               "$type": "Document",
@@ -156,7 +152,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
               "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
@@ -164,8 +160,7 @@
               "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T14:43:45.389Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-29T14:43:45.389Z"
             },
             {
               "$type": "Document",
