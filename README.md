@@ -21,11 +21,24 @@ the scene in progress from the perspectives of other participants in order
 to facilitate collaboration.
 
 ## Updates
+
+```
+5/04/25: Kyleigh - AR/VR Button Wrist Placement
+```
+
+- Moved AR/VR mode toggle button to the user's wrist for easy access
+- Button now follows the user's wrist using world space UI
+- Added smooth position and rotation tracking to ensure UI follows wrist naturally
+- Button maintains proper positioning and visibility as user moves
+- Button is continuously visible on the wrist for convenient mode switching (issues with raise-to-view functionality)
+- issue with VR spawnpoint capsule: size is too large when returning to AR mode after VR
+
 ```
 5/04/25: Dallas - Overhead View and Object Selection
 ```
+
 - Overhead view mode activated with bell on side of table
-- Gives top-down view of player's quadrant of the table and allows object 
+- Gives top-down view of player's quadrant of the table and allows object
   manipulation
 - Newly spawned items will automatically transition to overhead view for
   placement.
@@ -45,11 +58,12 @@ to facilitate collaboration.
 ```
 5/04/25: Nathan - Tab Switching
 ```
+
 - Implemented tab switching of assets
 - Players can switch between pages to see the assets of other players
 - Will improve UI of tab switching + integrate for all remaning players
 - Queue to be created
-  
+
 ```
 5/01/25: Kyleigh - UI Tracking Improvements
 ```
@@ -312,7 +326,7 @@ Rotate Object (*revised*)
 ```
 Select Object (*new*)
 
-  Tap twice on an object with the left index finger to select it for 
+  Tap twice on an object with the left index finger to select it for
   translation and rotation.  In normal view mode, selected objects will
   appear with a white outline around them.
 ```
@@ -344,7 +358,7 @@ The following scripts are currently available:
 ```
 BellAnimation.cs *new*
 
-  A script for giving an animation to the bell prefab positioned both on the 
+  A script for giving an animation to the bell prefab positioned both on the
   side of the tabletop at each player position aas well as in the center of the
   overhead view.  The bell when touched will animate with this script and play
   a sound to signal a transition between normal viewing mode and overhead
