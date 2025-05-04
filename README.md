@@ -23,6 +23,14 @@ to facilitate collaboration.
 ## Updates
 
 ```
+5/04/25: Nathan - Tab Switching
+```
+
+- Implemented tab switching of assets
+- Players can switch between pages to see the assets of other players
+- Will improve UI of tab switching + integrate for all remaning players
+- Queue to be created
+```
 5/01/25: Kyleigh - UI Tracking Improvements
 ```
 
