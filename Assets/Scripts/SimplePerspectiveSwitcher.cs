@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR;
 
 public class SimplePerspectiveSwitcher : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
   [SerializeField] private InputAction player4Action;
   [SerializeField] private InputAction previousPerspectiveAction;
   [SerializeField] private InputAction nextPerspectiveAction;
+
+  [Header("XR Settings")]
+  [SerializeField] private bool isXRMode = true;
+  [SerializeField] private Transform xrRig; // The parent object that contains the camera in XR
 
   private Transform[] playerMarkers = new Transform[4];
   private int currentPlayerIndex = 0;
@@ -65,7 +70,31 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
   {
     // Find main camera if not set
     if (mainCamera == null)
+    {
       mainCamera = Camera.main.transform;
+      Debug.Log($"Using main camera: {(mainCamera ? mainCamera.name : "NONE FOUND")}");
+    }
+
+    // Check if in XR mode - find XR Rig
+    if (isXRMode && mainCamera != null)
+    {
+      if (xrRig == null)
+      {
+        // Try to find XR rig (typically the parent of the camera or parent's parent)
+        Transform current = mainCamera.parent;
+        if (current != null)
+        {
+          xrRig = current;
+          Debug.Log($"Auto-detected XR Rig: {xrRig.name}");
+        }
+        else
+        {
+          Debug.LogWarning("XR Mode is enabled but couldn't find an XR Rig - camera movements may not work");
+        }
+      }
+
+      Debug.Log($"Camera parent hierarchy: {GetTransformPath(mainCamera)}");
+    }
 
     // Find player markers
     FindPlayerMarkers();
@@ -147,7 +176,10 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
     for (int i = 0; i < playerMarkers.Length; i++)
     {
       if (playerMarkers[i] != null)
+      {
         foundMarkers++;
+        Debug.Log($"Found Player {i + 1} marker at position: {playerMarkers[i].position}");
+      }
     }
 
     Debug.Log($"Found {foundMarkers} player markers");
@@ -156,11 +188,18 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
   public void SwitchToPlayer(int playerIndex)
   {
     if (playerIndex < 0 || playerIndex >= playerMarkers.Length || playerMarkers[playerIndex] == null)
+    {
+      Debug.LogWarning($"Cannot switch to Player {playerIndex + 1}: Invalid index or marker is null");
       return;
+    }
 
     if (currentPlayerIndex == playerIndex)
+    {
+      Debug.Log($"Already at Player {playerIndex + 1} perspective");
       return;
+    }
 
+    Debug.Log($"Switching from Player {currentPlayerIndex + 1} to Player {playerIndex + 1}");
     currentPlayerIndex = playerIndex;
 
     if (smoothTransition)
@@ -176,8 +215,16 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
 
   private void SetCameraToPlayerPosition(int playerIndex, bool keepHeight)
   {
+    if (playerMarkers[playerIndex] == null)
+    {
+      Debug.LogError($"Cannot move camera to Player {playerIndex + 1} position: marker is null");
+      return;
+    }
+
     Vector3 targetPosition = playerMarkers[playerIndex].position;
     Quaternion targetRotation = playerMarkers[playerIndex].rotation;
+
+    Debug.Log($"Moving camera to Player {playerIndex + 1} position: {targetPosition}, rotation: {targetRotation.eulerAngles}");
 
     // Optionally keep camera at same height
     if (keepHeight)
@@ -185,22 +232,66 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
       targetPosition.y = mainCamera.position.y;
     }
 
-    mainCamera.position = targetPosition;
-    mainCamera.rotation = targetRotation;
+    Vector3 oldPosition = mainCamera.position;
+    Quaternion oldRotation = mainCamera.rotation;
+
+    if (isXRMode && xrRig != null)
+    {
+      // In XR, we move the XR Rig, not the camera directly
+      Vector3 rigOldPosition = xrRig.position;
+      Quaternion rigOldRotation = xrRig.rotation;
+
+      // Calculate the offset from the camera to the rig
+      Vector3 cameraOffset = mainCamera.position - xrRig.position;
+
+      // Move the rig to the target position, accounting for the camera offset
+      xrRig.position = targetPosition - new Vector3(cameraOffset.x, 0, cameraOffset.z);
+      xrRig.rotation = targetRotation;
+
+      Debug.Log($"XR Rig moved from {rigOldPosition} to {xrRig.position}");
+    }
+    else
+    {
+      // Standard camera movement
+      mainCamera.position = targetPosition;
+      mainCamera.rotation = targetRotation;
+    }
+
+    Debug.Log($"Camera moved from {oldPosition} to {mainCamera.position}");
   }
 
   private IEnumerator TransitionToPlayer(int playerIndex)
   {
     isTransitioning = true;
+    Debug.Log($"Starting transition to Player {playerIndex + 1}");
 
-    Vector3 startPosition = mainCamera.position;
-    Quaternion startRotation = mainCamera.rotation;
-
+    Vector3 startPosition;
+    Quaternion startRotation;
     Vector3 targetPosition = playerMarkers[playerIndex].position;
     Quaternion targetRotation = playerMarkers[playerIndex].rotation;
 
+    if (isXRMode && xrRig != null)
+    {
+      // For XR mode, we track the rig position
+      startPosition = xrRig.position;
+      startRotation = xrRig.rotation;
+
+      // Calculate the offset from the camera to the rig
+      Vector3 cameraOffset = mainCamera.position - xrRig.position;
+
+      // Adjust target position for the rig
+      targetPosition = targetPosition - new Vector3(cameraOffset.x, 0, cameraOffset.z);
+    }
+    else
+    {
+      startPosition = mainCamera.position;
+      startRotation = mainCamera.rotation;
+    }
+
     float journeyLength = Vector3.Distance(startPosition, targetPosition);
     float startTime = Time.time;
+
+    Debug.Log($"Transition distance: {journeyLength}, will take ~{journeyLength / transitionSpeed} seconds");
 
     while (Time.time - startTime < journeyLength / transitionSpeed)
     {
@@ -209,15 +300,33 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
       // Smooth interpolation
       t = Mathf.SmoothStep(0, 1, t);
 
-      mainCamera.position = Vector3.Lerp(startPosition, targetPosition, t);
-      mainCamera.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+      if (isXRMode && xrRig != null)
+      {
+        xrRig.position = Vector3.Lerp(startPosition, targetPosition, t);
+        xrRig.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+      }
+      else
+      {
+        mainCamera.position = Vector3.Lerp(startPosition, targetPosition, t);
+        mainCamera.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+      }
 
       yield return null;
     }
 
     // Ensure we reach exact target position
-    mainCamera.position = targetPosition;
-    mainCamera.rotation = targetRotation;
+    if (isXRMode && xrRig != null)
+    {
+      xrRig.position = targetPosition;
+      xrRig.rotation = targetRotation;
+      Debug.Log($"Transition complete. XR Rig at {xrRig.position}, rotation: {xrRig.rotation.eulerAngles}");
+    }
+    else
+    {
+      mainCamera.position = targetPosition;
+      mainCamera.rotation = targetRotation;
+      Debug.Log($"Transition complete. Camera at {mainCamera.position}, rotation: {mainCamera.rotation.eulerAngles}");
+    }
 
     UpdateUI();
     isTransitioning = false;
@@ -278,5 +387,20 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
   public int GetCurrentPlayerIndex()
   {
     return currentPlayerIndex;
+  }
+
+  // Helper method to get the full path of a transform for debugging
+  private string GetTransformPath(Transform transform)
+  {
+    string path = transform.name;
+    Transform current = transform.parent;
+
+    while (current != null)
+    {
+      path = current.name + "/" + path;
+      current = current.parent;
+    }
+
+    return path;
   }
 }

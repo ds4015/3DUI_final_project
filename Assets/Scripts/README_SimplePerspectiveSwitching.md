@@ -26,8 +26,24 @@ This system allows a player to switch between different perspectives around a ta
    - Assign the Table Center transform (the center point of your table)
    - Adjust Transition Speed if needed (higher = faster transitions)
    - Enable/disable Smooth Transition as preferred
+   - Configure Input Actions (optional - defaults will be created if not set)
 
-### 3. Add UI (Optional)
+### 3. Input System Configuration
+
+This script uses the new Unity Input System. Make sure:
+
+1. The Input System package is installed via Package Manager
+2. Your project is set to use the new Input System in Project Settings > Player > Active Input Handling
+
+The script will create default input bindings if none are assigned:
+
+- `1`, `2`, `3`, `4` keys to switch to specific perspectives
+- `Q` key to switch to previous perspective
+- `E` key to switch to next perspective
+
+You can customize these bindings by assigning your own Input Actions to the fields in the Inspector.
+
+### 4. Add UI (Optional)
 
 1. If you want UI controls and perspective information:
    - Create a UI Canvas if you don't have one
@@ -64,3 +80,9 @@ Unlike the more complex implementations, this approach doesn't involve:
 - Complex calculations for object-relative perspectives
 
 This simpler approach is easier to set up and works well for showing different perspectives around a table.
+
+## Troubleshooting
+
+- **Input Error**: If you see an error about Input handling, make sure your project is set to use the new Input System in Project Settings > Player > Active Input Handling.
+- **Missing Markers**: The script will only use marker positions that actually exist in the scene. Make sure your markers are named correctly.
+- **Camera Not Moving**: Check that the Main Camera reference is set correctly and that the markers have valid positions.
