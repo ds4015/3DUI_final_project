@@ -21,7 +21,26 @@ the scene in progress from the perspectives of other participants in order
 to facilitate collaboration.
 
 ## Updates
+```
+5/04/25: Dallas - Overhead View and Object Selection
+```
+- Overhead view mode activated with bell on side of table
+- Gives top-down view of player's quadrant of the table and allows object 
+  manipulation
+- Newly spanwed items will automatically transition to overhead view for
+  placement.
+- Object selection by double tapping with index finger - object must be
+  selected before translating/rotating
+- Outline visible upon selection in normal tabletop view mode
+- Overhead view currently only implemented for player position 1, remaining
+  to come
 
+ <a href="https://www.youtube.com/watch?v=4rBbh7R9izI">
+  <img src="https://img.youtube.com/vi/4rBbh7R9izI/0.jpg" width="500" 
+  alt="City Scene"></a>
+  <br>
+  <em>Overhead View, Object Selection</em>
+</p>
 ```
 5/04/25: Nathan - Tab Switching
 ```
@@ -230,7 +249,8 @@ Dallas
 - [x] Item portals for all four players (4/28)
 - [x] Expand table, add more item portals w/position numbers (4/28)
 - [x] Test scene (4/28)
-- [ ] Overhead view switch to facilitate object placement in middle of table
+- [x] Overhead view switch to facilitate object placement in middle of table (p1) (5/4)
+- [ ] Overhead view for remaining player positions
 
 Optional:
 
@@ -313,6 +333,16 @@ The following scripts are currently available:
 ### AR Tabletop Scripts
 
 ```
+BellAnimation.cs *new*
+
+  A script for giving an animation to the bell prefab positioned both on the 
+  side of the tabletop at each player position aas well as in the center of the
+  overhead view.  The bell when touched will animate with this script and play
+  a sound to signal a transition between normal viewing mode and overhead
+  mode.
+```
+
+```
 GrabPushRotate.cs:
 
   This script is used to translate and rotate buildable objects.  Place it on any
@@ -354,6 +384,16 @@ OpenObjectMenu.cs
 ```
 
 ```
+OverheadSwap.cs *new*
+
+  Used for cloning tabletop objects onto the overhead view tabletop.  All objects
+  existing on the tabletop as well as newly instantiated objects will be cloned
+  using a pool for optimization on the overhead view tabletop.  Any changes made
+  to position and rotation will be mirrored/transferred back to the original items
+  on the original tabletop upon transitioning back to normal viewing mode with the bell.
+```
+
+```
 PortToPosition.cs (*new*)
 
   Allows teleportation from one table position to another using an in-game UI menu
@@ -374,6 +414,13 @@ RotateObject.cs
 
   A simple rotator script.  Slowly rotates a given GameObject continuously
   at a constant rate.
+```
+
+```
+ScreenFader.cs *new*
+
+  A simple script that uses a canvas to fade in/fade out transition between normal
+  tabletop view and overhead view.
 ```
 
 ```
