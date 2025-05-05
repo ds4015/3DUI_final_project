@@ -21,6 +21,23 @@ the scene in progress from the perspectives of other participants in order
 to facilitate collaboration.
 
 ## Updates
+```
+5/04/25: Nathan - Tab Switching + Request Feature
+```
+
+- Assets of other players available for request
+- Local player can request the asset of another player
+- UI pops up where a preview of the item they are looking to request is shown. Player can either send out the request or remove the request
+- UI Queue is shown to the requested player of the items the local player is looking for
+- Will continue to implement for all other players and items
+- Will look to improve design of queue and request feature
+
+<a href="https://youtu.be/_I5-_o1JqfkI">
+  <img src="https://img.youtube.com/vi/_I5-_o1JqfkI/maxresdefault.jpg" width="500" 
+  alt="Request Feature and Queue"></a>
+  <br>
+  <em>"Request Feature and Item Queue</em>
+</p>
 
 ```
 5/04/25: Kyleigh - AR/VR Button Wrist Placement
