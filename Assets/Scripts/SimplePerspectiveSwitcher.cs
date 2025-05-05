@@ -10,7 +10,6 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
   [SerializeField] private Transform tableCenter;
   [SerializeField] private float transitionSpeed = 5f;
   [SerializeField] private bool smoothTransition = true;
-  [SerializeField] private PerspectiveUI uiComponent;
 
   [Header("Input Actions")]
   [SerializeField] private InputAction player1Action;
@@ -99,15 +98,10 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
     // Find player markers
     FindPlayerMarkers();
 
-    // Find UI component if not set
-    if (uiComponent == null)
-      uiComponent = FindObjectOfType<PerspectiveUI>();
-
     // Set initial position
     if (playerMarkers[0] != null)
     {
       SetCameraToPlayerPosition(0, false);
-      UpdateUI();
     }
 
     // Set up default input actions if not already set
@@ -209,7 +203,6 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
     else
     {
       SetCameraToPlayerPosition(playerIndex, false);
-      UpdateUI();
     }
   }
 
@@ -328,33 +321,7 @@ public class SimplePerspectiveSwitcher : MonoBehaviour
       Debug.Log($"Transition complete. Camera at {mainCamera.position}, rotation: {mainCamera.rotation.eulerAngles}");
     }
 
-    UpdateUI();
     isTransitioning = false;
-  }
-
-  private void UpdateUI()
-  {
-    if (uiComponent != null)
-    {
-      uiComponent.UpdatePerspectiveText(currentPlayerIndex);
-    }
-
-    // Find and update perspective menu if it exists
-    UpdatePerspectiveMenus();
-  }
-
-  private void UpdatePerspectiveMenus()
-  {
-    // Find any perspective menus in the scene and update them
-    PerspectiveSwitcherMenu[] menus = FindObjectsOfType<PerspectiveSwitcherMenu>();
-
-    if (menus != null && menus.Length > 0)
-    {
-      foreach (PerspectiveSwitcherMenu menu in menus)
-      {
-        menu.UpdateButtonStates();
-      }
-    }
   }
 
   // Public methods for external calls (e.g. UI buttons)
