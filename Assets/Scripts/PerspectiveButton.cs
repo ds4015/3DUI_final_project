@@ -15,6 +15,8 @@ public class PerspectiveButton : MonoBehaviour
   public Text playerNameText;
   [Tooltip("UI Manager that controls the perspective panel")]
   public PerspectiveUIManager uiManager;
+  [Tooltip("The reset button that should appear after perspective change")]
+  public GameObject resetButton;
 
   private float lastPressTime = -10f;
   private Image buttonImage;
@@ -41,6 +43,12 @@ public class PerspectiveButton : MonoBehaviour
       {
         Debug.LogWarning("PerspectiveButton: PerspectiveUIManager not found in scene!");
       }
+    }
+
+    // If reset button is not assigned, try to find it from the perspective switcher
+    if (resetButton == null && perspectiveSwitcher != null && perspectiveSwitcher.resetButton != null)
+    {
+      resetButton = perspectiveSwitcher.resetButton;
     }
 
     // Get the button image for highlighting
@@ -86,6 +94,22 @@ public class PerspectiveButton : MonoBehaviour
         {
           uiManager.HidePerspectivePanel();
         }
+
+        // Show the reset button directly
+        if (resetButton != null)
+        {
+          resetButton.SetActive(true);
+        }
+
+        // Hide the perspective switch button if it exists
+        if (perspectiveSwitcher.perspectiveSwitchButton != null)
+        {
+          perspectiveSwitcher.perspectiveSwitchButton.SetActive(false);
+        }
+
+        // Debug log to verify this code is executing
+        Debug.Log("Perspective changed to player " + targetPlayerIndex +
+                  ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null"));
       }
     }
   }

@@ -11,6 +11,8 @@ public class ResetPerspectiveButton : MonoBehaviour
   public PerspectiveSwitcher perspectiveSwitcher;
   [Tooltip("The GameObject containing this button")]
   public GameObject buttonGameObject;
+  [Tooltip("The perspective switch button to show when reset")]
+  public GameObject perspectiveSwitchButton;
 
   private float lastPressTime = -10f;
   private Image buttonImage;
@@ -40,12 +42,24 @@ public class ResetPerspectiveButton : MonoBehaviour
       buttonGameObject = gameObject;
     }
 
+    // If perspective switch button is not assigned, try to get it from the perspective switcher
+    if (perspectiveSwitchButton == null && perspectiveSwitcher != null)
+    {
+      perspectiveSwitchButton = perspectiveSwitcher.perspectiveSwitchButton;
+    }
+
     // Get the button image for highlighting
     buttonImage = GetComponent<Image>();
     if (buttonImage != null)
     {
       originalColor = buttonImage.color;
     }
+
+    // Initially hide this button
+    gameObject.SetActive(false);
+
+    // Debug log to verify this script is running
+    Debug.Log("ResetPerspectiveButton initialized on " + gameObject.name);
   }
 
   private void OnTriggerEnter(Collider other)
@@ -65,6 +79,18 @@ public class ResetPerspectiveButton : MonoBehaviour
       if (perspectiveSwitcher != null)
       {
         perspectiveSwitcher.ResetToOriginalView();
+
+        // Hide this button
+        gameObject.SetActive(false);
+
+        // Show the perspective switch button
+        if (perspectiveSwitchButton != null)
+        {
+          perspectiveSwitchButton.SetActive(true);
+        }
+
+        // Debug log to verify this code is executing
+        Debug.Log("Reset button pressed, hiding reset button and showing switch button");
       }
     }
   }

@@ -54,6 +54,11 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     // Set initial button states
     UpdateButtonVisibility();
+
+    // Debug log to verify button references
+    Debug.Log("PerspectiveSwitcher initialized. Switch button: " +
+              (perspectiveSwitchButton != null ? perspectiveSwitchButton.name : "null") +
+              ", Reset button: " + (resetButton != null ? resetButton.name : "null"));
   }
 
   /// <summary>
@@ -74,6 +79,11 @@ public class PerspectiveSwitcher : MonoBehaviour
     // We're no longer in original perspective
     isInOriginalPerspective = false;
     UpdateButtonVisibility();
+
+    // Debug log to verify button states after switching
+    Debug.Log("Switched to perspective " + playerIndex +
+              ". Switch button active: " + (perspectiveSwitchButton != null ? perspectiveSwitchButton.activeSelf.ToString() : "null") +
+              ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null"));
   }
 
   /// <summary>
@@ -84,6 +94,11 @@ public class PerspectiveSwitcher : MonoBehaviour
     tableObjectsParent.rotation = originalRotation;
     isInOriginalPerspective = true;
     UpdateButtonVisibility();
+
+    // Debug log to verify button states after reset
+    Debug.Log("Reset to original view. Switch button active: " +
+              (perspectiveSwitchButton != null ? perspectiveSwitchButton.activeSelf.ToString() : "null") +
+              ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null"));
   }
 
   /// <summary>
@@ -114,6 +129,8 @@ public class PerspectiveSwitcher : MonoBehaviour
     if (resetButton != null)
     {
       resetButton.SetActive(!isInOriginalPerspective);
+      // Debug log to verify reset button state
+      Debug.Log("UpdateButtonVisibility called - Reset button active: " + resetButton.activeSelf);
     }
   }
 }
