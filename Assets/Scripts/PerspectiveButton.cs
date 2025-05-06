@@ -62,6 +62,16 @@ public class PerspectiveButton : MonoBehaviour
     UpdatePlayerNameText();
   }
 
+  private void OnDisable()
+  {
+    // Ensure button returns to original color when disabled/panel is hidden
+    if (buttonImage != null)
+    {
+      buttonImage.color = originalColor;
+    }
+    isHovering = false;
+  }
+
   private void UpdatePlayerNameText()
   {
     if (playerNameText != null && perspectiveSwitcher != null &&
@@ -106,6 +116,9 @@ public class PerspectiveButton : MonoBehaviour
         {
           perspectiveSwitcher.perspectiveSwitchButton.SetActive(false);
         }
+
+        // Reset button highlight state
+        SetHoverState(false);
 
         // Debug log to verify this code is executing
         Debug.Log("Perspective changed to player " + targetPlayerIndex +

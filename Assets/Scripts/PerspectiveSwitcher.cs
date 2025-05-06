@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PerspectiveSwitcher : MonoBehaviour
 {
@@ -29,11 +30,29 @@ public class PerspectiveSwitcher : MonoBehaviour
   // Current active perspective (index in the playerPositions array)
   private int currentPerspective = 0;
 
-  // Store original rotation
-  private Quaternion originalRotation;
+  // Store original state
+  private Quaternion originalParentRotation;
+  private Dictionary<Transform, OriginalTransform> originalChildTransforms = new Dictionary<Transform, OriginalTransform>();
 
   // Track if we're in a different perspective than original
   private bool isInOriginalPerspective = true;
+
+  // Class to store original transform data
+  private class OriginalTransform
+  {
+    public Vector3 position;
+    public Quaternion rotation;
+    public Vector3 localPosition;
+    public Quaternion localRotation;
+
+    public OriginalTransform(Transform t)
+    {
+      position = t.position;
+      rotation = t.rotation;
+      localPosition = t.localPosition;
+      localRotation = t.localRotation;
+    }
+  }
 
   void Start()
   {
@@ -49,8 +68,8 @@ public class PerspectiveSwitcher : MonoBehaviour
       rotationCenter = tableObjectsParent;
     }
 
-    // Store the original rotation
-    originalRotation = tableObjectsParent.rotation;
+    // Store the original rotations and positions
+    StoreOriginalTransforms();
 
     // Set initial button states
     UpdateButtonVisibility();
@@ -59,6 +78,35 @@ public class PerspectiveSwitcher : MonoBehaviour
     Debug.Log("PerspectiveSwitcher initialized. Switch button: " +
               (perspectiveSwitchButton != null ? perspectiveSwitchButton.name : "null") +
               ", Reset button: " + (resetButton != null ? resetButton.name : "null"));
+  }
+
+  /// <summary>
+  /// Store the original transforms of all table objects
+  /// </summary>
+  private void StoreOriginalTransforms()
+  {
+    originalParentRotation = tableObjectsParent.rotation;
+    originalChildTransforms.Clear();
+
+    // Store transforms for all children recursively
+    StoreChildrenTransforms(tableObjectsParent);
+
+    Debug.Log("Stored original transforms for " + originalChildTransforms.Count + " objects");
+  }
+
+  /// <summary>
+  /// Recursively store transforms for all children
+  /// </summary>
+  private void StoreChildrenTransforms(Transform parent)
+  {
+    foreach (Transform child in parent)
+    {
+      if (!originalChildTransforms.ContainsKey(child))
+      {
+        originalChildTransforms[child] = new OriginalTransform(child);
+        StoreChildrenTransforms(child);
+      }
+    }
   }
 
   /// <summary>
@@ -91,7 +139,12 @@ public class PerspectiveSwitcher : MonoBehaviour
   /// </summary>
   public void ResetToOriginalView()
   {
-    tableObjectsParent.rotation = originalRotation;
+    // Restore the parent rotation
+    tableObjectsParent.rotation = originalParentRotation;
+
+    // Restore all child transforms to their original state
+    RestoreOriginalTransforms();
+
     isInOriginalPerspective = true;
     UpdateButtonVisibility();
 
@@ -99,6 +152,27 @@ public class PerspectiveSwitcher : MonoBehaviour
     Debug.Log("Reset to original view. Switch button active: " +
               (perspectiveSwitchButton != null ? perspectiveSwitchButton.activeSelf.ToString() : "null") +
               ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null"));
+  }
+
+  /// <summary>
+  /// Restore all transforms to their original state
+  /// </summary>
+  private void RestoreOriginalTransforms()
+  {
+    foreach (var entry in originalChildTransforms)
+    {
+      Transform child = entry.Key;
+      OriginalTransform originalTransform = entry.Value;
+
+      if (child != null)
+      {
+        // Restore local transform values
+        child.localPosition = originalTransform.localPosition;
+        child.localRotation = originalTransform.localRotation;
+      }
+    }
+
+    Debug.Log("Restored original transforms for " + originalChildTransforms.Count + " objects");
   }
 
   /// <summary>
