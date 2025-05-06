@@ -13,6 +13,8 @@ public class PerspectiveButton : MonoBehaviour
   public int targetPlayerIndex = 0;
   [Tooltip("Optional text component to display the player name")]
   public Text playerNameText;
+  [Tooltip("UI Manager that controls the perspective panel")]
+  public PerspectiveUIManager uiManager;
 
   private float lastPressTime = -10f;
   private Image buttonImage;
@@ -28,6 +30,16 @@ public class PerspectiveButton : MonoBehaviour
       if (perspectiveSwitcher == null)
       {
         Debug.LogError("PerspectiveButton: PerspectiveSwitcher not found in scene!");
+      }
+    }
+
+    // Check if UI manager is assigned
+    if (uiManager == null)
+    {
+      uiManager = FindObjectOfType<PerspectiveUIManager>();
+      if (uiManager == null)
+      {
+        Debug.LogWarning("PerspectiveButton: PerspectiveUIManager not found in scene!");
       }
     }
 
@@ -68,6 +80,12 @@ public class PerspectiveButton : MonoBehaviour
       if (perspectiveSwitcher != null)
       {
         perspectiveSwitcher.SwitchToPerspective(targetPlayerIndex);
+
+        // Hide the perspective selection panel
+        if (uiManager != null)
+        {
+          uiManager.HidePerspectivePanel();
+        }
       }
     }
   }

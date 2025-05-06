@@ -8,6 +8,12 @@ public class PerspectiveSwitcher : MonoBehaviour
   [Tooltip("Center point to rotate around (usually the center of the table)")]
   public Transform rotationCenter;
 
+  [Tooltip("Button that opens the perspective selection panel")]
+  public GameObject perspectiveSwitchButton;
+
+  [Tooltip("Reset button that appears after changing perspective")]
+  public GameObject resetButton;
+
   [System.Serializable]
   public class PlayerPosition
   {
@@ -26,6 +32,9 @@ public class PerspectiveSwitcher : MonoBehaviour
   // Store original rotation
   private Quaternion originalRotation;
 
+  // Track if we're in a different perspective than original
+  private bool isInOriginalPerspective = true;
+
   void Start()
   {
     if (tableObjectsParent == null)
@@ -42,6 +51,9 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     // Store the original rotation
     originalRotation = tableObjectsParent.rotation;
+
+    // Set initial button states
+    UpdateButtonVisibility();
   }
 
   /// <summary>
@@ -58,6 +70,10 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     currentPerspective = playerIndex;
     RotateTableToCurrentPerspective();
+
+    // We're no longer in original perspective
+    isInOriginalPerspective = false;
+    UpdateButtonVisibility();
   }
 
   /// <summary>
@@ -66,6 +82,8 @@ public class PerspectiveSwitcher : MonoBehaviour
   public void ResetToOriginalView()
   {
     tableObjectsParent.rotation = originalRotation;
+    isInOriginalPerspective = true;
+    UpdateButtonVisibility();
   }
 
   /// <summary>
@@ -81,5 +99,21 @@ public class PerspectiveSwitcher : MonoBehaviour
     // Apply rotation around the center point
     Vector3 centerPoint = rotationCenter.position;
     tableObjectsParent.RotateAround(centerPoint, Vector3.up, targetPosition.rotationAngle);
+  }
+
+  /// <summary>
+  /// Update the visibility of perspective switch and reset buttons
+  /// </summary>
+  private void UpdateButtonVisibility()
+  {
+    if (perspectiveSwitchButton != null)
+    {
+      perspectiveSwitchButton.SetActive(isInOriginalPerspective);
+    }
+
+    if (resetButton != null)
+    {
+      resetButton.SetActive(!isInOriginalPerspective);
+    }
   }
 }

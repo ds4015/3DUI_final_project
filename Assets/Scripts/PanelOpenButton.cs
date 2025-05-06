@@ -7,8 +7,14 @@ public class PanelOpenButton : MonoBehaviour
   public float pressCooldown = 1.0f;
   [Tooltip("Color to highlight the button when finger is near")]
   public Color hoverColor = new Color(0.7f, 0.9f, 0.7f, 1.0f);
-  [Tooltip("The panel GameObject to show/hide when button is pressed")]
+  [Tooltip("The panel to show/hide when button is pressed")]
   public GameObject targetPanel;
+  [Tooltip("UI Manager that controls the perspective panel")]
+  public PerspectiveUIManager uiManager;
+  [Tooltip("The PerspectiveSwitcher component")]
+  public PerspectiveSwitcher perspectiveSwitcher;
+  [Tooltip("The GameObject containing this button")]
+  public GameObject buttonGameObject;
 
   private float lastPressTime = -10f;
   private Image buttonImage;
@@ -18,9 +24,40 @@ public class PanelOpenButton : MonoBehaviour
   void Start()
   {
     // Check if target panel is assigned
-    if (targetPanel == null)
+    if (targetPanel == null && uiManager == null)
     {
-      Debug.LogError("PanelOpenButton: Target panel not assigned!");
+      Debug.LogError("PanelOpenButton: Either target panel or UI Manager must be assigned!");
+    }
+
+    // Check if perspective switcher is assigned
+    if (perspectiveSwitcher == null)
+    {
+      perspectiveSwitcher = FindObjectOfType<PerspectiveSwitcher>();
+      if (perspectiveSwitcher == null)
+      {
+        Debug.LogWarning("PanelOpenButton: PerspectiveSwitcher not found in scene!");
+      }
+      else
+      {
+        // Register this button with the perspective switcher
+        perspectiveSwitcher.perspectiveSwitchButton = buttonGameObject != null ? buttonGameObject : gameObject;
+      }
+    }
+
+    // Check if UI manager is assigned
+    if (uiManager == null)
+    {
+      uiManager = FindObjectOfType<PerspectiveUIManager>();
+      if (uiManager == null)
+      {
+        Debug.LogWarning("PanelOpenButton: PerspectiveUIManager not found in scene!");
+      }
+    }
+
+    // If buttonGameObject is not assigned, use this object
+    if (buttonGameObject == null)
+    {
+      buttonGameObject = gameObject;
     }
 
     // Get the button image for highlighting
@@ -51,7 +88,11 @@ public class PanelOpenButton : MonoBehaviour
       lastPressTime = Time.time;
 
       // Toggle panel visibility
-      if (targetPanel != null)
+      if (uiManager != null)
+      {
+        uiManager.TogglePerspectivePanel();
+      }
+      else if (targetPanel != null)
       {
         targetPanel.SetActive(!targetPanel.activeSelf);
       }

@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResetPerspectiveButton : MonoBehaviour
+public class PerspectiveSwitchButton : MonoBehaviour
 {
   [Tooltip("Cooldown time in seconds between button presses.")]
   public float pressCooldown = 1.0f;
   [Tooltip("Color to highlight the button when finger is near")]
   public Color hoverColor = new Color(0.7f, 0.9f, 0.7f, 1.0f);
-  [Tooltip("The PerspectiveSwitcher component to control")]
+  [Tooltip("UI Manager that controls the perspective panel")]
+  public PerspectiveUIManager uiManager;
+  [Tooltip("The PerspectiveSwitcher component")]
   public PerspectiveSwitcher perspectiveSwitcher;
   [Tooltip("The GameObject containing this button")]
   public GameObject buttonGameObject;
@@ -19,18 +21,28 @@ public class ResetPerspectiveButton : MonoBehaviour
 
   void Start()
   {
+    // Check if UI manager is assigned
+    if (uiManager == null)
+    {
+      uiManager = FindObjectOfType<PerspectiveUIManager>();
+      if (uiManager == null)
+      {
+        Debug.LogWarning("PerspectiveSwitchButton: PerspectiveUIManager not found in scene!");
+      }
+    }
+
     // Check if perspective switcher is assigned
     if (perspectiveSwitcher == null)
     {
       perspectiveSwitcher = FindObjectOfType<PerspectiveSwitcher>();
       if (perspectiveSwitcher == null)
       {
-        Debug.LogError("ResetPerspectiveButton: PerspectiveSwitcher not found in scene!");
+        Debug.LogError("PerspectiveSwitchButton: PerspectiveSwitcher not found in scene!");
       }
       else
       {
         // Register this button with the perspective switcher
-        perspectiveSwitcher.resetButton = buttonGameObject != null ? buttonGameObject : gameObject;
+        perspectiveSwitcher.perspectiveSwitchButton = buttonGameObject != null ? buttonGameObject : gameObject;
       }
     }
 
@@ -61,10 +73,10 @@ public class ResetPerspectiveButton : MonoBehaviour
         return;
       lastPressTime = Time.time;
 
-      // Reset perspective to original view
-      if (perspectiveSwitcher != null)
+      // Toggle the perspective panel
+      if (uiManager != null)
       {
-        perspectiveSwitcher.ResetToOriginalView();
+        uiManager.TogglePerspectivePanel();
       }
     }
   }
