@@ -31,6 +31,7 @@ public class PerspectiveSwitcher : MonoBehaviour
   private int currentPerspective = 0;
 
   // Store original state
+  private Vector3 originalParentPosition;
   private Quaternion originalParentRotation;
   private Dictionary<Transform, OriginalTransform> originalChildTransforms = new Dictionary<Transform, OriginalTransform>();
 
@@ -44,6 +45,7 @@ public class PerspectiveSwitcher : MonoBehaviour
     public Quaternion rotation;
     public Vector3 localPosition;
     public Quaternion localRotation;
+    public Vector3 localScale;
 
     public OriginalTransform(Transform t)
     {
@@ -51,6 +53,7 @@ public class PerspectiveSwitcher : MonoBehaviour
       rotation = t.rotation;
       localPosition = t.localPosition;
       localRotation = t.localRotation;
+      localScale = t.localScale;
     }
   }
 
@@ -85,6 +88,7 @@ public class PerspectiveSwitcher : MonoBehaviour
   /// </summary>
   private void StoreOriginalTransforms()
   {
+    originalParentPosition = tableObjectsParent.position;
     originalParentRotation = tableObjectsParent.rotation;
     originalChildTransforms.Clear();
 
@@ -139,10 +143,11 @@ public class PerspectiveSwitcher : MonoBehaviour
   /// </summary>
   public void ResetToOriginalView()
   {
-    // Restore the parent rotation
+    // First, restore the parent to its original state
+    tableObjectsParent.position = originalParentPosition;
     tableObjectsParent.rotation = originalParentRotation;
 
-    // Restore all child transforms to their original state
+    // Then restore all child transforms to their original state
     RestoreOriginalTransforms();
 
     isInOriginalPerspective = true;
@@ -159,6 +164,11 @@ public class PerspectiveSwitcher : MonoBehaviour
   /// </summary>
   private void RestoreOriginalTransforms()
   {
+    // First, restore the parent's world position and rotation
+    tableObjectsParent.position = originalParentPosition;
+    tableObjectsParent.rotation = originalParentRotation;
+
+    // Then restore all child transforms
     foreach (var entry in originalChildTransforms)
     {
       Transform child = entry.Key;
@@ -166,9 +176,12 @@ public class PerspectiveSwitcher : MonoBehaviour
 
       if (child != null)
       {
-        // Restore local transform values
-        child.localPosition = originalTransform.localPosition;
-        child.localRotation = originalTransform.localRotation;
+        // Direct world transform restoration approach
+        child.position = originalTransform.position;
+        child.rotation = originalTransform.rotation;
+
+        // Ensure proper scale
+        child.localScale = originalTransform.localScale;
       }
     }
 
@@ -181,13 +194,17 @@ public class PerspectiveSwitcher : MonoBehaviour
   private void RotateTableToCurrentPerspective()
   {
     PlayerPosition targetPosition = playerPositions[currentPerspective];
+    Vector3 centerPoint = rotationCenter.position;
 
-    // Calculate the rotation needed
-    Quaternion targetRotation = Quaternion.Euler(0, targetPosition.rotationAngle, 0);
+    // Reset to original first to ensure consistent rotation
+    tableObjectsParent.position = originalParentPosition;
+    tableObjectsParent.rotation = originalParentRotation;
 
     // Apply rotation around the center point
-    Vector3 centerPoint = rotationCenter.position;
-    tableObjectsParent.RotateAround(centerPoint, Vector3.up, targetPosition.rotationAngle);
+    float rotationAngle = targetPosition.rotationAngle;
+    tableObjectsParent.RotateAround(centerPoint, Vector3.up, rotationAngle);
+
+    Debug.Log("Rotated table by " + rotationAngle + " degrees around " + centerPoint);
   }
 
   /// <summary>
