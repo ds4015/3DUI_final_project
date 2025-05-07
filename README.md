@@ -21,6 +21,19 @@ the scene in progress from the perspectives of other participants in order
 to facilitate collaboration.
 
 ## Updates
+
+```
+5/06/25: Kyleigh - Perspective Switching System
+```
+
+- Implemented collaborative perspective switching to view the table from another player's viewpoint
+- Players can now easily switch to see the table from any registered player position
+- UI panel displays player perspective options with intuitive button controls
+- Table objects rotate as a single unit to maintain spatial relationships
+- Reset button allows immediate return to original perspective
+- Automatic UI switching between perspective selection and reset buttons
+- Proper restoration of all object positions and orientations when returning to original view
+
 ```
 5/04/25: Nathan - Tab Switching + Request Feature
 ```
@@ -299,6 +312,14 @@ Nathan
 - [ ] Set up spawn points to support up to 4 players
 - [ ] Ownership transfer of objects
 
+```
+Kyleigh
+```
+
+- [x] AR/VR mode switching (4/28)
+- [x] UI tracking and positioning improvements (5/1)
+- [x] Perspective switching system (5/6)
+
 ## Gestures
 
 The following hand gestures are currently available:
@@ -364,6 +385,18 @@ Transfer Object
   You must select which player number you wish to transfer an object to
   using the buttons on top of the portal before placing the object inside
   the portal.
+```
+
+```
+Switch Perspective (*new*)
+
+  To view the table from another player's perspective, press the perspective
+  switch button to open a panel with player options. Select a player perspective
+  button to rotate the table and all objects to match that player's viewpoint.
+
+  To return to your original perspective, press the reset button that appears
+  after switching. This will restore all objects to their original positions
+  and orientations.
 ```
 
 ## Scripts
@@ -434,6 +467,44 @@ OverheadSwap.cs *new*
 ```
 
 ```
+PanelOpenButton.cs *new*
+
+  A script for buttons that show/hide panels when pressed with a finger in AR.
+  Used for the perspective switching panel and other UI elements in the scene.
+  Includes visual feedback when buttons are hovered and pressed, cooldown
+  timing to prevent accidental double-presses, and integration with the
+  PerspectiveUIManager for controlling panel visibility.
+```
+
+```
+PerspectiveButton.cs *new*
+
+  This script is used for buttons that switch to a specific player's perspective.
+  When pressed, it tells the PerspectiveSwitcher which player's perspective to show.
+  The button displays the player's name, highlights when touched, and ensures
+  proper UI state changes after being pressed (hiding the panel and showing the
+  reset button).
+```
+
+```
+PerspectiveSwitcher.cs *new*
+
+  The main controller for the perspective switching system. This script manages
+  rotating the table and all its objects to show different player perspectives.
+  It stores the original positions and rotations of all objects and can reset
+  everything precisely to its original state. Also manages which UI buttons should
+  be visible based on the current perspective state.
+```
+
+```
+PerspectiveUIManager.cs *new*
+
+  Manages the UI panels related to perspective switching. Controls showing and
+  hiding the panel containing player perspective buttons. Works alongside the
+  PerspectiveSwitcher to ensure proper UI flow when switching perspectives.
+```
+
+```
 PortToPosition.cs (*new*)
 
   Allows teleportation from one table position to another using an in-game UI menu
@@ -447,6 +518,15 @@ PositionPlayer.cs
   This is placed on the XR Origin Hands rig to start the player's camera off in a
   particular location.  Assign the XR rig itself and an empty GameObject positioned
   at the desired start location to the serialized variables in the inspector.
+```
+
+```
+ResetPerspectiveButton.cs *new*
+
+  A script for the button that resets the table and objects to their original perspective.
+  When pressed, it calls the PerspectiveSwitcher to restore everything to its original
+  position and rotation. The button automatically appears after changing perspective and
+  hides itself after being pressed, showing the perspective switch button again.
 ```
 
 ```
