@@ -18,7 +18,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-
+        if (runner.IsServer)
+        {
             Vector3 spawnPosition = Vector3.zero;
             Quaternion spawnRotation = Quaternion.identity;
 
@@ -37,7 +38,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
                 AudioListener listener = networkPlayerObject.GetComponentInChildren<AudioListener>();
                 listener.enabled = false; //disable audiosource for non-authority players
             }
-
+        }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
