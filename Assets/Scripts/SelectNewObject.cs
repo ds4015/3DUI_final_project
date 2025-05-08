@@ -65,7 +65,7 @@ public class SelectNewObject : MonoBehaviour
         }
         Bounds b = prefabCol.bounds;
 
-        /* spawn its transaprent cube container */
+        /* spawn its transaprent cube container 
         
         spawnCubeContainer = GameObject.CreatePrimitive(PrimitiveType.Cube);        
         spawnCubeContainer.transform.position = b.center;
@@ -78,7 +78,7 @@ public class SelectNewObject : MonoBehaviour
         spawnCubeContainer.transform.localScale = new Vector3(
             maxExtent, b.size.y + 0.1f, maxExtent);
 
-        /* set the transaprent material */
+        /* set the transaprent material 
         var rend = spawnCubeContainer.GetComponent<Renderer>();
         if (rend == null)
             return;
@@ -86,7 +86,7 @@ public class SelectNewObject : MonoBehaviour
         if(spawnCubeContainerMaterial != null)
             rend.material = spawnCubeContainerMaterial;
 
-        /* rotate the container */
+        /* rotate the container 
         spawnCubeContainer.AddComponent<RotateObject>();
         
         Destroy(spawnCubeContainer.GetComponent<Collider>());
