@@ -15,6 +15,20 @@ public class PerspectiveSwitcher : MonoBehaviour
   [Tooltip("Reset button that appears after changing perspective")]
   public GameObject resetButton;
 
+  [Header("Audio")]
+  [Tooltip("Sound to play when switching perspective")]
+  public AudioClip perspectiveSwitchSound;
+
+  [Tooltip("Sound to play when resetting to original view")]
+  public AudioClip resetSound;
+
+  [Range(0f, 1f)]
+  [Tooltip("Volume for perspective switch sounds")]
+  public float audioVolume = 0.7f;
+
+  // AudioSource component for playing sounds
+  private AudioSource audioSource;
+
   [System.Serializable]
   public class PlayerPosition
   {
@@ -71,6 +85,9 @@ public class PerspectiveSwitcher : MonoBehaviour
       rotationCenter = tableObjectsParent;
     }
 
+    // Set up audio source
+    SetupAudioSource();
+
     // Store the original rotations and positions
     StoreOriginalTransforms();
 
@@ -81,6 +98,23 @@ public class PerspectiveSwitcher : MonoBehaviour
     Debug.Log("PerspectiveSwitcher initialized. Switch button: " +
               (perspectiveSwitchButton != null ? perspectiveSwitchButton.name : "null") +
               ", Reset button: " + (resetButton != null ? resetButton.name : "null"));
+  }
+
+  /// <summary>
+  /// Set up audio source for playing perspective switch sounds
+  /// </summary>
+  private void SetupAudioSource()
+  {
+    // Get or add an AudioSource component
+    audioSource = GetComponent<AudioSource>();
+    if (audioSource == null)
+    {
+      audioSource = gameObject.AddComponent<AudioSource>();
+      // Configure audio source defaults
+      audioSource.playOnAwake = false;
+      audioSource.spatialBlend = 0f; // 2D sound
+      audioSource.volume = audioVolume;
+    }
   }
 
   /// <summary>
@@ -126,6 +160,10 @@ public class PerspectiveSwitcher : MonoBehaviour
     }
 
     currentPerspective = playerIndex;
+
+    // Play perspective switch sound
+    PlayPerspectiveSwitchSound();
+
     RotateTableToCurrentPerspective();
 
     // We're no longer in original perspective
@@ -139,10 +177,39 @@ public class PerspectiveSwitcher : MonoBehaviour
   }
 
   /// <summary>
+  /// Play sound for perspective switching
+  /// </summary>
+  private void PlayPerspectiveSwitchSound()
+  {
+    if (audioSource != null && perspectiveSwitchSound != null)
+    {
+      audioSource.clip = perspectiveSwitchSound;
+      audioSource.volume = audioVolume;
+      audioSource.Play();
+    }
+  }
+
+  /// <summary>
+  /// Play sound for resetting to original view
+  /// </summary>
+  private void PlayResetSound()
+  {
+    if (audioSource != null && resetSound != null)
+    {
+      audioSource.clip = resetSound;
+      audioSource.volume = audioVolume;
+      audioSource.Play();
+    }
+  }
+
+  /// <summary>
   /// Reset the table to its original rotation
   /// </summary>
   public void ResetToOriginalView()
   {
+    // Play reset sound
+    PlayResetSound();
+
     // First, restore the parent to its original state
     tableObjectsParent.position = originalParentPosition;
     tableObjectsParent.rotation = originalParentRotation;

@@ -15,6 +15,8 @@ public class PanelOpenButton : MonoBehaviour
   public PerspectiveSwitcher perspectiveSwitcher;
   [Tooltip("The GameObject containing this button")]
   public GameObject buttonGameObject;
+  [Tooltip("Play sound when button is clicked")]
+  public bool playAudio = true;
 
   private float lastPressTime = -10f;
   private Image buttonImage;
@@ -86,6 +88,12 @@ public class PanelOpenButton : MonoBehaviour
       if (Time.time - lastPressTime < pressCooldown)
         return;
       lastPressTime = Time.time;
+
+      // Play button click sound
+      if (playAudio)
+      {
+        AudioManager.Instance.PlayButtonClickSound();
+      }
 
       // Toggle panel visibility
       if (uiManager != null)
