@@ -7,6 +7,8 @@ public class XRModeToggleButton : MonoBehaviour
   public float pressCooldown = 1.0f;
   [Tooltip("Color to highlight the button when finger is near")]
   public Color hoverColor = new Color(0.7f, 0.9f, 0.7f, 1.0f);
+  [Tooltip("Play sound when button is clicked")]
+  public bool playAudio = true;
 
   private float lastPressTime = -10f;
   private ARVRModeManager modeManager;
@@ -42,6 +44,12 @@ public class XRModeToggleButton : MonoBehaviour
       if (Time.time - lastPressTime < pressCooldown)
         return;
       lastPressTime = Time.time;
+
+      // Play button click sound
+      if (playAudio)
+      {
+        AudioManager.Instance.PlayButtonClickSound();
+      }
 
       if (modeManager != null)
       {

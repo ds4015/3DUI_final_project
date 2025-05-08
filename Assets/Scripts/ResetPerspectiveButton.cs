@@ -13,6 +13,8 @@ public class ResetPerspectiveButton : MonoBehaviour
   public GameObject buttonGameObject;
   [Tooltip("The perspective switch button to show when reset")]
   public GameObject perspectiveSwitchButton;
+  [Tooltip("Play sound when button is clicked")]
+  public bool playAudio = true;
 
   private float lastPressTime = -10f;
   private Image buttonImage;
@@ -74,6 +76,12 @@ public class ResetPerspectiveButton : MonoBehaviour
       if (Time.time - lastPressTime < pressCooldown)
         return;
       lastPressTime = Time.time;
+
+      // Play button click sound
+      if (playAudio)
+      {
+        AudioManager.Instance.PlayButtonClickSound();
+      }
 
       // Reset perspective to original view
       if (perspectiveSwitcher != null)
