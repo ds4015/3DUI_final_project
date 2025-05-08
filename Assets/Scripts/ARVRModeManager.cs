@@ -566,6 +566,7 @@ public class ARVRModeManager : MonoBehaviour
       // Teleport the player to the VR spawn point
       xrOrigin.position = targetPosition;
       xrOrigin.rotation = finalVRSpawnPointRotation;
+      xrOrigin.GetComponent<MovePlayer>().enabled = true;
     }
     else if (floorTransform != null)
     {
@@ -597,6 +598,7 @@ public class ARVRModeManager : MonoBehaviour
 
       Debug.Log($"No VRSpawnPoint found. Teleporting to floor at adjusted height {targetPosition.y} with height boost of {vrHeightBoost}m");
       xrOrigin.position = targetPosition;
+
     }
   }
 

@@ -48,6 +48,8 @@ public class OverheadSwap : MonoBehaviour
                         
         tabletopItems = GameObject.Find("Tabletop Objects");
 
+        if (tabletopItems == null)
+            return;
         foreach (Transform child in tabletopItems.transform)
         {
             if (child.gameObject.activeSelf)
@@ -195,7 +197,16 @@ public class OverheadSwap : MonoBehaviour
                     if (newObject != null)
                     {
                         newObject.SetActive(true);
-                        Vector3 newPosition = new Vector3(child.transform.position.x - offset, child.transform.position.y, child.transform.position.z + offset);
+                        Vector3 newPosition = new Vector3(0, 0, 0);
+                        if (playerNum == 1) {
+                            newPosition = new Vector3(child.transform.position.x - offset, child.transform.position.y, child.transform.position.z + offset);
+                        } else if (playerNum == 2) {
+                            newPosition = new Vector3(child.transform.position.x + offset, child.transform.position.y, child.transform.position.z + offset);
+                        } else if (playerNum == 3) {
+                            newPosition = new Vector3(child.transform.position.x + offset, child.transform.position.y, child.transform.position.z - offset);
+                        } else if (playerNum == 4) {
+                            newPosition = new Vector3(child.transform.position.x - offset, child.transform.position.y, child.transform.position.z - offset);
+                        }
                         newObject.transform.position = newPosition;
                         newObject.transform.rotation = child.transform.rotation;
                         
@@ -253,11 +264,17 @@ public class OverheadSwap : MonoBehaviour
                 GameObject original = kvp.Key;
                 GameObject overhead = kvp.Value;
 
-                Vector3 updatedPosition = new Vector3(
-                    overhead.transform.position.x + offset,
-                    overhead.transform.position.y,
-                    overhead.transform.position.z - offset
-                );
+                Vector3 updatedPosition = new Vector3(0, 0, 0);
+                if (playerNum == 1) {
+                    updatedPosition = new Vector3(overhead.transform.position.x + offset, overhead.transform.position.y, overhead.transform.position.z - offset);
+                } else if (playerNum == 2) {
+                    updatedPosition = new Vector3(overhead.transform.position.x - offset, overhead.transform.position.y, overhead.transform.position.z - offset);
+                } else if (playerNum == 3) {
+                    updatedPosition = new Vector3(overhead.transform.position.x - offset, overhead.transform.position.y, overhead.transform.position.z + offset);
+                } else if (playerNum == 4) {
+                    updatedPosition = new Vector3(overhead.transform.position.x + offset, overhead.transform.position.y, overhead.transform.position.z + offset);
+                }
+
 
                 original.transform.position = updatedPosition;
                 original.transform.rotation = overhead.transform.rotation;
@@ -278,11 +295,16 @@ public class OverheadSwap : MonoBehaviour
                     {
                         if (overhead.name.StartsWith(item.name))
                         {
-                            Vector3 updatedPosition = new Vector3(
-                                overhead.transform.position.x + offset,
-                                overhead.transform.position.y,
-                                overhead.transform.position.z - offset
-                            );
+                            Vector3 updatedPosition = new Vector3(0, 0, 0);
+                            if (playerNum == 1) {
+                                updatedPosition = new Vector3(overhead.transform.position.x + offset, overhead.transform.position.y, overhead.transform.position.z - offset);
+                            } else if (playerNum == 2) {
+                                updatedPosition = new Vector3(overhead.transform.position.x - offset, overhead.transform.position.y, overhead.transform.position.z - offset);
+                            } else if (playerNum == 3) {
+                                updatedPosition = new Vector3(overhead.transform.position.x - offset, overhead.transform.position.y, overhead.transform.position.z + offset);
+                            } else if (playerNum == 4) {
+                                updatedPosition = new Vector3(overhead.transform.position.x + offset, overhead.transform.position.y, overhead.transform.position.z + offset);
+                            }
                             
                             item.transform.position = updatedPosition;
                             item.transform.rotation = overhead.transform.rotation;
@@ -302,8 +324,8 @@ public class OverheadSwap : MonoBehaviour
     {
         switch (playerNum)
         {
-            case 1: return 1;
-            case 2: return 0;
+            case 1: return 0;
+            case 2: return 1;
             case 3: return 2; 
             case 4: return 3; 
             default: return 1;
@@ -339,11 +361,11 @@ public class OverheadSwap : MonoBehaviour
                 int wedge;
                 if (absX >= absZ)
                 {
-                    wedge = dir.x >= 0 ? 2 : 1;
+                    wedge = dir.x >= 0 ? 2 : 0;
                 }
                 else
                 {
-                    wedge = dir.z >= 0 ? 0 : 3;
+                    wedge = dir.z >= 0 ? 1 : 3;
                 }
                 if (wedge == playerWedge)
                     return true;
