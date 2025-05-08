@@ -566,7 +566,7 @@ public class ARVRModeManager : MonoBehaviour
       // Teleport the player to the VR spawn point
       xrOrigin.position = targetPosition;
       xrOrigin.rotation = finalVRSpawnPointRotation;
-      xrOrigin.GetComponent<MovePlayer>().enabled = true;
+      // xrOrigin.GetComponent<MovePlayer>().enabled = true;
     }
     else if (floorTransform != null)
     {
