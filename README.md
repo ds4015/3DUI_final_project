@@ -23,6 +23,15 @@ to facilitate collaboration.
 ## Updates
 
 ```
+5/08/25: Kyleigh - Audio Feedback for Perspective Switching
+```
+
+- Added audio feedback when switching between perspectives and pressing wrist buttons
+- Added volume control for perspective switching audio
+- Integrated audio source handling within the PerspectiveSwitcher component
+- Enhanced user experience with auditory cues to reinforce visual perspective changes
+
+```
 5/06/25: Kyleigh - Perspective Switching System
 ```
 
@@ -494,6 +503,12 @@ PerspectiveSwitcher.cs *new*
   It stores the original positions and rotations of all objects and can reset
   everything precisely to its original state. Also manages which UI buttons should
   be visible based on the current perspective state.
+
+  The script includes audio feedback features:
+  - Plays configurable sounds when switching perspectives
+  - Plays distinct sounds when resetting to original view
+  - Automatically manages an AudioSource component
+  - Allows volume adjustment through the Inspector
 ```
 
 ```
