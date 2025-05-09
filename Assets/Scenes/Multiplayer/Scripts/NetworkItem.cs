@@ -5,23 +5,51 @@ using UnityEngine;
 
 public class NetworkItem : NetworkBehaviour
 {
-    [Networked] private Vector3 Position { get; set; }
-    [Networked] public Quaternion Rotation { get; set; }
+    public Transform playArea;
+    public Transform head;
+    public Transform leftHand;
+    public Transform rightHand;
+    private HardwareRig hardwareRig;
+    public override void Spawned()
+    {
+        if (Object.HasInputAuthority)
+        {
+            hardwareRig = FindObjectOfType<HardwareRig>();
+            if (hardwareRig == null)
+            {
+                Debug.LogError("No hardware Rig found ");
+            }
+        }
+
+    }
 
     public override void FixedUpdateNetwork()
     {
-        if (HasStateAuthority)
+        if(GetInput<RigIn>(out var inp))
         {
-            Position = transform.position;
-            Rotation = transform.rotation;
-            Debug.Log($"[NetworkedItem][Host] Position: {Position}, Rotation: {Rotation.eulerAngles}, Player: {Runner.LocalPlayer}"); 
-        }
+            playArea.position = inp.playAreaPosition;
+            playArea.rotation = inp.playAreaRotation;
+            head.position = inp.headsetPosition;
+            head.rotation = inp.headsetRotation;
+            leftHand.position = inp.leftHandPosition;
+            leftHand.rotation = inp.leftHandRotation;
+            rightHand.position = inp.rightHandPosition;
+            rightHand.rotation = inp.rightHandRotation;
 
-        else
+        }
+    }
+    public override void Render()
+    {
+        if (Object.HasInputAuthority && hardwareRig != null)
         {
-            transform.position = Position;
-            transform.rotation = Rotation;
-            Debug.Log($"[NetworkedItem][Client] Position: {Position}, Rotation: {Rotation.eulerAngles}, Player: {Runner.LocalPlayer}");
+            playArea.position = hardwareRig.playArea.position;
+            playArea.rotation = hardwareRig.playArea.rotation;
+            head.position = hardwareRig.headset.position;
+            head.rotation = hardwareRig.headset.rotation;
+            leftHand.position = hardwareRig.leftHand.position;
+            leftHand.rotation = hardwareRig.leftHand.rotation;
+            rightHand.position = hardwareRig.rightHand.position;
+            rightHand.rotation = hardwareRig.rightHand.rotation;
         }
     }
 }

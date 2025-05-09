@@ -3,68 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\selectnewobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\selectnewobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scripts\\requestqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\requestqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\requestitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\requestitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\requestitemui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\requestitemui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\porttoposition.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\porttoposition.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\objecttabmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\objecttabmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\reqbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\reqbutton.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\openobjectmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\openobjectmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\transferitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\transferitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scripts\\rotateobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\rotateobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\basicspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\basicspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\networkvr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scenes\\multiplayer\\scripts\\networkvr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\networkvr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\networkitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\networkitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\hardwarerig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\hardwarerig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Plugins\\Android\\AndroidManifest.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Plugins\\Android\\AndroidManifest.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\rigin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\rigin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\connmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\connmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -74,202 +26,56 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "RequestQueue.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RequestQueue.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\RequestQueue.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RequestQueue.cs",
-              "RelativeToolTip": "Assets\\Scripts\\RequestQueue.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAzAAAAAAAAAA==",
+              "Title": "RigIn.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\RigIn.cs",
+              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\RigIn.cs",
+              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\RigIn.cs",
+              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\RigIn.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:49:28.932Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ReqButton.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\ReqButton.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\ReqButton.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\ReqButton.cs",
-              "RelativeToolTip": "Assets\\Scripts\\ReqButton.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:03:35.012Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "RequestItemUI.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RequestItemUI.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\RequestItemUI.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RequestItemUI.cs",
-              "RelativeToolTip": "Assets\\Scripts\\RequestItemUI.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAQwB0AAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T20:23:06.032Z"
+              "WhenOpened": "2025-05-09T03:11:30.645Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "RequestItem.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RequestItem.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\RequestItem.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RequestItem.cs",
-              "RelativeToolTip": "Assets\\Scripts\\RequestItem.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Title": "ConnManager.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\ConnManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\ConnManager.cs",
+              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\ConnManager.cs",
+              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\ConnManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T20:20:30.661Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ObjectTabMenu.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\ObjectTabMenu.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\ObjectTabMenu.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\ObjectTabMenu.cs",
-              "RelativeToolTip": "Assets\\Scripts\\ObjectTabMenu.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T03:58:54.131Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "OpenObjectMenu.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\OpenObjectMenu.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\OpenObjectMenu.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\OpenObjectMenu.cs",
-              "RelativeToolTip": "Assets\\Scripts\\OpenObjectMenu.cs",
-              "ViewState": "AgIAADIAAAAAAAAAAAAewEwAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T03:41:11.685Z"
+              "WhenOpened": "2025-05-09T02:12:16.019Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "SelectNewObject.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\SelectNewObject.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\SelectNewObject.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\SelectNewObject.cs",
-              "RelativeToolTip": "Assets\\Scripts\\SelectNewObject.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA4AAAAhAAAAAAAAAA==",
+              "Title": "HardwareRig.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\HardwareRig.cs",
+              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\HardwareRig.cs",
+              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\HardwareRig.cs",
+              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\HardwareRig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-30T01:11:16.307Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-09T00:40:12.585Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "README.md",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\README.md",
-              "RelativeDocumentMoniker": "README.md",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\README.md",
-              "RelativeToolTip": "README.md",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAAB8AAAA0AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-05-04T05:22:12.776Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "PortToPosition.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\PortToPosition.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\PortToPosition.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\PortToPosition.cs",
-              "RelativeToolTip": "Assets\\Scripts\\PortToPosition.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T23:30:56.884Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "RotateObject.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RotateObject.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\RotateObject.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\RotateObject.cs",
-              "RelativeToolTip": "Assets\\Scripts\\RotateObject.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T04:40:27.094Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "AndroidManifest.xml",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Plugins\\Android\\AndroidManifest.xml",
-              "RelativeDocumentMoniker": "Assets\\Plugins\\Android\\AndroidManifest.xml",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Plugins\\Android\\AndroidManifest.xml",
-              "RelativeToolTip": "Assets\\Plugins\\Android\\AndroidManifest.xml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
-              "WhenOpened": "2025-04-30T12:01:03.29Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "TransferItem.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\TransferItem.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\TransferItem.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scripts\\TransferItem.cs",
-              "RelativeToolTip": "Assets\\Scripts\\TransferItem.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T19:56:34.397Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "NetworkItem.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\NetworkItem.cs",
-              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\NetworkItem.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\NetworkItem.cs",
-              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\NetworkItem.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-30T01:22:23.762Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
               "Title": "NetworkVR.cs",
               "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
               "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
               "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
               "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAuwC4AAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T15:41:31.821Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Player.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
-              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
-              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\Player.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T14:43:45.389Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "BasicSpawner.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
-              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
-              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAswF4AAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T13:44:39.617Z"
+              "WhenOpened": "2025-05-09T00:05:53.555Z",
+              "EditorCaption": ""
             }
           ]
         }
