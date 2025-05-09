@@ -21,6 +21,23 @@ the scene in progress from the perspectives of other participants in order
 to facilitate collaboration.
 
 ## Updates
+```
+5/09/25: Dallas - Finger Movement (VR Mode)
+```
+- Ability to move through VR immersive scene using hand tracking
+- Point index finger of left hand straight forward to move through the scene
+- To stop moving, lower the finger or raise it vertically
+- To change direction, rotate head or body with headset and continue pointing forward
+- Forward movement is in relation to camera/headset position
+- NOTE: Objects in VR mode currently collide with player with movement - must be
+made non-triggerable
+
+<a href="https://youtu.be/oxrz8zAX6A8">
+  <img src="https://img.youtube.com/vi/oxrz8zAX6A8/maxresdefault.jpg" width="500" 
+  alt="Finger Movement"></a>
+  <br>
+  <em>Finger Movement in VR Mode</em>
+</p>
 
 ```
 5/08/25: Nathan - Multiplayer Movement Synced
@@ -70,7 +87,7 @@ to facilitate collaboration.
   <img src="https://img.youtube.com/vi/_I5-_o1JqfkI/maxresdefault.jpg" width="500" 
   alt="Request Feature and Queue"></a>
   <br>
-  <em>"Request Feature and Item Queue</em>
+  <em>Request Feature and Item Queue</em>
 </p>
 
 ```
@@ -317,11 +334,9 @@ Dallas
 - [x] Test scene (4/28)
 - [x] Overhead view switch to facilitate object placement in middle of table (p1) (5/4)
 - [ ] Overhead view for remaining player positions
+- [x] Finger movement in VR Mode (5/9)
 
 Optional:
-
-- [ ] Include controller input
-- [ ] Item request feature
 - [ ] Hand gestures to open/close object selection UI panels
 
 ```
@@ -332,6 +347,7 @@ Nathan
 - [ ] Add authoritative interaction logic for scene objects
 - [ ] Set up spawn points to support up to 4 players
 - [ ] Ownership transfer of objects
+- [x] Item request/queue feature
 
 ```
 Kyleigh
@@ -362,7 +378,7 @@ Grab
 ```
 
 ```
-Move Object (*revised*)
+Move Object
 
     To move/translate an object with the hand, place any of your fingers on
     the left hand on the object and then move your hand.  As long as your
@@ -371,7 +387,21 @@ Move Object (*revised*)
 ```
 
 ```
-Rotate Object (*revised*)
+Move Player (*new*)
+
+    To move the player in the immersive VR mode scene, point the left index
+    finger straight forward.  The player will walk forward as long as the
+    index finger is pointing straight ahead.  To stop moving, either raise
+    or lower the index finger vertically.
+
+    To rotate in VR Mode, simply turn your head/body in the direction you
+    wish to move and then point the index finger forward to move in that
+    direction.  All movement is in relation to the position of the camera/
+    headset.
+```
+
+```
+Rotate Object
 
   To rotate an object, place any of your fingers of the right hand on the
   object. The object will begin to automatically rotate at a constant rate
@@ -383,7 +413,7 @@ Rotate Object (*revised*)
 ```
 
 ```
-Select Object (*new*)
+Select Object
 
   Tap twice on an object with the left index finger to select it for
   translation and rotation.  In normal view mode, selected objects will
@@ -427,7 +457,7 @@ The following scripts are currently available:
 ### AR Tabletop Scripts
 
 ```
-BellAnimation.cs *new*
+BellAnimation.cs
 
   A script for giving an animation to the bell prefab positioned both on the
   side of the tabletop at each player position aas well as in the center of the
@@ -532,7 +562,7 @@ PerspectiveUIManager.cs *new*
 ```
 
 ```
-PortToPosition.cs (*new*)
+PortToPosition.cs
 
   Allows teleportation from one table position to another using an in-game UI menu
   for location selection.  This feature is for testing and will be removed in the final
@@ -564,7 +594,7 @@ RotateObject.cs
 ```
 
 ```
-ScreenFader.cs *new*
+ScreenFader.cs
 
   A simple script that uses a canvas to fade in/fade out transition between normal
   tabletop view and overhead view.
@@ -596,7 +626,7 @@ SelectNewObject.cs
 ```
 
 ```
-SelectRemotePortal.cs (*new*)
+SelectRemotePortal.cs
 
   This is used in conjunction with the in-game UI menu for item portals to transfer
   items between players.  It allows the player to select which table position (1,2,3,4)
@@ -675,6 +705,15 @@ ARVRModeManager.cs:
   - Managing physics properties appropriately for each mode
   - Storing the last known positions in AR mode for seamless return
   - Adjusting camera settings and skybox for each mode
+```
+
+```
+MovePlayer.cs (*new*)
+
+  A basic script for detecting hand gestures in VR Mode.  If the index finger of the
+  left hand is horizontal and pointed forward, the camera/XR origin will move forward
+  in the current direction the player is facing.  If the index finger is raised or
+  lowered vertically, movement will be halted.
 ```
 
 ```
