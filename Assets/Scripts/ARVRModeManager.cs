@@ -243,6 +243,21 @@ public class ARVRModeManager : MonoBehaviour
   {
     if (!ValidateReferences()) return;
 
+    // Disable collisions with index finger colliders
+    GameObject[] fingerColliders = GameObject.FindGameObjectsWithTag("IndexFingerCollider");
+    foreach (GameObject collider in fingerColliders)
+    {
+      if (collider != null)
+      {
+        // Disable the collider component
+        Collider col = collider.GetComponent<Collider>();
+        if (col != null)
+        {
+          col.enabled = false;
+        }
+      }
+    }
+
     // Switch to skybox
     if (mainCamera != null)
     {
@@ -429,6 +444,7 @@ public class ARVRModeManager : MonoBehaviour
         // Store the world position before reparenting
         Vector3 worldPosition = data.transform.position;
         Quaternion worldRotation = data.transform.rotation;
+        
 
         // Parent to floor
         data.transform.SetParent(floorTransform, true);
@@ -566,7 +582,7 @@ public class ARVRModeManager : MonoBehaviour
       // Teleport the player to the VR spawn point
       xrOrigin.position = targetPosition;
       xrOrigin.rotation = finalVRSpawnPointRotation;
-      // xrOrigin.GetComponent<MovePlayer>().enabled = true;
+      xrOrigin.GetComponent<MovePlayer>().enabled = true;
     }
     else if (floorTransform != null)
     {
@@ -856,6 +872,21 @@ public class ARVRModeManager : MonoBehaviour
         if (data.grabPushRotate != null)
         {
           data.grabPushRotate.enabled = data.wasGrabPushRotateEnabled;
+        }
+      }
+    }
+
+    // Re-enable collisions with index finger colliders
+    GameObject[] fingerColliders = GameObject.FindGameObjectsWithTag("IndexFingerCollider");
+    foreach (GameObject collider in fingerColliders)
+    {
+      if (collider != null)
+      {
+        // Re-enable the collider component
+        Collider col = collider.GetComponent<Collider>();
+        if (col != null)
+        {
+          col.enabled = true;
         }
       }
     }
