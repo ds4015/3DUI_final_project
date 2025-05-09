@@ -19,6 +19,8 @@ public class NetworkItem : NetworkBehaviour
             {
                 Debug.LogError("No hardware Rig found ");
             }
+            hardwareRig.transform.position = transform.position;
+            hardwareRig.transform.rotation = transform.rotation;
         }
 
     }

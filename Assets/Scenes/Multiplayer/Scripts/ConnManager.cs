@@ -12,6 +12,9 @@ public class ConnManager : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkPrefabRef networkRigPref;
     private NetworkRunner _runner;
     private Dictionary<PlayerRef, NetworkObject> _spawnedPlayers = new();
+    [SerializeField]
+    private Transform[] spawnMarkers;
+    private int spawnIndex = 0;
     private async void Start()
     {
         _runner = gameObject.AddComponent<NetworkRunner>();
@@ -44,8 +47,19 @@ public class ConnManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         if(runner.IsServer)
         {
-            Vector3 spawnPosition = new Vector3(player.RawEncoded * 2, 0, 0);
-            NetworkObject playerXRRig = runner.Spawn(networkRigPref, spawnPosition, Quaternion.identity, player);
+            Vector3 spawnPosition = Vector3.zero;
+            Quaternion spawnRotation = Quaternion.identity;
+
+            if (spawnMarkers != null && spawnIndex < spawnMarkers.Length)
+            {
+                spawnPosition = spawnMarkers[spawnIndex].position;
+                Debug.Log($"SpawnMarker Position: {spawnMarkers[spawnIndex].position}");
+                spawnRotation = spawnMarkers[spawnIndex].rotation;
+                spawnIndex++;
+            }
+            //Vector3 spawnPosition = new Vector3(player.RawEncoded * 2, 0, 0);
+            Debug.Log($"Spawning at {spawnPosition}, index at {spawnIndex - 1}");
+            NetworkObject playerXRRig = runner.Spawn(networkRigPref, spawnPosition, spawnRotation, player);
             _spawnedPlayers[player] = playerXRRig;
         }
     }

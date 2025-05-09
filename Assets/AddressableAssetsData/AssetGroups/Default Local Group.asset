@@ -17,6 +17,11 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 1a8cbb3e30f9f43459cd7ca84e65b839
   m_SerializeEntries:
+  - m_GUID: 0487fb4b7dfd0438fa73e87d3237c002
+    m_Address: Assets/Prefabs/VRSpawnPoint.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 062f16ec3a3224c00bbe4f2dc9ee8f9b
     m_Address: Assets/Prefabs/Art Deco Building.prefab
     m_ReadOnly: 0
@@ -104,6 +109,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b39da92bdef194b7db6ed2196f22767a
     m_Address: Assets/Prefabs/Bench.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bbc31cc4d9fa0485a904e60c62b22f28
+    m_Address: Assets/Materials/New Material 6.mat
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
