@@ -3,15 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scenes\\multiplayer\\scripts\\basicspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\basicspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\rigin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\rigin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\natha\\Downloads\\fusion-vr-host-2.0.5\\Assets\\Photon\\FusionAddons\\ConnectionManager\\Scripts\\ConnectionManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\networkvr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\networkvr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|c:\\users\\natha\\downloads\\git\\3dui_final_project\\assets\\scenes\\multiplayer\\scripts\\connectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\connectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\hardwarerig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\hardwarerig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\assets\\scenes\\multiplayer\\scripts\\connmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E13EB973-4B37-5A60-2561-8114271895CD}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\multiplayer\\scripts\\connmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,40 +31,53 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "BasicSpawner.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
-              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
-              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\BasicSpawner.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAABMAAAAAAAAAA==",
+              "Title": "RigIn.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\RigIn.cs",
+              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\RigIn.cs",
+              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\RigIn.cs",
+              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\RigIn.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T22:17:04.949Z",
+              "WhenOpened": "2025-05-09T03:11:30.645Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ConnectionManager.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\fusion-vr-host-2.0.5\\Assets\\Photon\\FusionAddons\\ConnectionManager\\Scripts\\ConnectionManager.cs",
-              "RelativeDocumentMoniker": "..\\..\\fusion-vr-host-2.0.5\\Assets\\Photon\\FusionAddons\\ConnectionManager\\Scripts\\ConnectionManager.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\fusion-vr-host-2.0.5\\Assets\\Photon\\FusionAddons\\ConnectionManager\\Scripts\\ConnectionManager.cs",
-              "RelativeToolTip": "..\\..\\fusion-vr-host-2.0.5\\Assets\\Photon\\FusionAddons\\ConnectionManager\\Scripts\\ConnectionManager.cs",
-              "ViewState": "AgIAAIMAAAAAAAAAAAAiwA0BAAAAAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "ConnManager.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\ConnManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\ConnManager.cs",
+              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\ConnManager.cs",
+              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\ConnManager.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAywCMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T22:15:31.666Z",
+              "WhenOpened": "2025-05-09T02:12:16.019Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "ConnectionManager.cs",
-              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\ConnectionManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\ConnectionManager.cs",
-              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\ConnectionManager.cs",
-              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\ConnectionManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "HardwareRig.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\HardwareRig.cs",
+              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\HardwareRig.cs",
+              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\HardwareRig.cs",
+              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\HardwareRig.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAA0wA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-08T22:13:12.999Z",
+              "WhenOpened": "2025-05-09T00:40:12.585Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NetworkVR.cs",
+              "DocumentMoniker": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
+              "RelativeDocumentMoniker": "Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
+              "ToolTip": "C:\\Users\\natha\\Downloads\\git\\3DUI_final_project\\Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
+              "RelativeToolTip": "Assets\\Scenes\\Multiplayer\\Scripts\\NetworkVR.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAAwAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T00:05:53.555Z",
               "EditorCaption": ""
             }
           ]

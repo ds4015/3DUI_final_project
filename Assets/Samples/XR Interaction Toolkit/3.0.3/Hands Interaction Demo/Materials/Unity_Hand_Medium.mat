@@ -22,10 +22,12 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Unity_Hand_Medium
   m_Shader: {fileID: -6465566751694194690, guid: 89a6790c28795dd4987bb267c3d05338, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _BUILTIN_SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords:
   - _SURFACE_TYPE_TRANSPARENT
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -34,6 +36,7 @@ Material:
     RenderType: Transparent
   disabledShaderPasses:
   - DepthOnly
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -83,6 +86,7 @@ Material:
     - Vector1_69b40c1ee2e1422cbfcae389f53b36a9: 1
     - Vector1_8671db567d5d4784b29e8ff511bd8f1e: 1
     - _AlphaClip: 0
+    - _AlphaToMask: 0
     - _BUILTIN_AlphaClip: 0
     - _BUILTIN_Blend: 0
     - _BUILTIN_CullMode: 2
@@ -156,7 +160,7 @@ Material:
     - _FingerColor_3: {r: 1, g: 1, b: 1, a: 0}
     - _FingerColor_4: {r: 1, g: 1, b: 1, a: 0}
     - _FingerGlowColor: {r: 1, g: 1, b: 1, a: 1}
-    - _MainColor: {r: 0.1, g: 0.1, b: 0.1, a: 0.65882355}
+    - _MainColor: {r: 0.09999997, g: 0.09999997, b: 0.09999997, a: 1}
     - _OutlineColor: {r: 0.53773576, g: 0.53773576, b: 0.53773576, a: 1}
     - _OutlineGlowColor: {r: 1, g: 1, b: 1, a: 1}
     - _PinchColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}

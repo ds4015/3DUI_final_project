@@ -23,6 +23,17 @@ to facilitate collaboration.
 ## Updates
 
 ```
+5/08/25: Nathan - Multiplayer Movement Synced
+```
+
+- Successfully added multiplayer into the project
+- Movement of hands and headset in sync with all player POV -- including transforms
+- Incorporated a hardware rig and a network rig
+- Hardware rig feeds data into network rig for network transform updates
+- Will add implementation to main scene
+
+
+```
 5/08/25: Kyleigh - Audio Feedback for Perspective Switching
 ```
 
@@ -30,6 +41,7 @@ to facilitate collaboration.
 - Added volume control for perspective switching audio
 - Integrated audio source handling within the PerspectiveSwitcher component
 - Enhanced user experience with auditory cues to reinforce visual perspective changes
+
 
 ```
 5/06/25: Kyleigh - Perspective Switching System
