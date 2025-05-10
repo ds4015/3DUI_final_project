@@ -5,12 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TabletopAR.unity
     guid: 55daccc09a3b69647bbab145b54a3ab3
   - enabled: 0
     path: Assets/Scenes/TabletopAR Nathan Tab.unity
     guid: 7cef6fd42a84c5149a1738c4e5273c89
+  - enabled: 1
+    path: Assets/Scenes/Multiplayer.unity
+    guid: 95bc90a40826a4368bf8678b845c7839
   m_configObjects:
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 6dee06cff2e7b42f098dd866cfae5714, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: fa73de82e4581439aabe0c01e1f910f5, type: 2}
