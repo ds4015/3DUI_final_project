@@ -22,14 +22,20 @@ to facilitate collaboration.
 
 ## Updates
 ```
+5/09/25: Nathan - Changed multiplayer mode to shared + fixed object sync for connecting players
+```
+- Changed multiplayer from auto host/client to shared mode
+- Players are now able to spawn items and items are visible amongst all players
+- Able to handle 4 player multiplayer
+- Will implement to main scene
+
+```
 5/08/25: Nathan - Multiplayer Object Sync and added Main scene to Multiplayer scene
 ```
 
 - Added main scene to multiplayer
 - Players are spawning in correct places + objects are synced in transform amongst all players
 - Currently facing issue where player 2 is unable to spawn items perhaps due to Host-Client behavior
-- 
-
 
 ```
 5/09/25: Dallas - Finger Movement (VR Mode)
