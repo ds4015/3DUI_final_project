@@ -4,19 +4,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Fusion;
 using Fusion.Sockets;
-using System.Linq;
 
 public class ConnManager : MonoBehaviour, INetworkRunnerCallbacks
 {
-    //public GameMode gameMode = GameMode.AutoHostOrClient;
-    public GameMode gameMode = GameMode.Shared;
+    public GameMode gameMode = GameMode.AutoHostOrClient;
     public string roomName = "TabletopVR";
     public NetworkPrefabRef networkRigPref;
     private NetworkRunner _runner;
     private Dictionary<PlayerRef, NetworkObject> _spawnedPlayers = new();
     [SerializeField]
     private Transform[] spawnMarkers;
-    //private int spawnIndex = 0;
+    private int spawnIndex = 0;
     private async void Start()
     {
         _runner = gameObject.AddComponent<NetworkRunner>();
@@ -47,12 +45,10 @@ public class ConnManager : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        //if(runner.IsServer)
-        //{
-            if (player != runner.LocalPlayer) return;
+        if(runner.IsServer)
+        {
             Vector3 spawnPosition = Vector3.zero;
             Quaternion spawnRotation = Quaternion.identity;
-            int spawnIndex = (runner.ActivePlayers.Count()-1) % spawnMarkers.Length;
 
             if (spawnMarkers != null && spawnIndex < spawnMarkers.Length)
             {
@@ -65,7 +61,7 @@ public class ConnManager : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log($"Spawning at {spawnPosition}, index at {spawnIndex - 1}");
             NetworkObject playerXRRig = runner.Spawn(networkRigPref, spawnPosition, spawnRotation, player);
             _spawnedPlayers[player] = playerXRRig;
-        //}
+        }
     }
     public void OnSceneLoadStart(NetworkRunner runner) {  }
     public void OnSceneLoadDone(NetworkRunner runner) { }
