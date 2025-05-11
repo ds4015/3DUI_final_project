@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
-
+using Fusion;
 
 public class GrabPushRotate : MonoBehaviour
 {
@@ -27,10 +27,9 @@ public class GrabPushRotate : MonoBehaviour
 
 	public AudioSource audioSource;
 
-	[Header("Settings")]
 	public float rotationSpeed = 35f; 
 	public float moveSpeed = 2f; 
-	public float tableHeight = 1.122f; 
+	public float tableHeight = 1.125f; 
 	public float rotationSensitivity = 2f; 
 	private float fixedY;
 	private Rigidbody rb;
@@ -47,163 +46,273 @@ public class GrabPushRotate : MonoBehaviour
 	private bool rightIndexInside = false;
 	private float lastFingerAngle = 0f;
 	private bool handOffsetSet = false;
-	void Start()
-	{
-		rb = GetComponent<Rigidbody>();
+	XRGrabInteractable grabInteractable;
 
-		/* suspend physics temporarily on load until settled */
-		/* this prevents objects from colliding with one another initially and messing up scene */
-		rb.constraints = RigidbodyConstraints.FreezeAll;
-		rb.isKinematic = true;
-		rb.useGravity = false;
+    void Awake()
+    {
+		/* add necessary components if not present */
+        grabInteractable = GetComponent<XRGrabInteractable>();
+        if (grabInteractable == null)
+            grabInteractable = gameObject.AddComponent<XRGrabInteractable>();
 
-		StartCoroutine(UnfreezeAfterDelay());
+        NetworkObject networkObject = GetComponent<NetworkObject>();
+        if (networkObject == null)
+            networkObject = gameObject.AddComponent<NetworkObject>();
 
-		leftHand = GameObject.Find("XR Origin Hands (XR Rig)/Camera Offset/Left Hand/Left Hand Interaction Visual/L_Wrist").transform;
-		rightHand = GameObject.Find("XR Origin Hands (XR Rig)/Camera Offset/Right Hand/Right Hand Interaction Visual/R_Wrist").transform;
-		leftIndex = GameObject.Find("XR Origin Hands (XR Rig)/Camera Offset/Left Hand/Left Hand Interaction Visual/L_Wrist/L_IndexMetacarpal/L_IndexProximal/L_IndexIntermediate/L_IndexDistal/LeftIndexDistalCollider").transform;
-		rightIndex = GameObject.Find("XR Origin Hands (XR Rig)/Camera Offset/Right Hand/Right Hand Interaction Visual/R_Wrist/R_IndexMetacarpal/R_IndexProximal/R_IndexIntermediate/R_IndexDistal/RightIndexDistalCollider").transform;
-		leftHandCollider = leftHand.GetComponent<Collider>();
-		rightHandCollider = rightHand.GetComponent<Collider>();
-		leftIndexCollider = leftIndex.GetComponent<Collider>();
-		rightIndexCollider = rightIndex.GetComponent<Collider>();
+        NetworkTransform networkTransform = GetComponent<NetworkTransform>();
+        if (networkTransform == null)
+            networkTransform = gameObject.AddComponent<NetworkTransform>();
 
-		fixedY = tableHeight;
-		lastRightHandPosition = rightHand.position;
-		lastLeftHandPosition = leftHand.position;
-	}
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            AudioClip turnClip = Resources.Load<AudioClip>("turn");
+            if (turnClip != null)
+            {
+                audioSource.clip = turnClip;
+            }
+        }
 
+        Outline outline = GetComponent<Outline>();
+        if (outline == null)
+        {
+            outline = gameObject.AddComponent<Outline>();
+        }
+        outline.enabled = false;
 
-	private IEnumerator UnfreezeAfterDelay()
-	{
+        grabInteractable.selectEntered.AddListener(OnGrabStart);
+        grabInteractable.selectExited.AddListener(OnGrabEnd);
 
-		yield return new WaitForSeconds(1.0f);
+        Collider[] colliders = GetComponents<Collider>();
+        if (colliders.Length > 0)
+        {
+            grabInteractable.colliders.Clear();
+            foreach (Collider collider in colliders)
+            {
+                grabInteractable.colliders.Add(collider);
+            }
+        }
 
-		rb.isKinematic = false;
-		rb.useGravity = true;
-		rb.constraints = RigidbodyConstraints.FreezeRotation;
+        XRInteractionManager interactionManager = FindObjectOfType<XRInteractionManager>();
+        if (interactionManager != null)
+        {
+            grabInteractable.interactionManager = interactionManager;
+        }
+        else
+        {
+            Debug.LogError("No XR Interaction Manager found in the scene");
+        }
 
-		rb.velocity = Vector3.zero;
-		rb.angularVelocity = Vector3.zero;
+        grabInteractable.movementType = XRBaseInteractable.MovementType.Instantaneous;
+        grabInteractable.throwOnDetach = true;
+        grabInteractable.throwSmoothingDuration = 0.25f;
+        grabInteractable.throwVelocityScale = 1.5f;
+        grabInteractable.throwAngularVelocityScale = 1f;
+        grabInteractable.attachEaseInTime = 0.15f;
+        grabInteractable.matchAttachPosition = true;
+        grabInteractable.matchAttachRotation = true;
+        grabInteractable.snapToColliderVolume = true;
+        grabInteractable.reinitializeDynamicAttachEverySingleGrab = true;
 
-	}
+        grabInteractable.enabled = false;
 
-	void FixedUpdate()
-	{
-		if (currentlyManipulatedObject != gameObject)
-			return;
+        rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        rb.isKinematic = true;
+        rb.useGravity = false;
 
-		/* rotation */
-		if (isRightHandTouching)
-		{
-			float rotationAmount = rotationSpeed * Time.fixedDeltaTime;
-			transform.Rotate(0, rotationAmount, 0, Space.World);
-			if (!audioSource.isPlaying)
-				audioSource.Play();
-		}
-		/* translation */
-		else if (isLeftHandTouching && !isRightHandTouching)
-		{
-			if (handOffsetSet)
-			{
-				Vector3 targetPos = new Vector3(
-					leftIndex.position.x + handOffset.x,
-					fixedY,
-					leftIndex.position.z + handOffset.z
-				);
-				float deadZone = 0.01f;
-				if ((targetPos - transform.position).sqrMagnitude > deadZone * deadZone)
-				{
-					Vector3 newPos = Vector3.Lerp(transform.position, targetPos, 0.5f);
-					rb.MovePosition(newPos);
-				}
-				rb.constraints = RigidbodyConstraints.FreezeRotation;
-			}
-		}
-		else if (audioSource.isPlaying)
-			audioSource.Stop();
+        StartCoroutine(UnfreezeAfterDelay());
 
-		
-		lastRightHandPosition = rightHand.position;
-		lastLeftHandPosition = leftHand.position;
-	}
+        leftHand = GameObject.Find("XR Origin Hands (XR Rig)/Camera Offset/Left Hand/Left Hand Interaction Visual/L_Wrist").transform;
+        rightHand = GameObject.Find("XR Origin Hands (XR Rig)/Camera Offset/Right Hand/Right Hand Interaction Visual/R_Wrist").transform;
+        leftIndex = GameObject.Find("XR Origin Hands (XR Rig)/Camera Offset/Left Hand/Left Hand Interaction Visual/L_Wrist/L_IndexMetacarpal/L_IndexProximal/L_IndexIntermediate/L_IndexDistal/LeftIndexDistalCollider").transform;
+        rightIndex = GameObject.Find("XR Origin Hands (XR Rig)/Camera Offset/Right Hand/Right Hand Interaction Visual/R_Wrist/R_IndexMetacarpal/R_IndexProximal/R_IndexIntermediate/R_IndexDistal/RightIndexDistalCollider").transform;
+        leftHandCollider = leftHand.GetComponent<Collider>();
+        rightHandCollider = rightHand.GetComponent<Collider>();
+        leftIndexCollider = leftIndex.GetComponent<Collider>();
+        rightIndexCollider = rightIndex.GetComponent<Collider>();
 
-	void OnTriggerEnter(Collider other)
-	{
-		float now = Time.time;
-		/* detect double tap selection */
-		if (other == leftIndexCollider && !leftIndexInside)
-		{
-			leftIndexInside = true;
-			isLeftIndexTouching = true;
+        fixedY = tableHeight;
+        lastRightHandPosition = rightHand.position;
+        lastLeftHandPosition = leftHand.position;
+    }
 
-			if (currentlyManipulatedObject == gameObject && !handOffsetSet)
-			{
-				handOffset = transform.position - leftIndex.position;
-				handOffsetSet = true;
-			}
-			if (lastPokedObject != gameObject)
-			{
-				lastLeftIndexTapTime = -1f;
-				lastPokedObject = gameObject;
-			}
-			if (now - lastLeftIndexTapTime < doubleTapThreshold)
-			{
-				if (currentlyManipulatedObject != null && currentlyManipulatedObject != gameObject)
-				{
-					if (currentlySelectedOutline != null)
-						currentlySelectedOutline.enabled = false;
-					currentlyManipulatedObject = null;
-					isAnyObjectBeingManipulated = false;
-				}
-				var outline = gameObject.GetComponent<Outline>();
-				if (outline != null)
-					outline.enabled = true;
-				currentlySelectedOutline = outline;
-				currentlyManipulatedObject = gameObject;
-				isAnyObjectBeingManipulated = true;
-				handOffsetSet = false;
-			}
-			lastLeftIndexTapTime = now;
-		}
-		if (other == leftHandCollider)
-		{
-			isLeftHandTouching = true;
-		}
-		if (other == rightHandCollider)
-		{
-			isRightHandTouching = true;
-			lastFingerAngle = GetFingerAngle();
-		}
-	}
+    private IEnumerator UnfreezeAfterDelay()
+    {
+        yield return new WaitForSeconds(1.0f);
 
-	void OnTriggerExit(Collider other)
-	{
-		if (other == leftIndexCollider)
-		{
-			leftIndexInside = false;
-			isLeftIndexTouching = false;
-			handOffsetSet = false;
-		}
-		if (other == rightIndexCollider)
-		{
-			rightIndexInside = false;
-			isRightIndexTouching = false;
-		}
-		if (other == leftHandCollider)
-		{
-			isLeftHandTouching = false;
-		}
-		if (other == rightHandCollider)
-		{
-			isRightHandTouching = false;
-		}
-	}
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
 
-	float GetFingerAngle()
-	{
-		var dir = rightIndex.position - transform.position;
-		return Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
-	}
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    void FixedUpdate()
+    {
+        if (currentlyManipulatedObject != gameObject)
+            return;
+
+        /* rotation */
+        if (isRightHandTouching)
+        {
+            float rotationAmount = rotationSpeed * Time.fixedDeltaTime;
+            transform.Rotate(0, rotationAmount, 0, Space.World);
+            if (!audioSource.isPlaying)
+                audioSource.Play();
+        }
+        /* translation */
+        else if (isLeftHandTouching && !isRightHandTouching)
+        {
+            if (handOffsetSet)
+            {
+                Vector3 targetPos = new Vector3(
+                    leftIndex.position.x + handOffset.x,
+                    fixedY,
+                    leftIndex.position.z + handOffset.z
+                );
+                float deadZone = 0.01f;
+                if ((targetPos - transform.position).sqrMagnitude > deadZone * deadZone)
+                {
+                    Vector3 newPos = Vector3.Lerp(transform.position, targetPos, 0.5f);
+                    rb.MovePosition(newPos);
+                }
+                rb.constraints = RigidbodyConstraints.FreezeRotation;
+            }
+        }
+        else if (audioSource.isPlaying)
+            audioSource.Stop();
+
+        lastRightHandPosition = rightHand.position;
+        lastLeftHandPosition = leftHand.position;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        float now = Time.time;
+        /* detect double tap selection */
+        if (other == leftIndexCollider && !leftIndexInside)
+        {
+            leftIndexInside = true;
+            isLeftIndexTouching = true;
+
+            if (currentlyManipulatedObject == gameObject && !handOffsetSet)
+            {
+                handOffset = transform.position - leftIndex.position;
+                handOffsetSet = true;
+            }
+            if (lastPokedObject != gameObject)
+            {
+                lastLeftIndexTapTime = -1f;
+                lastPokedObject = gameObject;
+            }
+            if (now - lastLeftIndexTapTime < doubleTapThreshold)
+            {
+                if (currentlyManipulatedObject != null && currentlyManipulatedObject != gameObject)
+                {
+                    if (currentlySelectedOutline != null)
+                        currentlySelectedOutline.enabled = false;
+                    var prevGrabInteractable = currentlyManipulatedObject.GetComponent<XRGrabInteractable>();
+                    if (prevGrabInteractable != null)
+                        prevGrabInteractable.enabled = false;
+                    currentlyManipulatedObject = null;
+                    isAnyObjectBeingManipulated = false;
+                }
+                var outline = gameObject.GetComponent<Outline>();
+                if (outline != null)
+                    outline.enabled = true;
+                currentlySelectedOutline = outline;
+                currentlyManipulatedObject = gameObject;
+                isAnyObjectBeingManipulated = true;
+                handOffsetSet = false;
+                grabInteractable.enabled = true;
+            }
+            lastLeftIndexTapTime = now;
+        }
+        if (other == leftHandCollider)
+        {
+            isLeftHandTouching = true;
+        }
+        if (other == rightHandCollider)
+        {
+            isRightHandTouching = true;
+            lastFingerAngle = GetFingerAngle();
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other == leftIndexCollider)
+        {
+            leftIndexInside = false;
+            isLeftIndexTouching = false;
+            handOffsetSet = false;
+        }
+        if (other == rightIndexCollider)
+        {
+            rightIndexInside = false;
+            isRightIndexTouching = false;
+        }
+        if (other == leftHandCollider)
+        {
+            isLeftHandTouching = false;
+        }
+        if (other == rightHandCollider)
+        {
+            isRightHandTouching = false;
+        }
+    }
+
+    float GetFingerAngle()
+    {
+        var dir = rightIndex.position - transform.position;
+        return Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
+    }
+
+    void OnGrabStart(SelectEnterEventArgs args)
+    {
+        Debug.Log("Grab started");
+    }
+
+    void OnGrabEnd(SelectExitEventArgs args)
+    {
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.None;
+
+        StartCoroutine(HandleUprightPlacement());
+    }
+
+    private IEnumerator HandleUprightPlacement()
+    {
+        bool hasLanded = false;
+        float lastYVelocity = 0f;
+
+        while (!hasLanded)
+        {
+            if (rb.velocity.y < 0 && Mathf.Abs(transform.position.y - tableHeight) < 0.1f)
+            {
+                hasLanded = true;
+                Vector3 currentPos = transform.position;
+                currentPos.y = tableHeight;
+                transform.position = currentPos;
+
+                Quaternion currentRot = transform.rotation;
+                Vector3 eulerAngles = currentRot.eulerAngles;
+                eulerAngles.x = 0;
+                eulerAngles.z = 0;
+                transform.rotation = Quaternion.Euler(eulerAngles);
+
+                Vector3 velocity = rb.velocity;
+                velocity.y = 0;
+                rb.velocity = velocity;
+            }
+
+            lastYVelocity = rb.velocity.y;
+            yield return new WaitForFixedUpdate();
+        }
+    }
 }
 	

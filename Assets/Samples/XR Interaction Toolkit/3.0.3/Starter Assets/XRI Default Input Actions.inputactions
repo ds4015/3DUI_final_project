@@ -837,6 +837,17 @@
                 },
                 {
                     "name": "",
+                    "id": "dc2dffdf-00ae-47a5-8902-91af265f17ce",
+                    "path": "<XRHand>{LeftHand}/pinchStrengthIndex",
+                    "interactions": "Press(pressPoint=0.3)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "49a23327-a116-48c0-8af9-0d2c50c15a88",
                     "path": "<XRController>{LeftHand}/{Grip}",
                     "interactions": "",
@@ -1503,7 +1514,7 @@
                     "name": "Select",
                     "type": "Button",
                     "id": "ac96c10b-c955-4a46-8e67-bf16bc069b53",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
