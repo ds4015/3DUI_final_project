@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Fusion;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public class NetworkItem : NetworkBehaviour
@@ -10,17 +11,22 @@ public class NetworkItem : NetworkBehaviour
     public Transform leftHand;
     public Transform rightHand;
     private HardwareRig hardwareRig;
+    private XROrigin xrOrigin;
     public override void Spawned()
     {
         if (Object.HasInputAuthority)
         {
             hardwareRig = FindObjectOfType<HardwareRig>();
+            xrOrigin = hardwareRig.GetComponent<XROrigin>();
             if (hardwareRig == null)
             {
                 Debug.LogError("No hardware Rig found ");
             }
-            hardwareRig.transform.position = transform.position;
-            hardwareRig.transform.rotation = transform.rotation;
+            xrOrigin = hardwareRig.GetComponent<XROrigin>();
+            xrOrigin.MoveCameraToWorldLocation(transform.position);
+            xrOrigin.transform.rotation = transform.rotation;
+            //hardwareRig.transform.position = transform.position;
+            //hardwareRig.transform.rotation = transform.rotation;
         }
 
     }
