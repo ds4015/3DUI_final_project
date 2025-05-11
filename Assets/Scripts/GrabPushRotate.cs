@@ -55,13 +55,13 @@ public class GrabPushRotate : MonoBehaviour
         if (grabInteractable == null)
             grabInteractable = gameObject.AddComponent<XRGrabInteractable>();
 
-        NetworkObject networkObject = GetComponent<NetworkObject>();
-        if (networkObject == null)
-            networkObject = gameObject.AddComponent<NetworkObject>();
+        //NetworkObject networkObject = GetComponent<NetworkObject>();
+        //if (networkObject == null)
+            //networkObject = gameObject.AddComponent<NetworkObject>();
 
-        NetworkTransform networkTransform = GetComponent<NetworkTransform>();
-        if (networkTransform == null)
-            networkTransform = gameObject.AddComponent<NetworkTransform>();
+        //NetworkTransform networkTransform = GetComponent<NetworkTransform>();
+        //if (networkTransform == null)
+            //networkTransform = gameObject.AddComponent<NetworkTransform>();
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)

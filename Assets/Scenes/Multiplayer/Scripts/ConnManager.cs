@@ -36,6 +36,7 @@ public class ConnManager : MonoBehaviour, INetworkRunnerCallbacks
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         };
         var res = await _runner.StartGame(startGameArguments);
+ 
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
@@ -68,7 +69,7 @@ public class ConnManager : MonoBehaviour, INetworkRunnerCallbacks
         //}
     }
     public void OnSceneLoadStart(NetworkRunner runner) {  }
-    public void OnSceneLoadDone(NetworkRunner runner) { }
+    public void OnSceneLoadDone(NetworkRunner runner) {  }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken tok) { }
 
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }

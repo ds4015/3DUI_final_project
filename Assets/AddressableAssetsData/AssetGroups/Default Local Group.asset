@@ -47,6 +47,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 38ec617194d728b488ce67142fe75728
+    m_Address: Assets/Prefabs/NetworkObjects/Fountain.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3a8b14e7184ba4f68b8ce3aa49392a74
     m_Address: Assets/Prefabs/Swimming Pool.prefab
     m_ReadOnly: 0
@@ -122,13 +127,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bff235a3863d34cc98a575a28d9aefd2
+    m_Address: Assets/Prefabs/Fountain.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c34fd175af581449dbbbea3f13c78674
     m_Address: Assets/Prefabs/Pond.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c9be685d50d034600bb7dafeb9ac4fbb
-    m_Address: Assets/Prefabs/Fountain.prefab
+  - m_GUID: c5abe53d149250d4395ac18113b07f02
+    m_Address: Assets/Prefabs/ShortWall2.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
