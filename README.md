@@ -22,7 +22,17 @@ to facilitate collaboration.
 
 ## Updates
 ```
-5/09/25: Nathan - Changed multiplayer mode to shared + fixed object sync for connecting players
+5/11/25: Dallas - Grab Object Functionality Restored/Improved
+```
+- Grabbing objects has been restored/fixed
+- Only selected objects (double tap) can now be grabbed
+- Grab now uses hand raycast at close distance
+- Pinch to grab as before, with left hand only
+- Object can be thrown/dropped and will respond more naturally to gravity/physics
+
+```
+5/09/25: Nathan - Changed multiplayer mode to shared + fixed object sync for 
+connecting players
 ```
 - Changed multiplayer from auto host/client to shared mode
 - Players are now able to spawn items and items are visible amongst all players
@@ -34,8 +44,10 @@ to facilitate collaboration.
 ```
 
 - Added main scene to multiplayer
-- Players are spawning in correct places + objects are synced in transform amongst all players
-- Currently facing issue where player 2 is unable to spawn items perhaps due to Host-Client behavior
+- Players are spawning in correct places + objects are synced in transform amongst 
+  all players
+- Currently facing issue where player 2 is unable to spawn items perhaps due to 
+  Host-Client behavior
 
 ```
 5/09/25: Dallas - Finger Movement (VR Mode)
@@ -575,6 +587,16 @@ PerspectiveUIManager.cs *new*
   Manages the UI panels related to perspective switching. Controls showing and
   hiding the panel containing player perspective buttons. Works alongside the
   PerspectiveSwitcher to ensure proper UI flow when switching perspectives.
+```
+
+```
+PinchGrabber.cs (*new*)
+
+  Simple script that detects pinch gesture on the left hand for grabbing objects.
+  Since grabs now use XR Ray Interactable instead of direct, the pinch gesture
+  is determined in script rather than as a built-in gesture.  To grab an object,
+  first select with a double tap of left index finger, then pinch to grab as
+  before.
 ```
 
 ```
