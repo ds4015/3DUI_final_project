@@ -286,11 +286,16 @@ public class OverheadSwap : MonoBehaviour
                     updatedPosition = new Vector3(overhead.transform.position.x + offset, 1.122f, overhead.transform.position.z + offset);
                 }
 
-
                 original.transform.position = updatedPosition;
                 original.transform.rotation = overhead.transform.rotation;
-            }
 
+                string baseName = original.name.Replace("(Clone)", "").Trim();
+                int parenIndex = baseName.IndexOf(" (");
+                if (parenIndex > 0)
+                    baseName = baseName.Substring(0, parenIndex);
+
+                ReturnToPool(overhead, baseName); 
+            }
 
             itemToOverheadMap.Clear();
             activeOverheadItems.Clear();
