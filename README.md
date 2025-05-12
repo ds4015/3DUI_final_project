@@ -26,6 +26,7 @@ to facilitate collaboration.
 ```
 - fixed UI scale and forward padding for wrist buttons in VR mode
 - disabled AR/VR mode switch while looking at a different perspective
+- fix bug with AR/VR positioning, players now return to original popsition in AR
 
 ```
 
