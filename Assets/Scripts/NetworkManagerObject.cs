@@ -38,4 +38,23 @@ public class NetworkManagerObject : NetworkBehaviour
         requestQueue[toPlayer].AddRequest(toPlayer, fromPlayer, entry.previewPrefab);
         //requestQueue[toPlayer].AddRequest(fromPlayer, toPlayer, entry.previewPrefab);
     }
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_SpawnItem(string toPlayer, string prefabName)
+    {
+        PrefabEntry entry = entries.Find(n => n.prefabName == prefabName);
+        if (entry.previewPrefab == null)
+        {
+            Debug.LogWarning($"{prefabName} does not exist.");
+            return;
+        }
+        Vector3 spawnPosition = Vector3.zero;
+        if (toPlayer == "Player 1")
+        { 
+            spawnPosition = new Vector3(-1.7620f, 1.4408f, 0.8882f);
+        } else
+        {
+            spawnPosition = new Vector3(0.929f, 1.4408f, 1.6092f);
+        }
+            Runner.Spawn(entry.prefabRef, spawnPosition, Quaternion.identity, null);
+    }
 }
