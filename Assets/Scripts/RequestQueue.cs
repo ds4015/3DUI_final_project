@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RequestQueue : MonoBehaviour
 {
@@ -17,6 +18,14 @@ public class RequestQueue : MonoBehaviour
             queueManager.RegisterQueue(playerInThisPosition, this);
         }
 
+    }
+    public void HandleSend(string toPlayer, GameObject itemPrefab)
+    {
+        var queueNetManager = FindObjectOfType<NetworkManagerObject>();
+        if (queueNetManager != null)
+        {
+            queueNetManager.RPC_SpawnItem(toPlayer, itemPrefab.name);
+        }
     }
     public void AddRequest(string toPlayer, string currPlayer, GameObject itemPrefab)
     {
@@ -46,6 +55,23 @@ public class RequestQueue : MonoBehaviour
         {
             Debug.Log("No previewpoint");
         }
+        Transform sendButtonQ = card.transform.Find("Panel/Canvas/SendButton");
+        sendButtonQ.gameObject.SetActive(true);
+        if(sendButtonQ  != null)
+        {
+            Debug.Log("SendButtonQ not null");
+            SendQueueButton sendButton = sendButtonQ.GetComponent<SendQueueButton>();
+            if(sendButton != null)
+            {
+                Debug.Log("sendbutton not null");
+                sendButton.onPress.AddListener(() => { HandleSend(currPlayer, itemPrefab); 
+                Destroy(card);
+                });
+
+            }
+        }
+
     }
+    
 
 }
