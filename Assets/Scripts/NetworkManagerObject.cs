@@ -47,7 +47,14 @@ public class NetworkManagerObject : NetworkBehaviour
             Debug.LogWarning($"{prefabName} does not exist.");
             return;
         }
-        Vector3 spawnPosition = new Vector3(-1.5753f, -0.0232f, -0.7475f);
-        Runner.Spawn(entry.prefabRef, spawnPosition, Quaternion.identity, null);
+        Vector3 spawnPosition = Vector3.zero;
+        if (toPlayer == "Player 1")
+        { 
+            spawnPosition = new Vector3(-1.7620f, 1.4408f, 0.8882f);
+        } else
+        {
+            spawnPosition = new Vector3(0.929f, 1.4408f, 1.6092f);
+        }
+            Runner.Spawn(entry.prefabRef, spawnPosition, Quaternion.identity, null);
     }
 }
