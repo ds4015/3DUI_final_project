@@ -28,6 +28,14 @@ to facilitate collaboration.
 - disabled AR/VR mode switch while looking at a different perspective
 
 ```
+5/12/25: Nathan - Feature request + Visual fix
+```
+- Added a send feature for requested items
+- Added spawn positions for items to spawn
+- Fixed hand visuals where user might see two hands through the headset
+- Queue added for all 4 players
+- Tab switching implemented in main scene
+
 
 ```
 5/12/25: Dallas - Overhead Views P2-4, Aesthetic Redesign
@@ -53,6 +61,15 @@ to facilitate collaboration.
 - Grab now uses hand raycast at close distance
 - Pinch to grab as before, with left hand only
 - Object can be thrown/dropped and will respond more naturally to gravity/physics
+
+```
+5/11/25: Nathan - Multiplayer added to main scene + networking debug
+```
+- Successfully implemented multiplayer to the main scene
+- Fixed scene object spawning issue in networking
+- Incorporating tab switching + networking in main scene
+- Fixed issue involving networkrig spawning 
+
 
 ```
 5/09/25: Nathan - Changed multiplayer mode to shared + fixed object sync for 
