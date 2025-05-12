@@ -161,12 +161,13 @@ public class ARVRModeManager : MonoBehaviour
         originalRotation = xrOrigin.rotation;
       }
     }
+    
 
     if (toggleModeButton != null)
     {
-      toggleModeButton.onClick.AddListener(ToggleMode);
+      toggleModeButton.GetComponent<Button>().onClick.AddListener(ToggleMode);
       UpdateButtonText();
-    }
+    } 
 
     // Find and store all building objects' original transforms
     GameObject[] buildingObjects = GameObject.FindGameObjectsWithTag("BuildingObject");
@@ -842,7 +843,7 @@ public class ARVRModeManager : MonoBehaviour
         data.transform.rotation = data.lastARRotation;
 
         // Special handling for bench objects when returning to AR mode
-        if (data.transform.name.Contains("Bench"))
+/*        if (data.transform.name.Contains("Bench"))
         {
           // Get the rigidbody component
           Rigidbody rb = data.transform.GetComponent<Rigidbody>();
@@ -860,7 +861,7 @@ public class ARVRModeManager : MonoBehaviour
 
             Debug.Log($"Restored bench physics settings in AR mode: {data.transform.name}");
           }
-        }
+        } */
 
         // Restore original grab interaction state
         if (data.grabInteractable != null)

@@ -10,7 +10,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 public class SelectNewObject : MonoBehaviour
 {
     public GameObject prefabToSpawn;
-    //public GameObject prefabToSpawn;
+
     public Transform spawnPoint;
     public GameObject objectMenu;
     public Material spawnCubeContainerMaterial;    
@@ -59,7 +59,7 @@ public class SelectNewObject : MonoBehaviour
             prefabCol = spawned.gameObject.GetComponent<MeshCollider>();
             if (prefabCol == null)
             {
-                Debug.LogError("No BoxCollider or MeshCollider found on prefab!");
+                Debug.LogError("No BoxCollider or MeshCollider found on prefab");
                 return;
             }
         }
@@ -96,7 +96,6 @@ public class SelectNewObject : MonoBehaviour
             play sound effect or delete the container when the object is moved */
         
         openObjectMenu.objectSpawned = spawned;
-        openObjectMenu.objectSpawnedCubeContainer = spawnCubeContainer;
 
         openObjectMenu.justSpawned = true;
 

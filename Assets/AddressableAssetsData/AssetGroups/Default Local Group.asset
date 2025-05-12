@@ -122,13 +122,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c34fd175af581449dbbbea3f13c78674
-    m_Address: Assets/Prefabs/Pond.prefab
+  - m_GUID: bff235a3863d34cc98a575a28d9aefd2
+    m_Address: Assets/Prefabs/Fountain.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c9be685d50d034600bb7dafeb9ac4fbb
-    m_Address: Assets/Prefabs/Fountain.prefab
+  - m_GUID: c34fd175af581449dbbbea3f13c78674
+    m_Address: Assets/Prefabs/Pond.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

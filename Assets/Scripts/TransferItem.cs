@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class TransferItem : MonoBehaviour
 {
@@ -31,11 +32,15 @@ public class TransferItem : MonoBehaviour
     [HideInInspector] public bool p3Active = false;
     [HideInInspector] public bool p4Active = false;
 
-	void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.tag == "BuildingObject")
         {
             gpr = other.gameObject.GetComponent<GrabPushRotate>();
+
+
+            GrabPushRotate.DeselectCurrent();
+
             if (activePortal != null && activeDropPoint != null)
             {
                 Rigidbody objRB = other.gameObject.GetComponent<Rigidbody>();
@@ -45,6 +50,16 @@ public class TransferItem : MonoBehaviour
                 other.transform.position = new Vector3(activePortal.position.x,
                 activePortal.position.y + 0.5f, activePortal.position.z);
                 other.transform.gameObject.SetActive(true);
+
+                var grabPushRotate = other.gameObject.GetComponent<GrabPushRotate>();
+                if (grabPushRotate != null)
+                {
+                    var grabInteractable = other.gameObject.GetComponent<XRGrabInteractable>();
+                    if (grabInteractable != null)
+                        grabInteractable.enabled = false;
+                    other.gameObject.layer = LayerMask.NameToLayer("Default");
+                }
+
                 AudioSource audioSource = GetComponent<AudioSource>();
                 if (audioSource != null)
                 {
@@ -83,7 +98,7 @@ public class TransferItem : MonoBehaviour
     }
 
 
-	IEnumerator MoveFromHoverToTable(Transform obj, Vector3 startPos)
+    IEnumerator MoveFromHoverToTable(Transform obj, Vector3 startPos)
     {
         gpr.isRightHandTouching = false;
         gpr.isLeftHandTouching = false;
