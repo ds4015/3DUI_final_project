@@ -19,7 +19,15 @@ public class RequestItemUI : MonoBehaviour
     public void Show(string reqName, string currPlayer, GameObject itemPrefab)
     {
         msg.text = $"Request: ";
-        transform.position = new Vector3(-1.3578f, 1.538f, -0.2454f);
+        if (currPlayer == "Player 1")
+        {
+            transform.position = new Vector3(-1.3578f, 1.538f, -0.2454f);
+        }
+        if (currPlayer == "Player 2")
+        {
+            transform.position = new Vector3(-0.3221f, 1.5712f, 1.1840f);
+        }
+        //Vector3(-0.322100013,1.57120001,1.18400002)
         transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
         this.requestItemPrefab = itemPrefab;
         this.requestName = reqName;
