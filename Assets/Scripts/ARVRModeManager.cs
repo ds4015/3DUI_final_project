@@ -27,6 +27,9 @@ public class ARVRModeManager : MonoBehaviour
   public bool isVRMode = false;
   private Vector3 originalPosition;
   private Quaternion originalRotation;
+  // Store the player's last position and rotation in AR mode
+  private Vector3 lastARPosition;
+  private Quaternion lastARRotation;
   private List<BuildingObjectData> buildingObjectsData = new List<BuildingObjectData>();
   private Transform floorTransform;
   private List<GameObject> portalObjects = new List<GameObject>();
@@ -132,8 +135,8 @@ public class ARVRModeManager : MonoBehaviour
         rb.useGravity = false;
         if (rb != null && !rb.isKinematic)
         {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+          rb.velocity = Vector3.zero;
+          rb.angularVelocity = Vector3.zero;
         }
       }
 
@@ -153,6 +156,12 @@ public class ARVRModeManager : MonoBehaviour
       // Store this as the original position to return to in AR mode
       originalPosition = arStartMarker.position;
       originalRotation = arStartMarker.rotation;
+
+      // Initialize the last AR position and rotation
+      lastARPosition = arStartMarker.position;
+      lastARRotation = arStartMarker.rotation;
+
+      Debug.Log($"Initialized lastARPosition from {markerName}: {lastARPosition}");
     }
     else
     {
@@ -162,15 +171,21 @@ public class ARVRModeManager : MonoBehaviour
       {
         originalPosition = xrOrigin.position;
         originalRotation = xrOrigin.rotation;
+
+        // Initialize the last AR position and rotation
+        lastARPosition = xrOrigin.position;
+        lastARRotation = xrOrigin.rotation;
+
+        Debug.Log($"Initialized lastARPosition from xrOrigin: {lastARPosition}");
       }
     }
-    
+
 
     if (toggleModeButton != null)
     {
       toggleModeButton.GetComponent<Button>().onClick.AddListener(ToggleMode);
       UpdateButtonText();
-    } 
+    }
 
     // Find and store all building objects' original transforms
     GameObject[] buildingObjects = GameObject.FindGameObjectsWithTag("BuildingObject");
@@ -226,6 +241,15 @@ public class ARVRModeManager : MonoBehaviour
 
   public void ToggleMode()
   {
+    // Store the current position and rotation if switching from AR to VR
+    if (!isVRMode)
+    {
+      // We're in AR mode and about to switch to VR, so store current position
+      lastARPosition = xrOrigin.position;
+      lastARRotation = xrOrigin.rotation;
+      Debug.Log($"Storing lastARPosition before switching to VR: {lastARPosition}");
+    }
+
     isVRMode = !isVRMode;
 
     // Save information about the previous mode
@@ -363,8 +387,8 @@ public class ARVRModeManager : MonoBehaviour
         rb.useGravity = false;
         if (rb != null && !rb.isKinematic)
         {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+          rb.velocity = Vector3.zero;
+          rb.angularVelocity = Vector3.zero;
         }
         // Add freeze constraints to prevent any physics movement
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -419,10 +443,10 @@ public class ARVRModeManager : MonoBehaviour
           rb.useGravity = false;
           if (rb != null && !rb.isKinematic)
           {
-              rb.velocity = Vector3.zero;
-              rb.angularVelocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
           }
-         }
+        }
         else
         {
           Debug.LogWarning($"No Rigidbody found on {data.transform.name}");
@@ -471,7 +495,7 @@ public class ARVRModeManager : MonoBehaviour
         // Store the world position before reparenting
         Vector3 worldPosition = data.transform.position;
         Quaternion worldRotation = data.transform.rotation;
-        
+
 
         // Parent to floor
         data.transform.SetParent(floorTransform, true);
@@ -493,8 +517,8 @@ public class ARVRModeManager : MonoBehaviour
           rb.useGravity = true;
           if (rb != null && !rb.isKinematic)
           {
-              rb.velocity = Vector3.zero;
-              rb.angularVelocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
           }
           rb.constraints = RigidbodyConstraints.FreezeRotation; // Prevent objects from rotating
 
@@ -774,8 +798,8 @@ public class ARVRModeManager : MonoBehaviour
         rb.useGravity = false;
         if (rb != null && !rb.isKinematic)
         {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+          rb.velocity = Vector3.zero;
+          rb.angularVelocity = Vector3.zero;
         }
         // Remove all constraints
         rb.constraints = RigidbodyConstraints.None;
@@ -831,7 +855,7 @@ public class ARVRModeManager : MonoBehaviour
           {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-        }
+          }
           rb.constraints = RigidbodyConstraints.None;
           Debug.Log("Reset rediscovered VR spawn point physics - made kinematic with no gravity");
         }
@@ -853,8 +877,21 @@ public class ARVRModeManager : MonoBehaviour
       }
     }
 
-    // Reset XR Origin to the appropriate start position based on player number
-    if (arStartMarker != null)
+    // Reset XR Origin to the last AR position if we're returning from VR mode
+    if (wasInVRModePreviously && lastARPosition != Vector3.zero)
+    {
+      // Calculate target position adjusted for camera height
+      Vector3 targetPosition = lastARPosition;
+
+      // We don't need to adjust the Y position again, as lastARPosition already has the correct height
+      // We're just returning to the exact position we were at before switching to VR
+
+      Debug.Log($"Returning to last AR position: {targetPosition} with rotation: {lastARRotation.eulerAngles}");
+      xrOrigin.position = targetPosition;
+      xrOrigin.rotation = lastARRotation;
+    }
+    // Fall back to the arStartMarker if we don't have a stored position
+    else if (arStartMarker != null)
     {
       // Calculate target position adjusted for camera height
       Vector3 targetPosition = arStartMarker.position;
@@ -894,25 +931,25 @@ public class ARVRModeManager : MonoBehaviour
         data.transform.rotation = data.lastARRotation;
 
         // Special handling for bench objects when returning to AR mode
-/*        if (data.transform.name.Contains("Bench"))
-        {
-          // Get the rigidbody component
-          Rigidbody rb = data.transform.GetComponent<Rigidbody>();
-          if (rb != null)
-          {
-            // Reset to default physics values for AR mode
-            rb.mass = 1f;
-            rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+        /*        if (data.transform.name.Contains("Bench"))
+                {
+                  // Get the rigidbody component
+                  Rigidbody rb = data.transform.GetComponent<Rigidbody>();
+                  if (rb != null)
+                  {
+                    // Reset to default physics values for AR mode
+                    rb.mass = 1f;
+                    rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+                    rb.constraints = RigidbodyConstraints.FreezeRotation;
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
 
-            // Ensure the bench is properly positioned
-            data.transform.position = data.lastARPosition;
+                    // Ensure the bench is properly positioned
+                    data.transform.position = data.lastARPosition;
 
-            Debug.Log($"Restored bench physics settings in AR mode: {data.transform.name}");
-          }
-        } */
+                    Debug.Log($"Restored bench physics settings in AR mode: {data.transform.name}");
+                  }
+                } */
 
         // Restore original grab interaction state
         if (data.grabInteractable != null)
