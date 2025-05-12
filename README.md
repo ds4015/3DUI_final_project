@@ -22,6 +22,14 @@ to facilitate collaboration.
 
 ## Updates
 ```
+5/12/25: Kyleigh - Fix bugs for wrist buttons with networking
+```
+- fixed UI scale and forward padding for wrist buttons in VR mode
+- disabled AR/VR mode switch while looking at a different perspective
+
+```
+
+```
 5/12/25: Dallas - Overhead Views P2-4, Aesthetic Redesign
 ```
 - Overhead view tables implemented for players 2-4
