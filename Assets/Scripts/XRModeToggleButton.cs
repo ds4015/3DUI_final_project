@@ -25,6 +25,17 @@ public class XRModeToggleButton : MonoBehaviour
 
   void Start()
   {
+    // Try to tag this GameObject for easy reference by other scripts
+    try
+    {
+      // Just try to set the tag directly - if the tag doesn't exist, this will use the default "Untagged"
+      gameObject.tag = "ARVRToggleButton";
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogWarning("Could not set ARVRToggleButton tag: " + e.Message);
+    }
+
     modeManager = FindObjectOfType<ARVRModeManager>();
     if (modeManager == null)
     {

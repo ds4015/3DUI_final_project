@@ -20,6 +20,7 @@ TagManager:
   - HandCollider
   - DropSurface
   - RotateSphere
+  - ARVRToggleButton
   layers:
   - Default
   - TransparentFX

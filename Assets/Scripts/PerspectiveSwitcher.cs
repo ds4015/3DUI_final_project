@@ -15,6 +15,9 @@ public class PerspectiveSwitcher : MonoBehaviour
   [Tooltip("Reset button that appears after changing perspective")]
   public GameObject resetButton;
 
+  [Tooltip("AR/VR toggle button that should be hidden when perspective is changed")]
+  public GameObject arvrToggleButton;
+
   [Header("Audio")]
   [Tooltip("Sound to play when switching perspective")]
   public AudioClip perspectiveSwitchSound;
@@ -85,6 +88,64 @@ public class PerspectiveSwitcher : MonoBehaviour
       rotationCenter = tableObjectsParent;
     }
 
+    // Find the AR/VR toggle button if not assigned
+    if (arvrToggleButton == null)
+    {
+      // Try multiple approaches to find the button
+
+      // 1. Try to find by tag (if the tag exists)
+      try
+      {
+        arvrToggleButton = GameObject.FindWithTag("ARVRToggleButton");
+      }
+      catch (UnityEngine.UnityException)
+      {
+        // Tag doesn't exist, continue to other methods
+      }
+
+      // 2. Try to find by component
+      if (arvrToggleButton == null)
+      {
+        XRModeToggleButton[] toggleButtons = FindObjectsOfType<XRModeToggleButton>();
+        if (toggleButtons.Length > 0)
+        {
+          arvrToggleButton = toggleButtons[0].gameObject;
+        }
+      }
+
+      // 3. Try to find by name
+      if (arvrToggleButton == null)
+      {
+        // Common names for the AR/VR toggle button
+        string[] possibleNames = new string[] {
+          "ARVRToggleButton",
+          "ARVRModeButton",
+          "ModeToggleButton",
+          "XRModeToggleButton",
+          "ARVRButton"
+        };
+
+        foreach (string name in possibleNames)
+        {
+          GameObject buttonObj = GameObject.Find(name);
+          if (buttonObj != null)
+          {
+            arvrToggleButton = buttonObj;
+            break;
+          }
+        }
+      }
+
+      if (arvrToggleButton != null)
+      {
+        Debug.Log("Found AR/VR toggle button: " + arvrToggleButton.name);
+      }
+      else
+      {
+        Debug.LogWarning("Could not find AR/VR toggle button automatically. Please assign it in the inspector.");
+      }
+    }
+
     // Set up audio source
     SetupAudioSource();
 
@@ -97,7 +158,8 @@ public class PerspectiveSwitcher : MonoBehaviour
     // Debug log to verify button references
     Debug.Log("PerspectiveSwitcher initialized. Switch button: " +
               (perspectiveSwitchButton != null ? perspectiveSwitchButton.name : "null") +
-              ", Reset button: " + (resetButton != null ? resetButton.name : "null"));
+              ", Reset button: " + (resetButton != null ? resetButton.name : "null") +
+              ", AR/VR toggle button: " + (arvrToggleButton != null ? arvrToggleButton.name : "null"));
   }
 
   /// <summary>
@@ -173,7 +235,8 @@ public class PerspectiveSwitcher : MonoBehaviour
     // Debug log to verify button states after switching
     Debug.Log("Switched to perspective " + playerIndex +
               ". Switch button active: " + (perspectiveSwitchButton != null ? perspectiveSwitchButton.activeSelf.ToString() : "null") +
-              ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null"));
+              ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null") +
+              ", AR/VR toggle button active: " + (arvrToggleButton != null ? arvrToggleButton.activeSelf.ToString() : "null"));
   }
 
   /// <summary>
@@ -223,7 +286,8 @@ public class PerspectiveSwitcher : MonoBehaviour
     // Debug log to verify button states after reset
     Debug.Log("Reset to original view. Switch button active: " +
               (perspectiveSwitchButton != null ? perspectiveSwitchButton.activeSelf.ToString() : "null") +
-              ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null"));
+              ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null") +
+              ", AR/VR toggle button active: " + (arvrToggleButton != null ? arvrToggleButton.activeSelf.ToString() : "null"));
   }
 
   /// <summary>
@@ -289,6 +353,14 @@ public class PerspectiveSwitcher : MonoBehaviour
       resetButton.SetActive(!isInOriginalPerspective);
       // Debug log to verify reset button state
       Debug.Log("UpdateButtonVisibility called - Reset button active: " + resetButton.activeSelf);
+    }
+
+    // Control AR/VR toggle button visibility
+    if (arvrToggleButton != null)
+    {
+      // Show AR/VR toggle button only in original perspective
+      arvrToggleButton.SetActive(isInOriginalPerspective);
+      Debug.Log("UpdateButtonVisibility called - AR/VR toggle button active: " + arvrToggleButton.activeSelf);
     }
   }
 }

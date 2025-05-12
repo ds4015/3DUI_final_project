@@ -117,6 +117,30 @@ public class PerspectiveButton : MonoBehaviour
         if (resetButton != null)
         {
           resetButton.SetActive(true);
+
+          // Force update the reset button's visibility and position
+          Canvas resetCanvas = resetButton.GetComponentInParent<Canvas>();
+          if (resetCanvas != null)
+          {
+            // Force refresh the canvas
+            resetCanvas.enabled = false;
+            resetCanvas.enabled = true;
+          }
+
+          // Ensure the reset button has a collider for interaction
+          Collider resetCollider = resetButton.GetComponent<Collider>();
+          if (resetCollider == null)
+          {
+            resetCollider = resetButton.GetComponentInChildren<Collider>();
+          }
+          if (resetCollider != null)
+          {
+            resetCollider.enabled = true;
+          }
+
+          Debug.Log("Reset button activated with collider: " +
+                    (resetCollider != null ? "Yes" : "No") +
+                    ", Active in hierarchy: " + resetButton.activeInHierarchy);
         }
 
         // Hide the perspective switch button if it exists
@@ -125,12 +149,19 @@ public class PerspectiveButton : MonoBehaviour
           perspectiveSwitcher.perspectiveSwitchButton.SetActive(false);
         }
 
+        // Also hide the AR/VR toggle button if it exists
+        if (perspectiveSwitcher.arvrToggleButton != null)
+        {
+          perspectiveSwitcher.arvrToggleButton.SetActive(false);
+        }
+
         // Reset button highlight state
         SetHoverState(false);
 
         // Debug log to verify this code is executing
         Debug.Log("Perspective changed to player " + targetPlayerIndex +
-                  ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null"));
+                  ", Reset button active: " + (resetButton != null ? resetButton.activeSelf.ToString() : "null") +
+                  ", AR/VR toggle active: " + (perspectiveSwitcher.arvrToggleButton != null ? perspectiveSwitcher.arvrToggleButton.activeSelf.ToString() : "null"));
       }
     }
   }
