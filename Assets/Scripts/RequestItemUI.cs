@@ -45,10 +45,15 @@ public class RequestItemUI : MonoBehaviour
     public void YesPressed()
     {
         Debug.Log($"Pressed Yes. Requesting {requestItemPrefab.name} from {requestName}");
-        RequestQueue queue = FindObjectOfType<RequestQueue>();
-        if (queue != null)
+        //RequestQueue queue = FindObjectOfType<RequestQueue>();
+        var queueManager = FindObjectOfType<NetworkManagerObject>();
+        //if (queue != null)
+        //{
+        //queue.AddRequest(requestName, currPlayer, requestItemPrefab);
+        //}
+        if (queueManager != null)
         {
-            queue.AddRequest(requestName, currPlayer, requestItemPrefab);
+            queueManager.RPC_SendRequest(requestName, currPlayer, requestItemPrefab.name);
         }
         Destroy(currentPreview);
         Destroy(gameObject);

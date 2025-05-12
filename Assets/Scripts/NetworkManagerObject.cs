@@ -6,7 +6,16 @@ using Fusion;
 public class NetworkManagerObject : NetworkBehaviour
 {
     public List<PrefabEntry> entries;
-    public RequestQueue requestQueue;
+    //public RequestQueue requestQueue;
+    private Dictionary<string, RequestQueue> requestQueue = new();
+
+    public void RegisterQueue(string playerName, RequestQueue queue)
+    {
+        if (!requestQueue.ContainsKey(playerName))
+        {
+            requestQueue[playerName] = queue;
+        }
+    }
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_SendRequest(string toPlayer, string fromPlayer, string prefabName)
     {
@@ -16,11 +25,17 @@ public class NetworkManagerObject : NetworkBehaviour
             Debug.LogWarning($"{prefabName} does not exist.");
             return;
         }
-        if (requestQueue == null)
+        //if (requestQueue == null)
+        //{
+        //Debug.LogError("RequestQueue is not available");
+        //return;
+        //}
+        Debug.Log($"TO PLAYER: {toPlayer}");
+        if (!requestQueue.ContainsKey(toPlayer))
         {
-            Debug.LogError("RequestQueue is not available");
-            return;
+            Debug.LogWarning($"RequestQueue not found");
         }
-        requestQueue.AddRequest(toPlayer, fromPlayer, entry.previewPrefab);
+        requestQueue[toPlayer].AddRequest(toPlayer, fromPlayer, entry.previewPrefab);
+        //requestQueue[toPlayer].AddRequest(fromPlayer, toPlayer, entry.previewPrefab);
     }
 }

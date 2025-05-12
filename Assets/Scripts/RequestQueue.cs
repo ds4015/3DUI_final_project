@@ -9,11 +9,22 @@ public class RequestQueue : MonoBehaviour
     public GameObject placeholderQueue;
     public string playerInThisPosition;
 
+    private void Start()
+    {
+        var queueManager = FindObjectOfType<NetworkManagerObject>();
+        if(queueManager != null )
+        {
+            queueManager.RegisterQueue(playerInThisPosition, this);
+        }
+
+    }
     public void AddRequest(string toPlayer, string currPlayer, GameObject itemPrefab)
     {
         if (toPlayer != playerInThisPosition)
         {
-            return;
+            Debug.Log($"toPlayer: {toPlayer}");
+            Debug.Log($"playerinthisposition: {playerInThisPosition}");
+            //return;
         }
         Debug.Log("Add Request called");
         Debug.Log("Item Prefab sent: " + itemPrefab);
