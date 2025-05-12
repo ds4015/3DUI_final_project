@@ -17,6 +17,11 @@ public class UISetup : MonoBehaviour
   [Header("Wrist Attachment")]
   [SerializeField] private bool attachToRightWrist = true; // Whether to attach to right or left wrist
 
+  [Header("VR Mode Adjustments")]
+  [SerializeField] private float vrModeForwardOffset = 0.7f; // Increased forward distance in VR mode
+  [SerializeField] private float vrModeHeightOffset = 0.0f; // Adjusted height in VR mode
+  [SerializeField] private Vector3 vrModeScale = new Vector3(0.002f, 0.002f, 0.002f); // Larger scale in VR mode
+
   private Canvas canvas;
   private Camera mainCamera;
   private RectTransform canvasRect;
@@ -25,12 +30,17 @@ public class UISetup : MonoBehaviour
   private Vector3 positionVelocity;
   private float rotationVelocity;
   private Transform wristTransform;
+  private ARVRModeManager modeManager;
+  private bool lastKnownVRMode = false;
 
   private void Start()
   {
     canvas = GetComponent<Canvas>();
     mainCamera = Camera.main;
     canvasRect = GetComponent<RectTransform>();
+
+    // Find the AR/VR mode manager
+    modeManager = FindObjectOfType<ARVRModeManager>();
 
     // Find the appropriate wrist transform
     FindWristTransform();
@@ -66,6 +76,15 @@ public class UISetup : MonoBehaviour
 
   private void LateUpdate()
   {
+    // Check if we switched modes
+    bool isCurrentlyVRMode = IsInVRMode();
+    if (isCurrentlyVRMode != lastKnownVRMode)
+    {
+      // Mode changed, update UI scale accordingly
+      transform.localScale = isCurrentlyVRMode ? vrModeScale : uiScale;
+      lastKnownVRMode = isCurrentlyVRMode;
+    }
+
     // Check if wrist is available, if not, try to find it again
     if (wristTransform == null)
     {
@@ -85,8 +104,27 @@ public class UISetup : MonoBehaviour
     SmoothlyUpdatePosition();
   }
 
+  private bool IsInVRMode()
+  {
+    // Check if we have a reference to the mode manager
+    if (modeManager != null)
+    {
+      // Access a public property or field that indicates the current mode
+      // For this example, we're assuming there's a public isVRMode field
+      // You may need to modify this based on your actual implementation
+      return modeManager.GetComponent<ARVRModeManager>().isVRMode;
+    }
+
+    // Default to false if we can't determine
+    return false;
+  }
+
   private void UpdateTargetTransforms()
   {
+    bool isVRMode = IsInVRMode();
+    float currentForwardOffset = isVRMode ? vrModeForwardOffset : forwardOffset;
+    float currentHeightOffset = isVRMode ? vrModeHeightOffset : heightOffset;
+
     if (wristTransform != null)
     {
       // Calculate position directly on top of the wrist
@@ -107,8 +145,8 @@ public class UISetup : MonoBehaviour
 
       // Calculate the target position - directly on top of the wrist
       targetPosition = wristTransform.position +
-                   wristUpDirection * heightOffset +  // Height above wrist
-                   forwardDirection * forwardOffset + // Slight forward adjustment
+                   wristUpDirection * currentHeightOffset +  // Height above wrist
+                   forwardDirection * currentForwardOffset + // Slight forward adjustment
                    rightDirection * rightOffset;      // Slight right/left adjustment
 
       // Make UI face the player by looking at the camera, but keeping aligned with wrist orientation
@@ -131,6 +169,10 @@ public class UISetup : MonoBehaviour
 
   private void UpdateCameraBasedTargetTransforms()
   {
+    bool isVRMode = IsInVRMode();
+    float currentForwardOffset = isVRMode ? vrModeForwardOffset : forwardOffset;
+    float currentHeightOffset = isVRMode ? vrModeHeightOffset : heightOffset;
+
     if (mainCamera != null && canvas != null)
     {
       Transform cameraTransform = mainCamera.transform;
@@ -141,9 +183,9 @@ public class UISetup : MonoBehaviour
 
       // Calculate the target position
       targetPosition = cameraTransform.position +
-                     forwardDirection * forwardOffset +
+                     forwardDirection * currentForwardOffset +
                      rightDirection * rightOffset +
-                     Vector3.up * heightOffset;
+                     Vector3.up * currentHeightOffset;
 
       // Calculate rotation to face the player but maintain vertical orientation
       Vector3 lookDirection = targetPosition - cameraTransform.position;

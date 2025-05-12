@@ -24,7 +24,7 @@ public class ARVRModeManager : MonoBehaviour
   [SerializeField] private float eyeHeight = 1.6f; // Average human eye height in meters
   [SerializeField] private float vrHeightBoost = 0.7f; // Additional height in VR mode for better camera position
 
-  private bool isVRMode = false;
+  public bool isVRMode = false;
   private Vector3 originalPosition;
   private Quaternion originalRotation;
   private List<BuildingObjectData> buildingObjectsData = new List<BuildingObjectData>();
@@ -130,9 +130,10 @@ public class ARVRModeManager : MonoBehaviour
         // Make sure rigidbody is initially kinematic to prevent it from moving
         rb.isKinematic = true;
         rb.useGravity = false;
-        if (rb != null && !rb.isKinematic) {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+        if (rb != null && !rb.isKinematic)
+        {
+          rb.velocity = Vector3.zero;
+          rb.angularVelocity = Vector3.zero;
         }
       }
 
@@ -163,13 +164,13 @@ public class ARVRModeManager : MonoBehaviour
         originalRotation = xrOrigin.rotation;
       }
     }
-    
+
 
     if (toggleModeButton != null)
     {
       toggleModeButton.GetComponent<Button>().onClick.AddListener(ToggleMode);
       UpdateButtonText();
-    } 
+    }
 
     // Find and store all building objects' original transforms
     GameObject[] buildingObjects = GameObject.FindGameObjectsWithTag("BuildingObject");
@@ -246,7 +247,19 @@ public class ARVRModeManager : MonoBehaviour
   {
     if (!ValidateReferences()) return;
 
-    // Disable collisions with index finger colliders
+    // Find the toggle button collider to exclude it from disabling
+    Collider toggleButtonCollider = null;
+    if (toggleModeButton != null)
+    {
+      toggleButtonCollider = toggleModeButton.GetComponent<Collider>();
+      if (toggleButtonCollider == null)
+      {
+        // If the button itself doesn't have a collider, try to find it in children
+        toggleButtonCollider = toggleModeButton.GetComponentInChildren<Collider>();
+      }
+    }
+
+    // Disable collisions with index finger colliders, but keep them enabled for the toggle button
     GameObject[] fingerColliders = GameObject.FindGameObjectsWithTag("IndexFingerCollider");
     foreach (GameObject collider in fingerColliders)
     {
@@ -256,6 +269,11 @@ public class ARVRModeManager : MonoBehaviour
         Collider col = collider.GetComponent<Collider>();
         if (col != null)
         {
+          // Don't disable if this finger is interacting with the toggle button
+          if (toggleButtonCollider != null && col.bounds.Intersects(toggleButtonCollider.bounds))
+          {
+            continue;
+          }
           col.enabled = false;
         }
       }
@@ -343,9 +361,10 @@ public class ARVRModeManager : MonoBehaviour
       {
         rb.isKinematic = true;
         rb.useGravity = false;
-        if (rb != null && !rb.isKinematic) {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+        if (rb != null && !rb.isKinematic)
+        {
+          rb.velocity = Vector3.zero;
+          rb.angularVelocity = Vector3.zero;
         }
         // Add freeze constraints to prevent any physics movement
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -398,11 +417,12 @@ public class ARVRModeManager : MonoBehaviour
         {
           rb.isKinematic = true;
           rb.useGravity = false;
-          if (rb != null && !rb.isKinematic) {
-              rb.velocity = Vector3.zero;
-              rb.angularVelocity = Vector3.zero;
+          if (rb != null && !rb.isKinematic)
+          {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
           }
-         }
+        }
         else
         {
           Debug.LogWarning($"No Rigidbody found on {data.transform.name}");
@@ -451,7 +471,7 @@ public class ARVRModeManager : MonoBehaviour
         // Store the world position before reparenting
         Vector3 worldPosition = data.transform.position;
         Quaternion worldRotation = data.transform.rotation;
-        
+
 
         // Parent to floor
         data.transform.SetParent(floorTransform, true);
@@ -471,9 +491,10 @@ public class ARVRModeManager : MonoBehaviour
         {
           rb.isKinematic = false;
           rb.useGravity = true;
-          if (rb != null && !rb.isKinematic) {
-              rb.velocity = Vector3.zero;
-              rb.angularVelocity = Vector3.zero;
+          if (rb != null && !rb.isKinematic)
+          {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
           }
           rb.constraints = RigidbodyConstraints.FreezeRotation; // Prevent objects from rotating
 
@@ -695,6 +716,22 @@ public class ARVRModeManager : MonoBehaviour
       }
     }
 
+    // Re-enable all finger colliders that might have been disabled in VR mode
+    GameObject[] fingerColliders = GameObject.FindGameObjectsWithTag("IndexFingerCollider");
+    foreach (GameObject collider in fingerColliders)
+    {
+      if (collider != null)
+      {
+        // Re-enable the collider component
+        Collider col = collider.GetComponent<Collider>();
+        if (col != null && !col.enabled)
+        {
+          col.enabled = true;
+          Debug.Log("Re-enabled finger collider: " + collider.name);
+        }
+      }
+    }
+
     // Ensure the VR spawn point marker is active if it exists
     if (vrSpawnPoint != null)
     {
@@ -735,9 +772,10 @@ public class ARVRModeManager : MonoBehaviour
         // Always make it kinematic and disable gravity in AR mode to prevent it from moving
         rb.isKinematic = true;
         rb.useGravity = false;
-        if (rb != null && !rb.isKinematic) {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+        if (rb != null && !rb.isKinematic)
+        {
+          rb.velocity = Vector3.zero;
+          rb.angularVelocity = Vector3.zero;
         }
         // Remove all constraints
         rb.constraints = RigidbodyConstraints.None;
@@ -789,10 +827,11 @@ public class ARVRModeManager : MonoBehaviour
         {
           rb.isKinematic = true;
           rb.useGravity = false;
-          if (rb != null && !rb.isKinematic) {
+          if (rb != null && !rb.isKinematic)
+          {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-        }
+          }
           rb.constraints = RigidbodyConstraints.None;
           Debug.Log("Reset rediscovered VR spawn point physics - made kinematic with no gravity");
         }
@@ -855,25 +894,25 @@ public class ARVRModeManager : MonoBehaviour
         data.transform.rotation = data.lastARRotation;
 
         // Special handling for bench objects when returning to AR mode
-/*        if (data.transform.name.Contains("Bench"))
-        {
-          // Get the rigidbody component
-          Rigidbody rb = data.transform.GetComponent<Rigidbody>();
-          if (rb != null)
-          {
-            // Reset to default physics values for AR mode
-            rb.mass = 1f;
-            rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+        /*        if (data.transform.name.Contains("Bench"))
+                {
+                  // Get the rigidbody component
+                  Rigidbody rb = data.transform.GetComponent<Rigidbody>();
+                  if (rb != null)
+                  {
+                    // Reset to default physics values for AR mode
+                    rb.mass = 1f;
+                    rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+                    rb.constraints = RigidbodyConstraints.FreezeRotation;
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
 
-            // Ensure the bench is properly positioned
-            data.transform.position = data.lastARPosition;
+                    // Ensure the bench is properly positioned
+                    data.transform.position = data.lastARPosition;
 
-            Debug.Log($"Restored bench physics settings in AR mode: {data.transform.name}");
-          }
-        } */
+                    Debug.Log($"Restored bench physics settings in AR mode: {data.transform.name}");
+                  }
+                } */
 
         // Restore original grab interaction state
         if (data.grabInteractable != null)
@@ -890,7 +929,7 @@ public class ARVRModeManager : MonoBehaviour
     }
 
     // Re-enable collisions with index finger colliders
-    GameObject[] fingerColliders = GameObject.FindGameObjectsWithTag("IndexFingerCollider");
+    // Use existing fingerColliders array that was already populated above
     foreach (GameObject collider in fingerColliders)
     {
       if (collider != null)
