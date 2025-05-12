@@ -130,8 +130,10 @@ public class ARVRModeManager : MonoBehaviour
         // Make sure rigidbody is initially kinematic to prevent it from moving
         rb.isKinematic = true;
         rb.useGravity = false;
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        if (rb != null && !rb.isKinematic) {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
       }
 
       Debug.Log($"Found VRSpawnPoint: {vrSpawnObj.name} at position {vrSpawnObj.transform.position}, parent: {vrSpawnObj.transform.parent?.name}");
@@ -161,12 +163,13 @@ public class ARVRModeManager : MonoBehaviour
         originalRotation = xrOrigin.rotation;
       }
     }
+    
 
     if (toggleModeButton != null)
     {
-      toggleModeButton.onClick.AddListener(ToggleMode);
+      toggleModeButton.GetComponent<Button>().onClick.AddListener(ToggleMode);
       UpdateButtonText();
-    }
+    } 
 
     // Find and store all building objects' original transforms
     GameObject[] buildingObjects = GameObject.FindGameObjectsWithTag("BuildingObject");
@@ -340,8 +343,10 @@ public class ARVRModeManager : MonoBehaviour
       {
         rb.isKinematic = true;
         rb.useGravity = false;
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        if (rb != null && !rb.isKinematic) {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
         // Add freeze constraints to prevent any physics movement
         rb.constraints = RigidbodyConstraints.FreezeAll;
       }
@@ -393,9 +398,11 @@ public class ARVRModeManager : MonoBehaviour
         {
           rb.isKinematic = true;
           rb.useGravity = false;
-          rb.velocity = Vector3.zero;
-          rb.angularVelocity = Vector3.zero;
-        }
+          if (rb != null && !rb.isKinematic) {
+              rb.velocity = Vector3.zero;
+              rb.angularVelocity = Vector3.zero;
+          }
+         }
         else
         {
           Debug.LogWarning($"No Rigidbody found on {data.transform.name}");
@@ -464,8 +471,10 @@ public class ARVRModeManager : MonoBehaviour
         {
           rb.isKinematic = false;
           rb.useGravity = true;
-          rb.velocity = Vector3.zero;
-          rb.angularVelocity = Vector3.zero;
+          if (rb != null && !rb.isKinematic) {
+              rb.velocity = Vector3.zero;
+              rb.angularVelocity = Vector3.zero;
+          }
           rb.constraints = RigidbodyConstraints.FreezeRotation; // Prevent objects from rotating
 
           // Force a small upward position adjustment to ensure it's above the floor
@@ -726,8 +735,10 @@ public class ARVRModeManager : MonoBehaviour
         // Always make it kinematic and disable gravity in AR mode to prevent it from moving
         rb.isKinematic = true;
         rb.useGravity = false;
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        if (rb != null && !rb.isKinematic) {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
         // Remove all constraints
         rb.constraints = RigidbodyConstraints.None;
 
@@ -778,8 +789,10 @@ public class ARVRModeManager : MonoBehaviour
         {
           rb.isKinematic = true;
           rb.useGravity = false;
-          rb.velocity = Vector3.zero;
-          rb.angularVelocity = Vector3.zero;
+          if (rb != null && !rb.isKinematic) {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
           rb.constraints = RigidbodyConstraints.None;
           Debug.Log("Reset rediscovered VR spawn point physics - made kinematic with no gravity");
         }
@@ -842,7 +855,7 @@ public class ARVRModeManager : MonoBehaviour
         data.transform.rotation = data.lastARRotation;
 
         // Special handling for bench objects when returning to AR mode
-        if (data.transform.name.Contains("Bench"))
+/*        if (data.transform.name.Contains("Bench"))
         {
           // Get the rigidbody component
           Rigidbody rb = data.transform.GetComponent<Rigidbody>();
@@ -860,7 +873,7 @@ public class ARVRModeManager : MonoBehaviour
 
             Debug.Log($"Restored bench physics settings in AR mode: {data.transform.name}");
           }
-        }
+        } */
 
         // Restore original grab interaction state
         if (data.grabInteractable != null)

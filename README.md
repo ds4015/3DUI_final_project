@@ -22,6 +22,22 @@ to facilitate collaboration.
 
 ## Updates
 ```
+5/12/25: Dallas - Overhead Views P2-4, Aesthetic Redesign
+```
+- Overhead view tables implemented for players 2-4
+- Aesthetic redesign for cleaner look (transparency, coloration)
+- Objects only from each player's quadrant visible in overhead view
+- Newly spawned objects begin in overhead view, copied to main table upon switch
+- Dynamically created clones for each overhead view instead of 2 per for optimization
+
+<a href="https://youtu.be/fPzq2gmAKd4">
+  <img src="https://img.youtube.com/vi/fPzq2gmAKd4/maxresdefault.jpg" width="500" 
+  alt="Overhead View P2-4, Aesthetic Redesign"></a>
+  <br>
+  <em>Overhead View P2-4, Aesthetic Redesign; Revised Grab</em>
+</p>
+
+```
 5/11/25: Dallas - Grab Object Functionality Restored/Improved
 ```
 - Grabbing objects has been restored/fixed
@@ -361,7 +377,7 @@ Dallas
 - [x] Expand table, add more item portals w/position numbers (4/28)
 - [x] Test scene (4/28)
 - [x] Overhead view switch to facilitate object placement in middle of table (p1) (5/4)
-- [ ] Overhead view for remaining player positions
+- [x] Overhead view for remaining player positions (5/12)
 - [x] Finger movement in VR Mode (5/9)
 
 Optional:

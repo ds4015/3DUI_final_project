@@ -34,11 +34,9 @@ public class OpenObjectMenu : MonoBehaviour
 
     /* passed in from SelectNewObject.cs */
     [HideInInspector] public GameObject objectSpawned;
-    [HideInInspector] public GameObject objectSpawnedCubeContainer;
     [HideInInspector] public bool justSpawned = false;
     public OverheadSwap overheadSwap;
 
-    public Material spawnCubeContainerMaterial;
 
     void Start()
     {
@@ -65,9 +63,6 @@ public class OpenObjectMenu : MonoBehaviour
 
     void Update()
     {
-        if (hands != null)
-           // CheckPalmGesture();
-           Debug.Log("justSpawned: " + justSpawned);
 
         /* continuation of item spawn from SelectNewObject.cs */
         if (justSpawned && !isPressed)  

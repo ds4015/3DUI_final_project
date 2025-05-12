@@ -9,8 +9,8 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class SelectNewObject : MonoBehaviour
 {
-    public NetworkPrefabRef prefabToSpawn;
-    //public GameObject prefabToSpawn;
+    public GameObject prefabToSpawn;
+
     public Transform spawnPoint;
     public GameObject objectMenu;
     public Material spawnCubeContainerMaterial;    
@@ -45,13 +45,13 @@ public class SelectNewObject : MonoBehaviour
             return;
 
         /* spawn the object player selects */
-        //var spawned = Instantiate(prefabToSpawn, t.position, prefabToSpawn.transform.rotation);
-        NetworkObject networkObj = runner.Spawn(prefabToSpawn, t.position, Quaternion.identity, runner.LocalPlayer);
-        if (networkObj == null)
-        {
-            Debug.LogError("Failed to spawn prefab with runner spawner");
-        }
-        GameObject spawned = networkObj.gameObject;
+        var spawned = Instantiate(prefabToSpawn, t.position, prefabToSpawn.transform.rotation);
+        //NetworkObject networkObj = runner.Spawn(prefabToSpawn, t.position, Quaternion.identity, runner.LocalPlayer);
+        //if (networkObj == null)
+        //{
+        //    Debug.LogError("Failed to spawn prefab with runner spawner");
+        //}
+        //GameObject spawned = networkObj.gameObject;
         
         Collider prefabCol = spawned.gameObject.GetComponent<BoxCollider>();
         if (prefabCol == null)
@@ -59,7 +59,7 @@ public class SelectNewObject : MonoBehaviour
             prefabCol = spawned.gameObject.GetComponent<MeshCollider>();
             if (prefabCol == null)
             {
-                Debug.LogError("No BoxCollider or MeshCollider found on prefab!");
+                Debug.LogError("No BoxCollider or MeshCollider found on prefab");
                 return;
             }
         }
@@ -96,7 +96,6 @@ public class SelectNewObject : MonoBehaviour
             play sound effect or delete the container when the object is moved */
         
         openObjectMenu.objectSpawned = spawned;
-        openObjectMenu.objectSpawnedCubeContainer = spawnCubeContainer;
 
         openObjectMenu.justSpawned = true;
 

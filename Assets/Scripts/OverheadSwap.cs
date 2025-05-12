@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
+using System.Linq;
 
 
 public class OverheadSwap : MonoBehaviour
@@ -33,6 +34,10 @@ public class OverheadSwap : MonoBehaviour
     private Collider leftIndexCollider;
     private Collider rightIndexCollider;
     private bool isLoadingPrefabs = false;
+    public float tabletopHeight = 0.9328f;
+
+    public Material outlineMaskMaterial; // Assign in Inspector
+    public Material outlineFillMaterial; // Assign in Inspector
 
  
     void Start()
@@ -55,7 +60,7 @@ public class OverheadSwap : MonoBehaviour
             if (child.gameObject.activeSelf)
             items.Add(child.gameObject);
             Collider childCollider = child.gameObject.GetComponent<Collider>();
-            GameObject centralMat = GameObject.Find("Central Tabletop Mat");
+            GameObject centralMat = GameObject.Find("Overhead Table");
             foreach (Transform div in centralMat.transform)
             {
                 if (div.gameObject.name == "Table Divider") {
@@ -87,16 +92,11 @@ public class OverheadSwap : MonoBehaviour
             {
                 var handle = Addressables.LoadAssetAsync<GameObject>(prefabName);
                 handles.Add(handle);
+                yield return null;
             }
         }
 
-        yield return new WaitUntil(() => {
-            foreach (var handle in handles)
-            {
-                if (!handle.IsDone) return false;
-            }
-            return true;
-        });
+        yield return new WaitUntil(() => handles.All(h => h.IsDone));
 
         foreach (var handle in handles)
         {
@@ -104,44 +104,36 @@ public class OverheadSwap : MonoBehaviour
             {
                 string prefabName = handle.Result.name;
                 prefabCache[prefabName] = handle.Result;
-                
 
                 if (!objectPool.ContainsKey(prefabName))
                 {
                     objectPool[prefabName] = new Queue<GameObject>();
-
-                    for (int i = 0; i < 2; i++)
-                    {
-                        GameObject pooledObj = Instantiate(handle.Result);
-                        pooledObj.SetActive(false);
-                        objectPool[prefabName].Enqueue(pooledObj);
-                    }
                 }
             }
-        }
+            yield return null; 
 
         isLoadingPrefabs = false;
+    }
     }
 
     private GameObject GetPooledObject(string prefabName)
     {
         if (!objectPool.ContainsKey(prefabName))
-            return null;
+            objectPool[prefabName] = new Queue<GameObject>();
 
         Queue<GameObject> pool = objectPool[prefabName];
-        
+
         if (pool.Count > 0)
         {
-            return pool.Dequeue();
+            GameObject obj = pool.Dequeue();
+            return obj;
         }
-        else
+ 
+        if (prefabCache.TryGetValue(prefabName, out GameObject prefab))
         {
-
-            if (prefabCache.TryGetValue(prefabName, out GameObject prefab))
-            {
-                GameObject newObj = Instantiate(prefab);
-                return newObj;
-            }
+            GameObject newObj = Instantiate(prefab);
+            newObj.SetActive(false);
+            return newObj;
         }
         return null;
     }
@@ -152,9 +144,6 @@ public class OverheadSwap : MonoBehaviour
             objectPool[prefabName] = new Queue<GameObject>();
 
 
-        Outline outline = obj.GetComponent<Outline>();
-        if (outline != null)
-            outline.enabled = false;
 
 
         obj.SetActive(false);
@@ -183,8 +172,14 @@ public class OverheadSwap : MonoBehaviour
     {
         if (isOverhead)
         {
+            itemToOverheadMap.Clear();
+            activeOverheadItems.Clear();
+
             foreach (GameObject child in items)
             {
+                if (!IsObjectPartiallyInWedge(child, GetWedgeIndex(playerNum)))
+                    continue;
+
                 string baseName = child.gameObject.name;
                 baseName = baseName.Replace("(Clone)", "").Trim();
                 int parenIndex = baseName.IndexOf(" (");
@@ -196,36 +191,54 @@ public class OverheadSwap : MonoBehaviour
                     GameObject newObject = GetPooledObject(baseName);
                     if (newObject != null)
                     {
-                        newObject.SetActive(true);
-                        Vector3 newPosition = new Vector3(0, 0, 0);
-                        if (playerNum == 1) {
-                            newPosition = new Vector3(child.transform.position.x - offset, child.transform.position.y, child.transform.position.z + offset);
-                        } else if (playerNum == 2) {
-                            newPosition = new Vector3(child.transform.position.x + offset, child.transform.position.y, child.transform.position.z + offset);
-                        } else if (playerNum == 3) {
-                            newPosition = new Vector3(child.transform.position.x + offset, child.transform.position.y, child.transform.position.z - offset);
-                        } else if (playerNum == 4) {
-                            newPosition = new Vector3(child.transform.position.x - offset, child.transform.position.y, child.transform.position.z - offset);
-                        }
-                        newObject.transform.position = newPosition;
-                        newObject.transform.rotation = child.transform.rotation;
-                        
-                        UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable grabInteractable = newObject.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable>();
-                        if (grabInteractable != null)
+                        newObject.transform.SetParent(transform);
+                        newObject.transform.localPosition = child.transform.localPosition;
+                        newObject.transform.localRotation = child.transform.localRotation;
+
+                        GrabPushRotate grabPushRotate = newObject.GetComponent<GrabPushRotate>();
+                        if (grabPushRotate == null)
                         {
-                            Destroy(grabInteractable);
+                            grabPushRotate = newObject.AddComponent<GrabPushRotate>();
                         }
-                        if (newObject.GetComponent<GrabPushRotate>() == null)
-                            newObject.AddComponent<GrabPushRotate>();
+
+                        GrabPushRotate originalGrabPushRotate = child.GetComponent<GrabPushRotate>();
+                        if (originalGrabPushRotate != null)
+                        {
+                            grabPushRotate.rotationSpeed = originalGrabPushRotate.rotationSpeed;
+                            grabPushRotate.moveSpeed = originalGrabPushRotate.moveSpeed;
+                            grabPushRotate.tableHeight = originalGrabPushRotate.tableHeight;
+                            grabPushRotate.rotationSensitivity = originalGrabPushRotate.rotationSensitivity;
+                        }
+
+                        var outline = newObject.GetComponent<Outline>();
+                        if (outline == null)
+                            outline = newObject.AddComponent<Outline>();
+
+                        var outlineMaskField = typeof(Outline).GetField("OutlineMaskMaterial", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                        var outlineFillField = typeof(Outline).GetField("OutlineFillMaterial", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+
+                        if (outlineMaskField != null)
+                            outlineMaskField.SetValue(outline, outlineMaskMaterial);
+                        if (outlineFillField != null)
+                            outlineFillField.SetValue(outline, outlineFillMaterial);
+
+                        outline.enabled = true;
+                        outline.OutlineMode = Outline.Mode.OutlineAll;
+                        outline.OutlineColor = Color.yellow;
+                        outline.OutlineWidth = 5f;
+
+                        newObject.layer = LayerMask.NameToLayer("Default");
+
+
+                        UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabInteractable = newObject.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+                        if (grabInteractable == null)
+                        {
+                            grabInteractable = newObject.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+                        }
+                        grabInteractable.enabled = false;
+
                         if (newObject.GetComponent<Outline>() == null)
                             newObject.AddComponent<Outline>();
-
-                        Outline outline = newObject.GetComponent<Outline>();
-                        if (outline != null) {
-                            outline.enabled = false;
-                            outline.enabled = true;  
-                            outline.enabled = false; 
-                        }
 
                         activeOverheadItems.Add(newObject);
                         itemToOverheadMap[child] = newObject;
@@ -246,14 +259,12 @@ public class OverheadSwap : MonoBehaviour
                         originalMaterials[newObject] = matsList;
                     }
                 }
-                else
-                {
-                    Debug.LogWarning($"[OverheadSwap] Prefab NOT found for: {baseName}");
-                }
             }
+
             itemsCloned = true;
         }
     }
+
 
     void DestroyItems()
     {
@@ -266,53 +277,20 @@ public class OverheadSwap : MonoBehaviour
 
                 Vector3 updatedPosition = new Vector3(0, 0, 0);
                 if (playerNum == 1) {
-                    updatedPosition = new Vector3(overhead.transform.position.x + offset, overhead.transform.position.y, overhead.transform.position.z - offset);
+                    updatedPosition = new Vector3(overhead.transform.position.x + offset, 1.122f, overhead.transform.position.z - offset);
                 } else if (playerNum == 2) {
-                    updatedPosition = new Vector3(overhead.transform.position.x - offset, overhead.transform.position.y, overhead.transform.position.z - offset);
+                    updatedPosition = new Vector3(overhead.transform.position.x - offset, 1.122f, overhead.transform.position.z - offset);
                 } else if (playerNum == 3) {
-                    updatedPosition = new Vector3(overhead.transform.position.x - offset, overhead.transform.position.y, overhead.transform.position.z + offset);
+                    updatedPosition = new Vector3(overhead.transform.position.x - offset, 1.122f, overhead.transform.position.z + offset);
                 } else if (playerNum == 4) {
-                    updatedPosition = new Vector3(overhead.transform.position.x + offset, overhead.transform.position.y, overhead.transform.position.z + offset);
+                    updatedPosition = new Vector3(overhead.transform.position.x + offset, 1.122f, overhead.transform.position.z + offset);
                 }
 
 
                 original.transform.position = updatedPosition;
                 original.transform.rotation = overhead.transform.rotation;
-
-                string baseName = original.name;
-                baseName = baseName.Replace("(Clone)", "").Trim();
-                int parenIndex = baseName.IndexOf(" (");
-                if (parenIndex > 0)
-                    baseName = baseName.Substring(0, parenIndex);
-                ReturnToPool(overhead, baseName);
             }
 
-            foreach (GameObject item in items)
-            {
-                if (!itemToOverheadMap.ContainsKey(item))
-                {
-                    foreach (GameObject overhead in activeOverheadItems)
-                    {
-                        if (overhead.name.StartsWith(item.name))
-                        {
-                            Vector3 updatedPosition = new Vector3(0, 0, 0);
-                            if (playerNum == 1) {
-                                updatedPosition = new Vector3(overhead.transform.position.x + offset, overhead.transform.position.y, overhead.transform.position.z - offset);
-                            } else if (playerNum == 2) {
-                                updatedPosition = new Vector3(overhead.transform.position.x - offset, overhead.transform.position.y, overhead.transform.position.z - offset);
-                            } else if (playerNum == 3) {
-                                updatedPosition = new Vector3(overhead.transform.position.x - offset, overhead.transform.position.y, overhead.transform.position.z + offset);
-                            } else if (playerNum == 4) {
-                                updatedPosition = new Vector3(overhead.transform.position.x + offset, overhead.transform.position.y, overhead.transform.position.z + offset);
-                            }
-                            
-                            item.transform.position = updatedPosition;
-                            item.transform.rotation = overhead.transform.rotation;
-                            break;
-                        }
-                    }
-                }
-            }
 
             itemToOverheadMap.Clear();
             activeOverheadItems.Clear();
@@ -340,36 +318,28 @@ public class OverheadSwap : MonoBehaviour
         foreach (var rend in renderers)
         {
             Bounds bounds = rend.bounds;
-            Vector3[] points = new Vector3[]
-            {
-                bounds.center,
-                bounds.min,
-                bounds.max,
-                new Vector3(bounds.min.x, bounds.min.y, bounds.max.z),
-                new Vector3(bounds.min.x, bounds.max.y, bounds.min.z),
-                new Vector3(bounds.max.x, bounds.min.y, bounds.min.z),
-                new Vector3(bounds.max.x, bounds.max.y, bounds.min.z),
-                new Vector3(bounds.max.x, bounds.min.y, bounds.max.z),
-                new Vector3(bounds.min.x, bounds.max.y, bounds.max.z),
-            };
+            Vector3 objCenter = bounds.center;
 
-            foreach (var point in points)
-            {
-                Vector3 dir = point - center;
-                float absX = Mathf.Abs(dir.x);
-                float absZ = Mathf.Abs(dir.z);
+
+                Vector3 dir = objCenter - center;
+                float dx = Mathf.Abs(dir.x);
+                float dz = Mathf.Abs(dir.z);
                 int wedge;
-                if (absX >= absZ)
+
+                if (playerNum == 1 && objCenter.x < 0 && Mathf.Abs(objCenter.x) > Mathf.Abs(objCenter.z))
+                    if (playerWedge == 0)
+                        return true;
+                if (playerNum == 3 && objCenter.x > 0 && Mathf.Abs(objCenter.x) > Mathf.Abs(objCenter.z))
+                    if (playerWedge == 2)
+                        return true;
+                if (playerNum == 2 && objCenter.z  > 0 && Mathf.Abs(objCenter.z) > Mathf.Abs(objCenter.x))
                 {
-                    wedge = dir.x >= 0 ? 2 : 0;
+                    if (playerWedge == 1)
+                        return true;
                 }
-                else
-                {
-                    wedge = dir.z >= 0 ? 1 : 3;
-                }
-                if (wedge == playerWedge)
-                    return true;
-            }
+                if (playerNum == 4 && objCenter.z < 0 && Mathf.Abs(objCenter.z) >= Mathf.Abs(objCenter.x))
+                    if (playerWedge == 3)
+                        return true;
         }
         return false;
     }
@@ -380,7 +350,10 @@ public class OverheadSwap : MonoBehaviour
 
         foreach (GameObject obj in activeOverheadItems)
         {
-            bool inWedge = IsObjectPartiallyInWedge(obj, playerWedge);
+            GameObject origObj = itemToOverheadMap.FirstOrDefault(kv => kv.Value == obj).Key;
+            if (origObj == null)
+                continue;
+            bool inWedge = IsObjectPartiallyInWedge(origObj, playerWedge);
 
             if (!inWedge)
             {
@@ -388,6 +361,7 @@ public class OverheadSwap : MonoBehaviour
             }
             else
             {
+                obj.transform.position = new Vector3(obj.transform.position.x, tabletopHeight, obj.transform.position.z);
                 obj.SetActive(true);
                 if (originalMaterials.ContainsKey(obj))
                 {
@@ -399,18 +373,13 @@ public class OverheadSwap : MonoBehaviour
                 Collider[] colliders = obj.GetComponentsInChildren<Collider>();
                 foreach (var col in colliders)
                     col.enabled = true;
+
             }
         }
     }
 
     public void AddItem(GameObject newItem)
     {
-        if (!items.Contains(newItem))
-        {
             items.Add(newItem);
-            Debug.Log("Added item: " + newItem.name);
-        }
-
-
     }
 }

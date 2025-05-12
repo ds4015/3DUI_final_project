@@ -5,11 +5,12 @@ using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using Fusion;
+using cakeslice;
+using Unity.VisualScripting;
 
 public class GrabPushRotate : MonoBehaviour
 {
 	private static GameObject currentlyManipulatedObject = null;
-	private static Outline currentlySelectedOutline = null;
 	private static bool isAnyObjectBeingManipulated = false;
 
 	private Transform leftHand;
@@ -40,7 +41,7 @@ public class GrabPushRotate : MonoBehaviour
 	private float lastAngle;
 	private float lastLeftIndexTapTime = -1f;
 	private float lastRightIndexTapTime = -1f;
-	private float doubleTapThreshold = 0.5f;
+	private float doubleTapThreshold = 0.3f;
 	private GameObject lastPokedObject = null;
 	private bool leftIndexInside = false;
 	private bool rightIndexInside = false;
@@ -55,13 +56,13 @@ public class GrabPushRotate : MonoBehaviour
         if (grabInteractable == null)
             grabInteractable = gameObject.AddComponent<XRGrabInteractable>();
 
-        //NetworkObject networkObject = GetComponent<NetworkObject>();
-        //if (networkObject == null)
-            //networkObject = gameObject.AddComponent<NetworkObject>();
+        NetworkObject networkObject = GetComponent<NetworkObject>();
+        if (networkObject == null)
+            networkObject = gameObject.AddComponent<NetworkObject>();
 
-        //NetworkTransform networkTransform = GetComponent<NetworkTransform>();
-        //if (networkTransform == null)
-            //networkTransform = gameObject.AddComponent<NetworkTransform>();
+        NetworkTransform networkTransform = GetComponent<NetworkTransform>();
+        if (networkTransform == null)
+            networkTransform = gameObject.AddComponent<NetworkTransform>();
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -74,12 +75,7 @@ public class GrabPushRotate : MonoBehaviour
             }
         }
 
-        Outline outline = GetComponent<Outline>();
-        if (outline == null)
-        {
-            outline = gameObject.AddComponent<Outline>();
-        }
-        outline.enabled = false;
+        gameObject.layer = LayerMask.NameToLayer("Default");
 
         grabInteractable.selectEntered.AddListener(OnGrabStart);
         grabInteractable.selectExited.AddListener(OnGrabEnd);
@@ -210,24 +206,7 @@ public class GrabPushRotate : MonoBehaviour
             }
             if (now - lastLeftIndexTapTime < doubleTapThreshold)
             {
-                if (currentlyManipulatedObject != null && currentlyManipulatedObject != gameObject)
-                {
-                    if (currentlySelectedOutline != null)
-                        currentlySelectedOutline.enabled = false;
-                    var prevGrabInteractable = currentlyManipulatedObject.GetComponent<XRGrabInteractable>();
-                    if (prevGrabInteractable != null)
-                        prevGrabInteractable.enabled = false;
-                    currentlyManipulatedObject = null;
-                    isAnyObjectBeingManipulated = false;
-                }
-                var outline = gameObject.GetComponent<Outline>();
-                if (outline != null)
-                    outline.enabled = true;
-                currentlySelectedOutline = outline;
-                currentlyManipulatedObject = gameObject;
-                isAnyObjectBeingManipulated = true;
-                handOffsetSet = false;
-                grabInteractable.enabled = true;
+                SelectObject();
             }
             lastLeftIndexTapTime = now;
         }
@@ -271,6 +250,20 @@ public class GrabPushRotate : MonoBehaviour
         return Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
     }
 
+    public static void DeselectCurrent()
+    {
+        if (currentlyManipulatedObject == null)
+            return;
+
+        var grabInteractable = currentlyManipulatedObject.GetComponent<XRGrabInteractable>();
+        if (grabInteractable != null)
+            grabInteractable.enabled = false;
+
+        currentlyManipulatedObject.layer = LayerMask.NameToLayer("Default");
+        currentlyManipulatedObject = null;
+        isAnyObjectBeingManipulated = false;
+    }
+
     void OnGrabStart(SelectEnterEventArgs args)
     {
         Debug.Log("Grab started");
@@ -281,6 +274,8 @@ public class GrabPushRotate : MonoBehaviour
         rb.isKinematic = false;
         rb.useGravity = true;
         rb.constraints = RigidbodyConstraints.None;
+
+        DeselectCurrent();
 
         StartCoroutine(HandleUprightPlacement());
     }
@@ -314,5 +309,31 @@ public class GrabPushRotate : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
+
+    void SelectObject()
+    {
+        if (currentlyManipulatedObject != null && currentlyManipulatedObject != gameObject)
+        {
+            currentlyManipulatedObject.layer = LayerMask.NameToLayer("Default");
+            var prevGrabInteractable = currentlyManipulatedObject.GetComponent<XRGrabInteractable>();
+            if (prevGrabInteractable != null)
+                prevGrabInteractable.enabled = false;
+
+            var prevOutline = currentlyManipulatedObject.GetComponent<Outline>();
+            if (prevOutline != null)
+                prevOutline.enabled = false;
+            currentlyManipulatedObject = null;
+            isAnyObjectBeingManipulated = false;
+        }
+        gameObject.layer = LayerMask.NameToLayer("Objects");
+        currentlyManipulatedObject = gameObject;
+        isAnyObjectBeingManipulated = true;
+        handOffsetSet = false;
+        grabInteractable.enabled = true;
+    
+        var outline = GetComponent<Outline>();
+        if (outline != null)
+            outline.enabled = true;
+    }
 }
-	
+
