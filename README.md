@@ -413,10 +413,13 @@ Nathan
 ```
 
 - [x] Photon Fusion Integration (4/21)
-- [ ] Add authoritative interaction logic for scene objects
-- [ ] Set up spawn points to support up to 4 players
-- [ ] Ownership transfer of objects
-- [x] Item request/queue feature
+- [x] Add authoritative interaction logic for scene objects (5/1)
+- [x] Set up spawn points to support up to 4 players (4/29)
+- [x] Ownership transfer of objects (5/8)
+- [x] Tab switching (5/11)
+- [x] Item feature request between players (5/10)
+- [x] Send requested item back to player + request queue (5/11)
+- [x] Network Rig visual improvements (5/11)
 
 ```
 Kyleigh
