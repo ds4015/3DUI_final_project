@@ -36,11 +36,9 @@ public class PinchGrabber : MonoBehaviour
 
     void TrySelect()
     {
-        // must have double-tapped already
         var go = GrabPushRotate.currentlyManipulatedObject;
         if (go == null) return;
 
-        // do a raycast and make sure it hit *that* object
         if (rayInteractor.TryGetCurrent3DRaycastHit(out RaycastHit hit) &&
             hit.collider.transform.IsChildOf(go.transform))
         {
@@ -57,7 +55,6 @@ public class PinchGrabber : MonoBehaviour
     {
         if (grabbed != null)
         {
-            // Only call SelectExit if the interactable is currently selected
             if (grabbed.isSelected)
             {
                 manager.SelectExit((IXRSelectInteractor)rayInteractor, (IXRSelectInteractable)grabbed);

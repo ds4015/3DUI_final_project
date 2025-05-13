@@ -134,7 +134,6 @@ public class GrabPushRotate : MonoBehaviour
         lastRightHandPosition = rightHand.position;
         lastLeftHandPosition = leftHand.position;
 
-        // Add Outline component if not present
         outline = GetComponent<Outline>();
         if (outline == null)
         {
@@ -166,17 +165,13 @@ public class GrabPushRotate : MonoBehaviour
 
     private void HandleTranslation()
     {
-        // Only handle direct hand translation if we're not being grabbed by the ray
         if (isLeftHandTouching && currentlyManipulatedObject == gameObject && !interactable.isSelected)
         {
             if (!isBeingTranslated)
             {
-                // Start translation - calculate offset from hand to object
                 translationOffset = transform.position - leftHand.position;
                 isBeingTranslated = true;
             }
-
-            // Move object with hand while maintaining the offset and table height
             Vector3 targetPosition = leftHand.position + translationOffset;
             targetPosition.y = tableHeight;
             transform.position = targetPosition;
@@ -211,12 +206,10 @@ public class GrabPushRotate : MonoBehaviour
             leftIndexInside = true;
             isLeftIndexTouching = true;
 
-            // Check for double tap
             if (lastLeftIndexTapTime > 0 && now - lastLeftIndexTapTime < doubleTapThreshold)
             {
-                Debug.Log("Double tap detected!");
                 SelectObject();
-                lastLeftIndexTapTime = -1f; // Reset to prevent triple-tap
+                lastLeftIndexTapTime = -1f; 
             }
             else
             {
@@ -288,15 +281,12 @@ public class GrabPushRotate : MonoBehaviour
 
     void OnGrabStart(SelectEnterEventArgs args)
     {
-        Debug.Log("Grab started on: " + gameObject.name);
-        // When grabbed by ray, stop direct hand translation
         isBeingTranslated = false;
         isLeftHandTouching = false;
     }
 
     void OnGrabEnd(SelectExitEventArgs args)
     {
-        Debug.Log("Grab ended on: " + gameObject.name);
         isBeingTranslated = false;
         rb.isKinematic = false;
         rb.useGravity = true;
@@ -337,15 +327,12 @@ public class GrabPushRotate : MonoBehaviour
 
     void SelectObject()
     {
-        Debug.Log("Selecting object: " + gameObject.name);
-        
-        // Deselect previous object if exists
+
         if (currentlyManipulatedObject != null && currentlyManipulatedObject != gameObject)
         {
             DeselectObject(currentlyManipulatedObject);
         }
 
-        // Select this object
         gameObject.layer = LayerMask.NameToLayer("Objects");
         currentlyManipulatedObject = gameObject;
         isAnyObjectBeingManipulated = true;

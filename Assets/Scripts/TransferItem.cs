@@ -39,7 +39,6 @@ public class TransferItem : MonoBehaviour
         {
             gpr = other.gameObject.GetComponent<GrabPushRotate>();
 
-            // Deselect the current object before transfer
             GrabPushRotate.DeselectCurrent();
 
             if (activePortal != null && activeDropPoint != null)
@@ -55,13 +54,11 @@ public class TransferItem : MonoBehaviour
                 var grabPushRotate = other.gameObject.GetComponent<GrabPushRotate>();
                 if (grabPushRotate != null)
                 {
-                    // Reset all interaction states
                     grabPushRotate.isLeftHandTouching = false;
                     grabPushRotate.isRightHandTouching = false;
                     grabPushRotate.isLeftIndexTouching = false;
                     grabPushRotate.isRightIndexTouching = false;
                     
-                    // Ensure the object is in the correct layer
                     other.gameObject.layer = LayerMask.NameToLayer("Default");
                 }
 
@@ -147,7 +144,6 @@ public class TransferItem : MonoBehaviour
         obj.position = endPos;
         obj.rotation = endRot;
         
-        // Re-enable physics and grab functionality
         Rigidbody rb = obj.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -155,10 +151,8 @@ public class TransferItem : MonoBehaviour
             rb.isKinematic = false;
         }
 
-        // Ensure the object is in the correct layer and can be grabbed
         obj.gameObject.layer = LayerMask.NameToLayer("Default");
         
-        // Re-enable grab interactable after the object has settled
         var grabInteractable = obj.GetComponent<XRGrabInteractable>();
         if (grabInteractable != null)
         {
@@ -166,7 +160,6 @@ public class TransferItem : MonoBehaviour
             grabInteractable.interactionLayers = InteractionLayerMask.GetMask("Default", "Objects");
         }
 
-        // Reset any remaining interaction states
         var grabPushRotate = obj.GetComponent<GrabPushRotate>();
         if (grabPushRotate != null)
         {
