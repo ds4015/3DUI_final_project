@@ -22,6 +22,21 @@ to facilitate collaboration.
 
 ## Updates
 ```
+5/12/25: Dallas - Immersive VR Test Scene 2
+```
+- Second test scene with objects at full human scale
+- Play area in AR expanded to accommodate increased scale
+- Movement speed increased in VR with pointer finger
+- New test assets for scene
+
+<a href="https://youtu.be/iY1By1gU4no">
+  <img src="https://img.youtube.com/vi/iY1By1gU4no/maxresdefault.jpg" width="500" 
+  alt="VR Test Scene"></a>
+  <br>
+  <em>Immersive VR Test Scene 2</em>
+</p>
+
+```
 5/12/25: Kyleigh - Fix bugs for wrist buttons with networking
 ```
 - fixed UI scale and forward padding for wrist buttons in VR mode
@@ -408,6 +423,7 @@ Dallas
 
 Optional:
 - [ ] Hand gestures to open/close object selection UI panels
+- [x] Immersive VR second test scene (5/12)
 
 ```
 Nathan
