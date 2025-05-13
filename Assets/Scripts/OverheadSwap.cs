@@ -5,7 +5,8 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using System.Linq;
-
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class OverheadSwap : MonoBehaviour
 {
@@ -194,6 +195,7 @@ public class OverheadSwap : MonoBehaviour
                         newObject.transform.SetParent(transform);
                         newObject.transform.localPosition = child.transform.localPosition;
                         newObject.transform.localRotation = child.transform.localRotation;
+                        newObject.tag = "BuildingObject";
 
                         GrabPushRotate grabPushRotate = newObject.GetComponent<GrabPushRotate>();
                         if (grabPushRotate == null)
@@ -206,7 +208,7 @@ public class OverheadSwap : MonoBehaviour
                         {
                             grabPushRotate.rotationSpeed = originalGrabPushRotate.rotationSpeed;
                             grabPushRotate.moveSpeed = originalGrabPushRotate.moveSpeed;
-                            grabPushRotate.tableHeight = originalGrabPushRotate.tableHeight;
+                            grabPushRotate.tableHeight = tabletopHeight;
                             grabPushRotate.rotationSensitivity = originalGrabPushRotate.rotationSensitivity;
                         }
 
@@ -229,21 +231,21 @@ public class OverheadSwap : MonoBehaviour
 
                         newObject.layer = LayerMask.NameToLayer("Default");
 
-
-                        UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabInteractable = newObject.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+                        var grabInteractable = newObject.GetComponent<XRGrabInteractable>();
                         if (grabInteractable == null)
                         {
-                            grabInteractable = newObject.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+                            grabInteractable = newObject.AddComponent<XRGrabInteractable>();
                         }
-                        grabInteractable.enabled = false;
-
-                        if (newObject.GetComponent<Outline>() == null)
-                            newObject.AddComponent<Outline>();
-
-                        activeOverheadItems.Add(newObject);
-                        itemToOverheadMap[child] = newObject;
+                        grabInteractable.enabled = true;
+                        grabInteractable.interactionLayers = InteractionLayerMask.GetMask("Default", "Objects");
 
                         Collider[] newObjectColliders = newObject.GetComponentsInChildren<Collider>();
+                        foreach (var collider in newObjectColliders)
+                        {
+                            collider.enabled = true;
+                            collider.isTrigger = false;
+                        }
+
                         foreach (var dividerCollider in dividerColliders)
                         {
                             foreach (var objCollider in newObjectColliders)
@@ -257,6 +259,9 @@ public class OverheadSwap : MonoBehaviour
                         foreach (var rend in renderers)
                             matsList.Add((Material[])rend.materials.Clone());
                         originalMaterials[newObject] = matsList;
+
+                        activeOverheadItems.Add(newObject);
+                        itemToOverheadMap[child] = newObject;
                     }
                 }
             }
@@ -368,6 +373,7 @@ public class OverheadSwap : MonoBehaviour
             {
                 obj.transform.position = new Vector3(obj.transform.position.x, tabletopHeight, obj.transform.position.z);
                 obj.SetActive(true);
+                
                 if (originalMaterials.ContainsKey(obj))
                 {
                     var matsList = originalMaterials[obj];
@@ -375,10 +381,26 @@ public class OverheadSwap : MonoBehaviour
                     for (int i = 0; i < renderers.Length; i++)
                         renderers[i].materials = matsList[i];
                 }
+
                 Collider[] colliders = obj.GetComponentsInChildren<Collider>();
                 foreach (var col in colliders)
+                {
                     col.enabled = true;
+                    col.isTrigger = false;
+                }
 
+                var grabInteractable = obj.GetComponent<XRGrabInteractable>();
+                if (grabInteractable != null)
+                {
+                    grabInteractable.enabled = true;
+                    grabInteractable.interactionLayers = InteractionLayerMask.GetMask("Default", "Objects");
+                }
+
+                var outline = obj.GetComponent<Outline>();
+                if (outline != null)
+                {
+                    outline.enabled = true;
+                }
             }
         }
     }

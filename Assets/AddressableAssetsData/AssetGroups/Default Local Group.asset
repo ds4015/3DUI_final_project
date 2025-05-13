@@ -122,11 +122,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 375d411dd4534406c90c49b797e2e8c0
-    m_Address: Assets/Prefabs/Downtown_Buildings_Set_-_Low_Poly_model (1).prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 38ec617194d728b488ce67142fe75728
     m_Address: Assets/Prefabs/NetworkObjects/Fountain.prefab
     m_ReadOnly: 0
