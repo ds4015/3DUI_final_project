@@ -7,6 +7,14 @@ using System.Collections.Generic;
 
 public class ARVRModeManager : MonoBehaviour
 {
+ [Header("Breadcrumb Trail")]
+  public List<GameObject> listofbreadCrumbs = new List<GameObject>();
+  public GameObject breadCrumbPrefab;
+  [SerializeField] private GameObject breadCrumb;
+  [SerializeField] private float breadCrumbGap = 0.2f;
+  private Vector3 lastBreadCrumbPosition;
+  private bool shouldLeaveBreadCrumbs = false;
+
   [Header("Scene References")]
   [SerializeField] private Camera mainCamera;
   [SerializeField] private Transform xrOrigin;
@@ -229,7 +237,22 @@ public class ARVRModeManager : MonoBehaviour
         }
       }
     }
-  }
+        if (isVRMode && shouldLeaveBreadCrumbs && breadCrumb != null)
+        {
+            float distance = Vector3.Distance(xrOrigin.position, lastBreadCrumbPosition);
+            Debug.Log("ISVR AND BREAD");
+            if (distance >= breadCrumbGap)
+            {
+                Vector3 spawnPoint = xrOrigin.position;
+                spawnPoint.y += 0.35f;
+                GameObject crumb = Instantiate(breadCrumb, spawnPoint, Quaternion.identity);
+                //Destroy(crumb, breadcrumbLifetime);
+                listofbreadCrumbs.Add(crumb);
+                Debug.Log("BREADCRUMBS SPAWNED");
+                lastBreadCrumbPosition = xrOrigin.position;
+            }
+        }
+    }
 
   private void UpdateButtonText()
   {
@@ -723,11 +746,24 @@ public class ARVRModeManager : MonoBehaviour
         Debug.Log($"Added new building object to tracking: {obj.name}");
       }
     }
-  }
+        //breadcrumb
+        lastBreadCrumbPosition = xrOrigin.position;
+        shouldLeaveBreadCrumbs = true;
+        Debug.Log("SHOULDLEAVEBREADCRUMBS TRUE");
+    }
 
   private void SetARMode()
   {
-    if (mainCamera != null)
+        shouldLeaveBreadCrumbs = false;
+        foreach (GameObject crumb in listofbreadCrumbs)
+        {
+            if (crumb != null)
+            {
+                Destroy(crumb);
+            }
+        }
+        listofbreadCrumbs.Clear();
+        if (mainCamera != null)
     {
       mainCamera.clearFlags = CameraClearFlags.SolidColor;
     }
