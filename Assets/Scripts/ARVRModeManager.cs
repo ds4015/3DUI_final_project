@@ -283,6 +283,12 @@ public class ARVRModeManager : MonoBehaviour
       }
     }
 
+    MovePlayer movePlayer = xrOrigin.GetComponent<MovePlayer>();
+    if (movePlayer != null)
+    {
+      movePlayer.enabled = true;
+    }
+
     // Disable collisions with index finger colliders, but keep them enabled for the toggle button
     GameObject[] fingerColliders = GameObject.FindGameObjectsWithTag("IndexFingerCollider");
     foreach (GameObject collider in fingerColliders)
@@ -418,6 +424,7 @@ public class ARVRModeManager : MonoBehaviour
     tempParent.transform.position = floorTransform.position;
     tempParent.transform.rotation = Quaternion.identity;
     Transform tempParentTransform = tempParent.transform;
+    
 
     // First, parent all objects to the temporary parent while maintaining their world positions
     foreach (BuildingObjectData data in buildingObjectsData)
@@ -481,7 +488,7 @@ public class ARVRModeManager : MonoBehaviour
     if (tableTop != null)
     {
       // Assuming the table is roughly 1 unit in size, scale up to real-world size
-      scaleFactor = 10.0f; // Adjust this value based on your desired scale
+      scaleFactor = 90.0f; // Adjust this value based on your desired scale
     }
 
     // Scale up the temporary parent and all its children
@@ -723,6 +730,12 @@ public class ARVRModeManager : MonoBehaviour
     if (mainCamera != null)
     {
       mainCamera.clearFlags = CameraClearFlags.SolidColor;
+    }
+
+    MovePlayer movePlayer = xrOrigin.GetComponent<MovePlayer>();
+    if (movePlayer != null)
+    {
+      movePlayer.enabled = false;
     }
 
     // Show the tabletop
