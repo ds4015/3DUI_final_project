@@ -2,6 +2,14 @@
 
 Final team project for 3D UI Design at Columbia University, Spring 2025
 
+Submitted May 13, 2025
+
+## Contributors
+Kyleigh Sudlow - kas2330
+Dallas Scott - ds4015
+Nathan Wangidjaja - nbw2120
+Krystal Briggs - kab2286
+
 ## Contents
 
 - [Project Overview](#overview)
@@ -19,6 +27,12 @@ an immersive 3D exploration of the completed tabletop scaled up to human size.
 During the construction process, participants will have the opportunity to view
 the scene in progress from the perspectives of other participants in order
 to facilitate collaboration.
+
+This project was developed using Unity and can be deployed to a Meta Quest headset via build settings. We used Gitbug for version control.
+
+## Asset Sources
+- Button Sets: <a href="https://assetstore.unity.com/packages/2d/gui/buttons-set-211824">
+- 
 
 ## Updates
 ```
@@ -677,7 +691,7 @@ PositionPlayer.cs
 ```
 
 ```
-ResetPerspectiveButton.cs *new*
+ResetPerspectiveButton.cs
 
   A script for the button that resets the table and objects to their original perspective.
   When pressed, it calls the PerspectiveSwitcher to restore everything to its original
