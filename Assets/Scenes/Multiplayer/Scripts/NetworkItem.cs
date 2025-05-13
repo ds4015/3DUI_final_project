@@ -12,8 +12,6 @@ public class NetworkItem : NetworkBehaviour
     public Transform rightHand;
     private HardwareRig hardwareRig;
     private XROrigin xrOrigin;
-    public GameObject leftHandVisual;
-    public GameObject rightHandVisual;
     public override void Spawned()
     {
         if (Object.HasInputAuthority)
@@ -29,8 +27,6 @@ public class NetworkItem : NetworkBehaviour
             xrOrigin.transform.rotation = transform.rotation;
             //hardwareRig.transform.position = transform.position;
             //hardwareRig.transform.rotation = transform.rotation;
-            leftHandVisual.SetActive(false);
-            rightHandVisual.SetActive(false);
         }
 
     }

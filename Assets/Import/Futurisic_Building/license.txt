@@ -1,0 +1,11 @@
+Model Information:
+* title:	Futurisic Building
+* source:	https://sketchfab.com/3d-models/futurisic-building-97dafb7fa638404990c8948383db9127
+* author:	Matsuomoto (https://sketchfab.com/Matsuomoto)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Futurisic Building" (https://sketchfab.com/3d-models/futurisic-building-97dafb7fa638404990c8948383db9127) by Matsuomoto (https://sketchfab.com/Matsuomoto) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

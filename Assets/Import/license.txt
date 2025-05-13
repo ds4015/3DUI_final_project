@@ -1,0 +1,11 @@
+Model Information:
+* title:	Skyscraper
+* source:	https://sketchfab.com/3d-models/skyscraper-77134ed0e42f41c88f6986253d1813cd
+* author:	eder (https://sketchfab.com/eder_e)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Skyscraper" (https://sketchfab.com/3d-models/skyscraper-77134ed0e42f41c88f6986253d1813cd) by eder (https://sketchfab.com/eder_e) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

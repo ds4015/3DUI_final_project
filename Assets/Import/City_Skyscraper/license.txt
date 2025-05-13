@@ -1,0 +1,11 @@
+Model Information:
+* title:	City Skyscraper
+* source:	https://sketchfab.com/3d-models/city-skyscraper-72277ab10174437f8f33392e8e4309d0
+* author:	galimovagulnaz188 (https://sketchfab.com/galimovagulnaz188)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "City Skyscraper" (https://sketchfab.com/3d-models/city-skyscraper-72277ab10174437f8f33392e8e4309d0) by galimovagulnaz188 (https://sketchfab.com/galimovagulnaz188) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
