@@ -5,7 +5,8 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using System.Linq;
-
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class OverheadSwap : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class OverheadSwap : MonoBehaviour
     private float offset = 16.5f;
     private GameObject tabletopItems;
     private List<Collider> dividerColliders = new List<Collider>();
-    public Transform tabletopCenter; 
+    public Transform tabletopCenter;
     public int numWedges = 4;
     public Material ghostMaterial;
     public Transform playerTransform;
@@ -39,7 +40,7 @@ public class OverheadSwap : MonoBehaviour
     public Material outlineMaskMaterial; // Assign in Inspector
     public Material outlineFillMaterial; // Assign in Inspector
 
- 
+
     void Start()
     {
         leftWrist = GameObject.Find("XR Origin Hands (XR Rig)/Camera Offset/Left Hand/Left Hand Interaction Visual/L_Wrist").transform;
@@ -50,7 +51,7 @@ public class OverheadSwap : MonoBehaviour
         rightWristCollider = rightWrist.GetComponent<Collider>();
         leftIndexCollider = leftIndex.GetComponent<Collider>();
         rightIndexCollider = rightIndex.GetComponent<Collider>();
-                        
+
         tabletopItems = GameObject.Find("Tabletop Objects");
 
         if (tabletopItems == null)
@@ -58,12 +59,13 @@ public class OverheadSwap : MonoBehaviour
         foreach (Transform child in tabletopItems.transform)
         {
             if (child.gameObject.activeSelf)
-            items.Add(child.gameObject);
+                items.Add(child.gameObject);
             Collider childCollider = child.gameObject.GetComponent<Collider>();
             GameObject centralMat = GameObject.Find("Overhead Table");
             foreach (Transform div in centralMat.transform)
             {
-                if (div.gameObject.name == "Table Divider") {
+                if (div.gameObject.name == "Table Divider")
+                {
                     Collider dividerCollider = div.gameObject.GetComponent<Collider>();
                     if (dividerCollider != null && !dividerColliders.Contains(dividerCollider))
                         dividerColliders.Add(dividerCollider);
@@ -87,7 +89,7 @@ public class OverheadSwap : MonoBehaviour
             if (parenIndex > 0)
                 baseName = baseName.Substring(0, parenIndex);
             string prefabName = "Assets/Prefabs/" + baseName + ".prefab";
-            
+
             if (!prefabCache.ContainsKey(prefabName))
             {
                 var handle = Addressables.LoadAssetAsync<GameObject>(prefabName);
@@ -110,10 +112,10 @@ public class OverheadSwap : MonoBehaviour
                     objectPool[prefabName] = new Queue<GameObject>();
                 }
             }
-            yield return null; 
+            yield return null;
 
-        isLoadingPrefabs = false;
-    }
+            isLoadingPrefabs = false;
+        }
     }
 
     private GameObject GetPooledObject(string prefabName)
@@ -128,7 +130,7 @@ public class OverheadSwap : MonoBehaviour
             GameObject obj = pool.Dequeue();
             return obj;
         }
- 
+
         if (prefabCache.TryGetValue(prefabName, out GameObject prefab))
         {
             GameObject newObj = Instantiate(prefab);
@@ -166,7 +168,7 @@ public class OverheadSwap : MonoBehaviour
         }
 
         UpdateObjectStates(playerNum);
-        }
+    }
 
     void SwapItems()
     {
@@ -194,6 +196,7 @@ public class OverheadSwap : MonoBehaviour
                         newObject.transform.SetParent(transform);
                         newObject.transform.localPosition = child.transform.localPosition;
                         newObject.transform.localRotation = child.transform.localRotation;
+                        newObject.tag = "BuildingObject";
 
                         GrabPushRotate grabPushRotate = newObject.GetComponent<GrabPushRotate>();
                         if (grabPushRotate == null)
@@ -206,7 +209,7 @@ public class OverheadSwap : MonoBehaviour
                         {
                             grabPushRotate.rotationSpeed = originalGrabPushRotate.rotationSpeed;
                             grabPushRotate.moveSpeed = originalGrabPushRotate.moveSpeed;
-                            grabPushRotate.tableHeight = originalGrabPushRotate.tableHeight;
+                            grabPushRotate.tableHeight = tabletopHeight;
                             grabPushRotate.rotationSensitivity = originalGrabPushRotate.rotationSensitivity;
                         }
 
@@ -229,21 +232,21 @@ public class OverheadSwap : MonoBehaviour
 
                         newObject.layer = LayerMask.NameToLayer("Default");
 
-
-                        UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabInteractable = newObject.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+                        var grabInteractable = newObject.GetComponent<XRGrabInteractable>();
                         if (grabInteractable == null)
                         {
-                            grabInteractable = newObject.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+                            grabInteractable = newObject.AddComponent<XRGrabInteractable>();
                         }
-                        grabInteractable.enabled = false;
-
-                        if (newObject.GetComponent<Outline>() == null)
-                            newObject.AddComponent<Outline>();
-
-                        activeOverheadItems.Add(newObject);
-                        itemToOverheadMap[child] = newObject;
+                        grabInteractable.enabled = true;
+                        grabInteractable.interactionLayers = InteractionLayerMask.GetMask("Default", "Objects");
 
                         Collider[] newObjectColliders = newObject.GetComponentsInChildren<Collider>();
+                        foreach (var collider in newObjectColliders)
+                        {
+                            collider.enabled = true;
+                            collider.isTrigger = false;
+                        }
+
                         foreach (var dividerCollider in dividerColliders)
                         {
                             foreach (var objCollider in newObjectColliders)
@@ -257,6 +260,9 @@ public class OverheadSwap : MonoBehaviour
                         foreach (var rend in renderers)
                             matsList.Add((Material[])rend.materials.Clone());
                         originalMaterials[newObject] = matsList;
+
+                        activeOverheadItems.Add(newObject);
+                        itemToOverheadMap[child] = newObject;
                     }
                 }
             }
@@ -276,13 +282,20 @@ public class OverheadSwap : MonoBehaviour
                 GameObject overhead = kvp.Value;
 
                 Vector3 updatedPosition = new Vector3(0, 0, 0);
-                if (playerNum == 1) {
+                if (playerNum == 1)
+                {
                     updatedPosition = new Vector3(overhead.transform.position.x + offset, 1.122f, overhead.transform.position.z - offset);
-                } else if (playerNum == 2) {
+                }
+                else if (playerNum == 2)
+                {
                     updatedPosition = new Vector3(overhead.transform.position.x - offset, 1.122f, overhead.transform.position.z - offset);
-                } else if (playerNum == 3) {
+                }
+                else if (playerNum == 3)
+                {
                     updatedPosition = new Vector3(overhead.transform.position.x - offset, 1.122f, overhead.transform.position.z + offset);
-                } else if (playerNum == 4) {
+                }
+                else if (playerNum == 4)
+                {
                     updatedPosition = new Vector3(overhead.transform.position.x + offset, 1.122f, overhead.transform.position.z + offset);
                 }
 
@@ -294,7 +307,7 @@ public class OverheadSwap : MonoBehaviour
                 if (parenIndex > 0)
                     baseName = baseName.Substring(0, parenIndex);
 
-                ReturnToPool(overhead, baseName); 
+                ReturnToPool(overhead, baseName);
             }
 
             itemToOverheadMap.Clear();
@@ -309,8 +322,8 @@ public class OverheadSwap : MonoBehaviour
         {
             case 1: return 0;
             case 2: return 1;
-            case 3: return 2; 
-            case 4: return 3; 
+            case 3: return 2;
+            case 4: return 3;
             default: return 1;
         }
     }
@@ -326,25 +339,25 @@ public class OverheadSwap : MonoBehaviour
             Vector3 objCenter = bounds.center;
 
 
-                Vector3 dir = objCenter - center;
-                float dx = Mathf.Abs(dir.x);
-                float dz = Mathf.Abs(dir.z);
-                int wedge;
+            Vector3 dir = objCenter - center;
+            float dx = Mathf.Abs(dir.x);
+            float dz = Mathf.Abs(dir.z);
+            int wedge;
 
-                if (playerNum == 1 && objCenter.x < 0 && Mathf.Abs(objCenter.x) > Mathf.Abs(objCenter.z))
-                    if (playerWedge == 0)
-                        return true;
-                if (playerNum == 3 && objCenter.x > 0 && Mathf.Abs(objCenter.x) > Mathf.Abs(objCenter.z))
-                    if (playerWedge == 2)
-                        return true;
-                if (playerNum == 2 && objCenter.z  > 0 && Mathf.Abs(objCenter.z) > Mathf.Abs(objCenter.x))
-                {
-                    if (playerWedge == 1)
-                        return true;
-                }
-                if (playerNum == 4 && objCenter.z < 0 && Mathf.Abs(objCenter.z) >= Mathf.Abs(objCenter.x))
-                    if (playerWedge == 3)
-                        return true;
+            if (playerNum == 1 && objCenter.x < 0 && Mathf.Abs(objCenter.x) > Mathf.Abs(objCenter.z))
+                if (playerWedge == 0)
+                    return true;
+            if (playerNum == 3 && objCenter.x > 0 && Mathf.Abs(objCenter.x) > Mathf.Abs(objCenter.z))
+                if (playerWedge == 2)
+                    return true;
+            if (playerNum == 2 && objCenter.z > 0 && Mathf.Abs(objCenter.z) > Mathf.Abs(objCenter.x))
+            {
+                if (playerWedge == 1)
+                    return true;
+            }
+            if (playerNum == 4 && objCenter.z < 0 && Mathf.Abs(objCenter.z) >= Mathf.Abs(objCenter.x))
+                if (playerWedge == 3)
+                    return true;
         }
         return false;
     }
@@ -368,6 +381,7 @@ public class OverheadSwap : MonoBehaviour
             {
                 obj.transform.position = new Vector3(obj.transform.position.x, tabletopHeight, obj.transform.position.z);
                 obj.SetActive(true);
+
                 if (originalMaterials.ContainsKey(obj))
                 {
                     var matsList = originalMaterials[obj];
@@ -375,16 +389,32 @@ public class OverheadSwap : MonoBehaviour
                     for (int i = 0; i < renderers.Length; i++)
                         renderers[i].materials = matsList[i];
                 }
+
                 Collider[] colliders = obj.GetComponentsInChildren<Collider>();
                 foreach (var col in colliders)
+                {
                     col.enabled = true;
+                    col.isTrigger = false;
+                }
 
+                var grabInteractable = obj.GetComponent<XRGrabInteractable>();
+                if (grabInteractable != null)
+                {
+                    grabInteractable.enabled = true;
+                    grabInteractable.interactionLayers = InteractionLayerMask.GetMask("Default", "Objects");
+                }
+
+                var outline = obj.GetComponent<Outline>();
+                if (outline != null)
+                {
+                    outline.enabled = true;
+                }
             }
         }
     }
 
     public void AddItem(GameObject newItem)
     {
-            items.Add(newItem);
+        items.Add(newItem);
     }
 }

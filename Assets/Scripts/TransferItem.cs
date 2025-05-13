@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class TransferItem : MonoBehaviour
 {
@@ -18,11 +19,11 @@ public class TransferItem : MonoBehaviour
     private GameObject portal4;
     private GrabPushRotate gpr;
     [SerializeField]
-    private GameObject portal1DropPoint; 
+    private GameObject portal1DropPoint;
     [SerializeField]
-    private GameObject portal2DropPoint; 
+    private GameObject portal2DropPoint;
     [SerializeField]
-    private GameObject portal3DropPoint; 
+    private GameObject portal3DropPoint;
     [SerializeField]
     private GameObject portal4DropPoint;
     [HideInInspector] public Transform activePortal;
@@ -38,6 +39,7 @@ public class TransferItem : MonoBehaviour
         {
             gpr = other.gameObject.GetComponent<GrabPushRotate>();
 
+            // Deselect the current object before transfer
             GrabPushRotate.DeselectCurrent();
 
             if (activePortal != null && activeDropPoint != null)
@@ -53,9 +55,13 @@ public class TransferItem : MonoBehaviour
                 var grabPushRotate = other.gameObject.GetComponent<GrabPushRotate>();
                 if (grabPushRotate != null)
                 {
-                    var grabInteractable = other.gameObject.GetComponent<XRGrabInteractable>();
-                    if (grabInteractable != null)
-                        grabInteractable.enabled = false;
+                    // Reset all interaction states
+                    grabPushRotate.isLeftHandTouching = false;
+                    grabPushRotate.isRightHandTouching = false;
+                    grabPushRotate.isLeftIndexTouching = false;
+                    grabPushRotate.isRightIndexTouching = false;
+
+                    // Ensure the object is in the correct layer
                     other.gameObject.layer = LayerMask.NameToLayer("Default");
                 }
 
@@ -66,6 +72,16 @@ public class TransferItem : MonoBehaviour
                 }
                 StartCoroutine(MoveFromHoverToTable(other.transform, other.transform.position));
             }
+        }
+    }
+
+    private void ReenableAllGrabInteractables()
+    {
+        foreach (var interactable in FindObjectsOfType<XRGrabInteractable>())
+        {
+            interactable.enabled = true;
+            interactable.interactionLayers = InteractionLayerMask.GetMask("Default", "Objects");
+            interactable.gameObject.layer = LayerMask.NameToLayer("Default");
         }
     }
 
@@ -99,14 +115,19 @@ public class TransferItem : MonoBehaviour
 
     IEnumerator MoveFromHoverToTable(Transform obj, Vector3 startPos)
     {
-        gpr.isRightHandTouching = false;
-        gpr.isLeftHandTouching = false;
+        if (gpr != null)
+        {
+            gpr.isRightHandTouching = false;
+            gpr.isLeftHandTouching = false;
+        }
+
         float waitTime = 3f;
         float moveDuration = 0.8f;
 
         yield return new WaitForSeconds(waitTime);
 
-        if (activeDropPoint == null) {
+        if (activeDropPoint == null)
+        {
             yield return null;
         }
         Vector3 endPos = activeDropPoint.position;
@@ -126,7 +147,45 @@ public class TransferItem : MonoBehaviour
 
         obj.position = endPos;
         obj.rotation = endRot;
-        obj.GetComponent<Rigidbody>().useGravity = true;
-        obj.GetComponent<Rigidbody>().isKinematic = false;
+
+        // Re-enable physics and grab functionality
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.useGravity = true;
+            rb.isKinematic = false;
+        }
+
+        // Ensure the object is in the correct layer and can be grabbed
+        obj.gameObject.layer = LayerMask.NameToLayer("Default");
+
+        // Re-enable grab interactable after the object has settled
+        var grabInteractable = obj.GetComponent<XRGrabInteractable>();
+        if (grabInteractable != null)
+        {
+            grabInteractable.enabled = true;
+            grabInteractable.interactionLayers = InteractionLayerMask.GetMask("Default", "Objects");
+        }
+
+        // Reset any remaining interaction states
+        var grabPushRotate = obj.GetComponent<GrabPushRotate>();
+        if (grabPushRotate != null)
+        {
+            grabPushRotate.isLeftHandTouching = false;
+            grabPushRotate.isRightHandTouching = false;
+            grabPushRotate.isLeftIndexTouching = false;
+            grabPushRotate.isRightIndexTouching = false;
+        }
+        ReenableAllGrabInteractables();
+        GrabPushRotate.currentlyManipulatedObject = null;
+    }
+
+    IEnumerator ReenableGrabInteractable(XRGrabInteractable grabInteractable)
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (grabInteractable != null)
+        {
+            grabInteractable.enabled = true;
+        }
     }
 }

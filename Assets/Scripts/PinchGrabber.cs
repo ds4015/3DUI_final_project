@@ -1,24 +1,24 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
-[RequireComponent(typeof(UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor))]
+[RequireComponent(typeof(XRRayInteractor))]
 public class PinchGrabber : MonoBehaviour
 {
-
     public Transform indexTipTransform;
     public Transform thumbTipTransform;
-
     public float pinchThreshold = 0.05f;
 
-    UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor rayInteractor;
+    XRRayInteractor rayInteractor;
     XRInteractionManager manager;
-    UnityEngine.XR.Interaction.Toolkit.Interactables.IXRSelectInteractable grabbed;
+    XRGrabInteractable grabbed;
     bool wasPinching;
 
     void Awake()
     {
-        rayInteractor = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactors.XRRayInteractor>();
-        manager      = rayInteractor.interactionManager;
+        rayInteractor = GetComponent<XRRayInteractor>();
+        manager = rayInteractor.interactionManager;
     }
 
     void Update()
@@ -26,26 +26,30 @@ public class PinchGrabber : MonoBehaviour
         if (indexTipTransform == null || thumbTipTransform == null)
             return;
 
-        float dist = Vector3.Distance(indexTipTransform.position, thumbTipTransform.position);
-        bool isPinching = dist < pinchThreshold;
+        bool isPinching = Vector3.Distance(indexTipTransform.position, thumbTipTransform.position)
+                          < pinchThreshold;
 
-        if (isPinching && !wasPinching)
-            TrySelect();
-        if (!isPinching && wasPinching)
-            TryDeselect();
-
+        if (isPinching && !wasPinching) TrySelect();
+        if (!isPinching && wasPinching) TryDeselect();
         wasPinching = isPinching;
     }
 
     void TrySelect()
     {
+        // must have double-tapped already
+        var go = GrabPushRotate.currentlyManipulatedObject;
+        if (go == null) return;
+
+        // do a raycast and make sure it hit *that* object
         if (rayInteractor.TryGetCurrent3DRaycastHit(out RaycastHit hit) &&
-            manager.TryGetInteractableForCollider(hit.collider, out UnityEngine.XR.Interaction.Toolkit.Interactables.IXRInteractable baseInt))
+            hit.collider.transform.IsChildOf(go.transform))
         {
-            var interactor = (UnityEngine.XR.Interaction.Toolkit.Interactors.IXRSelectInteractor)rayInteractor;
-            var target     = (UnityEngine.XR.Interaction.Toolkit.Interactables.IXRSelectInteractable)   baseInt;
-            manager.SelectEnter(interactor, target);
-            grabbed = target;
+            var xi = go.GetComponent<XRGrabInteractable>();
+            if (xi != null && xi.enabled)
+            {
+                manager.SelectEnter((IXRSelectInteractor)rayInteractor, (IXRSelectInteractable)xi);
+                grabbed = xi;
+            }
         }
     }
 
@@ -53,8 +57,11 @@ public class PinchGrabber : MonoBehaviour
     {
         if (grabbed != null)
         {
-            var interactor = (UnityEngine.XR.Interaction.Toolkit.Interactors.IXRSelectInteractor)rayInteractor;
-            manager.SelectExit(interactor, grabbed);
+            // Only call SelectExit if the interactable is currently selected
+            if (grabbed.isSelected)
+            {
+                manager.SelectExit((IXRSelectInteractor)rayInteractor, (IXRSelectInteractable)grabbed);
+            }
             grabbed = null;
         }
     }

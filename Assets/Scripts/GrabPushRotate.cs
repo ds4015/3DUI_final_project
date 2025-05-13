@@ -10,59 +10,62 @@ using Unity.VisualScripting;
 
 public class GrabPushRotate : MonoBehaviour
 {
-	private static GameObject currentlyManipulatedObject = null;
-	private static bool isAnyObjectBeingManipulated = false;
+    [HideInInspector] public static GameObject currentlyManipulatedObject = null;
+    private static bool isAnyObjectBeingManipulated = false;
 
-	private Transform leftHand;
-	private Transform rightHand;
-	private Transform leftIndex;
-	private Transform rightIndex;
-	private Collider leftHandCollider;
-	private Collider rightHandCollider;
-	private Collider leftIndexCollider;
-	private Collider rightIndexCollider;
-	[HideInInspector] public bool isLeftHandTouching = false;
-	[HideInInspector] public bool isRightHandTouching = false;
-	[HideInInspector] public bool isLeftIndexTouching = false;
-	[HideInInspector] public bool isRightIndexTouching = false;
+    private Transform leftHand;
+    private Transform rightHand;
+    private Transform leftIndex;
+    private Transform rightIndex;
+    private Collider leftHandCollider;
+    private Collider rightHandCollider;
+    private Collider leftIndexCollider;
+    private Collider rightIndexCollider;
+    [HideInInspector] public bool isLeftHandTouching = false;
+    [HideInInspector] public bool isRightHandTouching = false;
+    [HideInInspector] public bool isLeftIndexTouching = false;
+    [HideInInspector] public bool isRightIndexTouching = false;
 
-	public AudioSource audioSource;
+    public AudioSource audioSource;
 
-	public float rotationSpeed = 35f; 
-	public float moveSpeed = 2f; 
-	public float tableHeight = 1.125f; 
-	public float rotationSensitivity = 2f; 
-	private float fixedY;
-	private Rigidbody rb;
-	private Vector3 lastHandPosition;
-	private Vector3 handOffset;
-	private Vector3 lastRightHandPosition;
-	private Vector3 lastLeftHandPosition;
-	private float lastAngle;
-	private float lastLeftIndexTapTime = -1f;
-	private float lastRightIndexTapTime = -1f;
-	private float doubleTapThreshold = 0.3f;
-	private GameObject lastPokedObject = null;
-	private bool leftIndexInside = false;
-	private bool rightIndexInside = false;
-	private float lastFingerAngle = 0f;
-	private bool handOffsetSet = false;
-	XRGrabInteractable grabInteractable;
+    public float rotationSpeed = 35f;
+    public float moveSpeed = 10f;
+    public float tableHeight = 1.125f;
+    public float rotationSensitivity = 2f;
+    private float fixedY;
+    private Rigidbody rb;
+    private Vector3 lastHandPosition;
+    private Vector3 handOffset;
+    private Vector3 lastRightHandPosition;
+    private Vector3 lastLeftHandPosition;
+    private float lastAngle;
+    private float lastLeftIndexTapTime = -1f;
+    private float lastRightIndexTapTime = -1f;
+    private float doubleTapThreshold = 0.3f;
+    private GameObject lastPokedObject = null;
+    private bool leftIndexInside = false;
+    private bool rightIndexInside = false;
+    private float lastFingerAngle = 0f;
+    private bool handOffsetSet = false;
+    private XRGrabInteractable interactable;
+    private Outline outline;
+    private bool isBeingTranslated = false;
+    private Vector3 translationOffset;
 
     void Awake()
     {
-		/* add necessary components if not present */
-        grabInteractable = GetComponent<XRGrabInteractable>();
-        if (grabInteractable == null)
-            grabInteractable = gameObject.AddComponent<XRGrabInteractable>();
+        /* add necessary components if not present */
+        interactable = GetComponent<XRGrabInteractable>();
+        if (interactable == null)
+            interactable = gameObject.AddComponent<XRGrabInteractable>();
 
         //NetworkObject networkObject = GetComponent<NetworkObject>();
         //if (networkObject == null)
-            //networkObject = gameObject.AddComponent<NetworkObject>();
+        //networkObject = gameObject.AddComponent<NetworkObject>();
 
         //NetworkTransform networkTransform = GetComponent<NetworkTransform>();
-       // if (networkTransform == null)
-            //networkTransform = gameObject.AddComponent<NetworkTransform>();
+        // if (networkTransform == null)
+        //networkTransform = gameObject.AddComponent<NetworkTransform>();
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -77,41 +80,39 @@ public class GrabPushRotate : MonoBehaviour
 
         gameObject.layer = LayerMask.NameToLayer("Default");
 
-        grabInteractable.selectEntered.AddListener(OnGrabStart);
-        grabInteractable.selectExited.AddListener(OnGrabEnd);
+        interactable.selectEntered.AddListener(OnGrabStart);
+        interactable.selectExited.AddListener(OnGrabEnd);
 
         Collider[] colliders = GetComponents<Collider>();
         if (colliders.Length > 0)
         {
-            grabInteractable.colliders.Clear();
+            interactable.colliders.Clear();
             foreach (Collider collider in colliders)
             {
-                grabInteractable.colliders.Add(collider);
+                interactable.colliders.Add(collider);
             }
         }
 
         XRInteractionManager interactionManager = FindObjectOfType<XRInteractionManager>();
         if (interactionManager != null)
         {
-            grabInteractable.interactionManager = interactionManager;
+            interactable.interactionManager = interactionManager;
         }
         else
         {
             Debug.LogError("No XR Interaction Manager found in the scene");
         }
 
-        grabInteractable.movementType = XRBaseInteractable.MovementType.Instantaneous;
-        grabInteractable.throwOnDetach = true;
-        grabInteractable.throwSmoothingDuration = 0.25f;
-        grabInteractable.throwVelocityScale = 1.5f;
-        grabInteractable.throwAngularVelocityScale = 1f;
-        grabInteractable.attachEaseInTime = 0.15f;
-        grabInteractable.matchAttachPosition = true;
-        grabInteractable.matchAttachRotation = true;
-        grabInteractable.snapToColliderVolume = true;
-        grabInteractable.reinitializeDynamicAttachEverySingleGrab = true;
-
-        grabInteractable.enabled = false;
+        interactable.movementType = XRBaseInteractable.MovementType.Instantaneous;
+        interactable.throwOnDetach = true;
+        interactable.throwSmoothingDuration = 0.25f;
+        interactable.throwVelocityScale = 1.5f;
+        interactable.throwAngularVelocityScale = 1f;
+        interactable.attachEaseInTime = 0.15f;
+        interactable.matchAttachPosition = true;
+        interactable.matchAttachRotation = true;
+        //interactable.snapToColliderVolume = true;
+        //interactable.reinitializeDynamicAttachEverySingleGrab = true;
 
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -132,6 +133,14 @@ public class GrabPushRotate : MonoBehaviour
         fixedY = tableHeight;
         lastRightHandPosition = rightHand.position;
         lastLeftHandPosition = leftHand.position;
+
+        // Add Outline component if not present
+        outline = GetComponent<Outline>();
+        if (outline == null)
+        {
+            outline = gameObject.AddComponent<Outline>();
+            outline.enabled = false;
+        }
     }
 
     private IEnumerator UnfreezeAfterDelay()
@@ -146,78 +155,87 @@ public class GrabPushRotate : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        if (currentlyManipulatedObject != gameObject)
-            return;
-
-        /* rotation */
-        if (isRightHandTouching)
+        if (currentlyManipulatedObject == gameObject)
         {
-            float rotationAmount = rotationSpeed * Time.fixedDeltaTime;
+            HandleTranslation();
+            HandleRotation();
+        }
+    }
+
+    private void HandleTranslation()
+    {
+        // Only handle direct hand translation if we're not being grabbed by the ray
+        if (isLeftHandTouching && currentlyManipulatedObject == gameObject && !interactable.isSelected)
+        {
+            if (!isBeingTranslated)
+            {
+                // Start translation - calculate offset from hand to object
+                translationOffset = transform.position - leftHand.position;
+                isBeingTranslated = true;
+            }
+
+            // Move object with hand while maintaining the offset and table height
+            Vector3 targetPosition = leftHand.position + translationOffset;
+            targetPosition.y = tableHeight;
+            transform.position = targetPosition;
+        }
+        else if (isBeingTranslated && !isLeftHandTouching)
+        {
+            isBeingTranslated = false;
+        }
+    }
+
+    private void HandleRotation()
+    {
+        if (isRightHandTouching && currentlyManipulatedObject == gameObject)
+        {
+            float rotationAmount = rotationSpeed * Time.deltaTime;
             transform.Rotate(0, rotationAmount, 0, Space.World);
             if (!audioSource.isPlaying)
                 audioSource.Play();
         }
-        /* translation */
-        else if (isLeftHandTouching && !isRightHandTouching)
-        {
-            if (handOffsetSet)
-            {
-                Vector3 targetPos = new Vector3(
-                    leftIndex.position.x + handOffset.x,
-                    fixedY,
-                    leftIndex.position.z + handOffset.z
-                );
-                float deadZone = 0.01f;
-                if ((targetPos - transform.position).sqrMagnitude > deadZone * deadZone)
-                {
-                    Vector3 newPos = Vector3.Lerp(transform.position, targetPos, 0.5f);
-                    rb.MovePosition(newPos);
-                }
-                rb.constraints = RigidbodyConstraints.FreezeRotation;
-            }
-        }
         else if (audioSource.isPlaying)
+        {
             audioSource.Stop();
-
-        lastRightHandPosition = rightHand.position;
-        lastLeftHandPosition = leftHand.position;
+        }
     }
 
     void OnTriggerEnter(Collider other)
     {
         float now = Time.time;
-        /* detect double tap selection */
-        if (other == leftIndexCollider && !leftIndexInside)
+
+        if (other == leftIndexCollider)
         {
             leftIndexInside = true;
             isLeftIndexTouching = true;
 
-            if (currentlyManipulatedObject == gameObject && !handOffsetSet)
+            // Check for double tap
+            if (lastLeftIndexTapTime > 0 && now - lastLeftIndexTapTime < doubleTapThreshold)
             {
-                handOffset = transform.position - leftIndex.position;
-                handOffsetSet = true;
-            }
-            if (lastPokedObject != gameObject)
-            {
-                lastLeftIndexTapTime = -1f;
-                lastPokedObject = gameObject;
-            }
-            if (now - lastLeftIndexTapTime < doubleTapThreshold)
-            {
+                Debug.Log("Double tap detected!");
                 SelectObject();
+                lastLeftIndexTapTime = -1f; // Reset to prevent triple-tap
             }
-            lastLeftIndexTapTime = now;
+            else
+            {
+                lastLeftIndexTapTime = now;
+            }
         }
+
         if (other == leftHandCollider)
         {
             isLeftHandTouching = true;
+            if (currentlyManipulatedObject == gameObject)
+            {
+                translationOffset = transform.position - leftHand.position;
+                isBeingTranslated = true;
+            }
         }
         if (other == rightHandCollider)
         {
             isRightHandTouching = true;
-            lastFingerAngle = GetFingerAngle();
         }
     }
 
@@ -227,16 +245,14 @@ public class GrabPushRotate : MonoBehaviour
         {
             leftIndexInside = false;
             isLeftIndexTouching = false;
-            handOffsetSet = false;
-        }
-        if (other == rightIndexCollider)
-        {
-            rightIndexInside = false;
-            isRightIndexTouching = false;
         }
         if (other == leftHandCollider)
         {
             isLeftHandTouching = false;
+            if (currentlyManipulatedObject == gameObject)
+            {
+                isBeingTranslated = false;
+            }
         }
         if (other == rightHandCollider)
         {
@@ -255,27 +271,36 @@ public class GrabPushRotate : MonoBehaviour
         if (currentlyManipulatedObject == null)
             return;
 
-        var grabInteractable = currentlyManipulatedObject.GetComponent<XRGrabInteractable>();
-        if (grabInteractable != null)
-            grabInteractable.enabled = false;
+        var script = currentlyManipulatedObject.GetComponent<GrabPushRotate>();
+        if (script != null)
+        {
+            script.DeselectObject(currentlyManipulatedObject);
 
-        currentlyManipulatedObject.layer = LayerMask.NameToLayer("Default");
+            script.isLeftHandTouching = false;
+            script.isRightHandTouching = false;
+            script.isLeftIndexTouching = false;
+            script.isRightIndexTouching = false;
+        }
+
         currentlyManipulatedObject = null;
         isAnyObjectBeingManipulated = false;
     }
 
     void OnGrabStart(SelectEnterEventArgs args)
     {
-        Debug.Log("Grab started");
+        Debug.Log("Grab started on: " + gameObject.name);
+        // When grabbed by ray, stop direct hand translation
+        isBeingTranslated = false;
+        isLeftHandTouching = false;
     }
 
     void OnGrabEnd(SelectExitEventArgs args)
     {
+        Debug.Log("Grab ended on: " + gameObject.name);
+        isBeingTranslated = false;
         rb.isKinematic = false;
         rb.useGravity = true;
         rb.constraints = RigidbodyConstraints.None;
-
-        DeselectCurrent();
 
         StartCoroutine(HandleUprightPlacement());
     }
@@ -312,28 +337,53 @@ public class GrabPushRotate : MonoBehaviour
 
     void SelectObject()
     {
+        Debug.Log("Selecting object: " + gameObject.name);
+
+        // Deselect previous object if exists
         if (currentlyManipulatedObject != null && currentlyManipulatedObject != gameObject)
         {
-            currentlyManipulatedObject.layer = LayerMask.NameToLayer("Default");
-            var prevGrabInteractable = currentlyManipulatedObject.GetComponent<XRGrabInteractable>();
-            if (prevGrabInteractable != null)
-                prevGrabInteractable.enabled = false;
-
-            var prevOutline = currentlyManipulatedObject.GetComponent<Outline>();
-            if (prevOutline != null)
-                prevOutline.enabled = false;
-            currentlyManipulatedObject = null;
-            isAnyObjectBeingManipulated = false;
+            DeselectObject(currentlyManipulatedObject);
         }
+
+        // Select this object
         gameObject.layer = LayerMask.NameToLayer("Objects");
         currentlyManipulatedObject = gameObject;
         isAnyObjectBeingManipulated = true;
         handOffsetSet = false;
-        grabInteractable.enabled = true;
-    
-        var outline = GetComponent<Outline>();
+        isBeingTranslated = false;
+
+        if (interactable != null)
+            interactable.enabled = true;
+
         if (outline != null)
+        {
             outline.enabled = true;
+        }
+    }
+
+    void DeselectObject(GameObject obj)
+    {
+        if (obj == null) return;
+
+        obj.layer = LayerMask.NameToLayer("Default");
+        var prevInteractable = obj.GetComponent<XRGrabInteractable>();
+        if (prevInteractable != null)
+            prevInteractable.enabled = false;
+
+        var prevOutline = obj.GetComponent<Outline>();
+        if (prevOutline != null)
+        {
+            prevOutline.enabled = false;
+        }
+    }
+
+    private IEnumerator ReenableInteractable(XRGrabInteractable interactable)
+    {
+        yield return new WaitForSeconds(0.1f);
+        if (interactable != null)
+        {
+            interactable.enabled = true;
+            interactable.interactionLayers = InteractionLayerMask.GetMask("Default", "Objects");
+        }
     }
 }
-
