@@ -72,6 +72,13 @@ This project was developed using Unity and can be deployed to a Meta Quest heads
 </p>
 
 ```
+5/12/25: Nathan - Breadcrumb Trail
+```
+- Added bread crumb trail prefab
+- Users have a breadcrumb trail after moving in VR mode (wayfinding)
+- Trail disappears / clears when switching back to AR mode
+
+```
 5/12/25: Kyleigh - Fix bugs for wrist buttons with networking
 ```
 - fixed UI scale and forward padding for wrist buttons in VR mode
@@ -802,27 +809,54 @@ TransferItem.cs
 ### Networking Scripts
 
 ```
-BasicSpawner.cs
+ConnManager.cs
 
-  Sets up multiplayer spawner with Fusion. Players can host or join a session and
-  are spawned at the different markers in the scene. Script handles player
-  spawning, despawning and handling of non-authoritative players
+  Handles multiplayer spawning with Fusion. Players are joined via shared mode.
+  Game is initialized, players join and spawn at assigned spawn points.
 ```
 
 ```
-Player.cs
+NetworkManagerObject.cs
 
-  Allows player to move character based on input data.
+  Keeps track of RPC calls for sending item requests and spawning items. 
 ```
 
 ```
-NetworkVR.cs
+ReqButton.cs
 
-  Syncs position and rotation of player's head, left controller, and right
-  controller across the network. Uses state authority and updates the network with
-  transforms of headset and controller. If player doesn't have authority, it reads
-  and applies to local scene player. This allows for live movement of users.
+  UnityEvent where button triggers when touched by index finger collider. 
 ```
+
+```
+RequestItem.cs
+
+  Script for items that users would like to request. Request UI pops up on the 
+  right side of the asset window for users to send out a request to the specified
+  player.
+```
+
+```
+RequestItemUI.cs
+
+  Handles request ui window. Displays preview of the requested item and lets users 
+  either confirm or cancel the request
+```
+
+```
+RequestQueue.cs
+
+  Keeps a list of requests made by a player. Request cards are displayed to the user
+  with the preview of the item. Also handles sending out / spawning the item if 
+  accepted.
+```
+
+```
+QueueSendItem.cs
+
+  Attached to the send button of the request card. When triggered,
+  it calls HandleSend which sends the item to a request platform (for spawning).
+```
+
 
 ### AR/VR Immersion
 
