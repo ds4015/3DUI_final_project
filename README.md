@@ -6,8 +6,11 @@ Submitted May 13, 2025
 
 ## Contributors
 Kyleigh Sudlow - kas2330
+
 Dallas Scott - ds4015
+
 Nathan Wangidjaja - nbw2120
+
 Krystal Briggs - kab2286
 
 ## Contents
@@ -28,11 +31,29 @@ During the construction process, participants will have the opportunity to view
 the scene in progress from the perspectives of other participants in order
 to facilitate collaboration.
 
-This project was developed using Unity and can be deployed to a Meta Quest headset via build settings. We used Gitbug for version control.
+This project was developed using Unity and can be deployed to a Meta Quest headset via build settings. We used GitHub for version control.
 
 ## Asset Sources
-- Button Sets: <a href="https://assetstore.unity.com/packages/2d/gui/buttons-set-211824">
-- 
+- [Button Sets](https://assetstore.unity.com/packages/2d/gui/buttons-set-211824)
+- [3D SImple Building Hotel](https://assetstore.unity.com/packages/3d/environments/3d-simple-building-hotel-213775)
+- [Modular Medieval Village Megapack)](https://assetstore.unity.com/packages/3d/environments/modular-medieval-village-megapack-free-demo-house-305058)
+- [Christmas Toys](https://assetstore.unity.com/packages/3d/props/interior/christmas-toys-106607)
+- [Old Seaport Environemnt](https://assetstore.unity.com/packages/3d/environments/old-sea-port-environment-36897)
+- [Hand Painted Seamless Ground Textures](https://assetstore.unity.com/packages/2d/textures-materials/floors/hand-painted-seamless-ground-texture-155088)
+- [Romantic Porcelain Figurine](https://assetstore.unity.com/packages/3d/props/romantic-porcelain-figurine-264579)
+- [Water Fountain Round](https://assetstore.unity.com/packages/3d/props/exterior/water-fountain-round-four-tier-pbr-299380)
+- [Wooden Street Bench](https://assetstore.unity.com/packages/3d/props/wooden-street-bench-289333)
+- [Stylized Building 17th Century](https://assetstore.unity.com/packages/3d/props/stylized-building-17th-century-214786)
+- [Wooden PBR Table](https://assetstore.unity.com/packages/3d/props/wooden-pbr-table-112005)
+- [RPG Food Props](https://assetstore.unity.com/packages/3d/props/food/rpg-food-props-demo-248712)
+- [3D Nature Assets Pack](https://assetstore.unity.com/packages/3d/environments/3d-nature-assetspack-215646)
+- [Lowpoly Flowers](https://assetstore.unity.com/packages/3d/vegetation/plants/lowpoly-flowers-47083)
+- [Exterior Swimming Pool](https://assetstore.unity.com/packages/3d/environments/exterior-swimming-pool-161671)
+- [Lowpoly Environment Nature Free Medieval Fantasy Series](https://assetstore.unity.com/packages/3d/environments/lowpoly-environment-nature-free-medieval-fantasy-series-187052)
+- [Modular Lowpoly Streets](https://assetstore.unity.com/packages/3d/environments/urban/modular-lowpoly-streets-free-192094)
+- [Downtown Buildings Set Lowpoly](https://sketchfab.com/3d-models/downtown-buildings-set-low-poly-model-7378e7fb9c914c39880d9913a6f4e1d6)
+- [Futuristic Building](https://sketchfab.com/3d-models/futurisic-building-97dafb7fa638404990c8948383db9127)
+- [Paper](https://sketchfab.com/3d-models/paper-e7eeeecef3204e65bde08976a77531ab)
 
 ## Updates
 ```
